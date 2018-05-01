@@ -1,1 +1,0 @@
-# Accessible & Responsive Web Apps

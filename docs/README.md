@@ -1,9 +1,9 @@
-<!-- markdownlint-disable MD022 MD032 -->
+<!-- markdownlint-disable MD022 MD024 MD032 -->
 # Mobile Web Specialist Nanodegree
 This site contains notes and project submissions related to the Google Udacity Mobile Web Specialist Nanodegree program.
 
 ## Course Notes
-- [Responsive Web Design Fundamentals](course-notes/responsive-web-design-fundamentals.md)
+- [Responsive Web Design Fundamentals](course-notes/responsive-web-design-fundamentals.html)
 - Responsive Images
 - Web Accessibility
 
