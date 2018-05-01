@@ -1,7 +1,13 @@
 ---
-title: Mobile Web Specialist Nanodegree 
+title: Responsive Web Design Fundamentals
 description: Notes by James Priest
 ---
+# Mobile Web Specialist Nanodegree
+
+[<-- back to Mobile Web Specialist Nanodegree homepage](../index.html)
+
+---
+
 # Responsive Web Design Fundamentals
 
 ## 1. Why Responsive
