@@ -14,9 +14,7 @@ This site contains notes and project submissions related to the Google Udacity M
 - Restaurant Reviews App - Stage 3
 
 ## Core Curriculum
-The core curriculum, which is split into three parts, consists of courses provided by Udacity and developed by Google.
-
-Each of the courses are free to take and the links below will navigate to a course homepage.
+The core curriculum is split into three parts and consists of courses provided by Udacity and developed by Google.
 
 ### Part 1 - Accessible & Responsive Web Apps
 - Udacity course: [Responsive Web Design Fundamentals](https://www.udacity.com/course/responsive-web-design-fundamentals--ud893) by Google
