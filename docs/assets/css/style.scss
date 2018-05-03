@@ -1,0 +1,91 @@
+---
+---
+
+@import "{{ site.theme }}";
+// body { background: #e4ead1;background: #eeeeee;}
+// header {
+//     background: #1D8C39;
+//     background: #1A7F33;
+// }
+// a { color:#1A7F33;}
+a:hover { color:#999999; text-decoration: underline; }
+input[type="checkbox"], input[type="radio"] {
+    margin-right: 6px;
+}
+// Begin v3
+nav {
+    overflow-y: auto;
+    padding-right: 20px;
+    margin-left: -574px;
+    top: 190px;
+    max-height: 70vh;
+}
+// End v3
+nav ul li { padding: 2px 0; line-height: 16px;}
+nav ul li.tag-h1 {}
+nav ul li.tag-h1 a {}
+nav ul li.tag-h2 {}
+nav ul li.tag-h2 a { font-size: 1.1em; font-weight: bold; }
+
+nav li.active {
+    background-color: #ffeca0;
+    border-top: 1px solid #dba500;
+    border-bottom: 1px solid #dba500;
+    box-shadow: inset 0px 1px 0px rgba(255, 255, 255, 0.4), 0px 1px 1px rgba(0, 0, 0, 0.1)
+}
+nav li.active a {
+    font-weight: bold;
+    color: #333;
+    
+}
+a:focus { outline: none; }
+
+section { padding: 30px 20px 50px; }
+
+section>p, h4, h5, h6 {
+    // margin: 10px;
+    margin: 8px 40px;
+    line-height: 1.2em;
+}
+hr { margin: 20px 0; }
+ul { margin-left: 10px;}
+
+h1, h2, h3, h2+p>strong {
+    line-height: 1.0;
+}
+h1 {
+    font-size: 1.8em;
+    margin-bottom: 20px;
+}
+h2 {
+    font-size:1.5em;
+    margin: 20px 10px 10px;
+}
+h3, h2+p>strong {
+    font-size:1.2em;
+    color: #666;
+    margin: 20px 20px 6px
+}
+
+pre{ line-height: 1em; margin: 0 40px;}
+code {
+    // font-family: Courier New, Courier, monospace; 
+    font-family: Consolas, monospace;
+    // font-family: Lucida Console,Monaco,Courier,monospace;
+    font-size: 0.8em;
+}
+p>code, li>code, blockquote code, h1>code, h2>code, h3>code, h4>code, strong>code {
+    // color: #c7254e;
+    color: #ff4675;
+    background-color: #f9f2f4;
+    border-radius: 4px;
+    margin: 0 2px;
+    padding: 2px;
+    font-weight: 400;
+    font-size: .785714em; /* 11px/14px */
+    text-shadow: none;
+}
+blockquote { font-style: normal; margin-left: 40px;}
+footer {
+    position: static;
+}
