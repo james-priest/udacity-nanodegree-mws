@@ -13,7 +13,7 @@ description: Notes by James Priest
 ## 1. Why Responsive?
 Pete LePage, a developer advocate at Google, and Cameron Pittman, a front end course developer at Udacity, discuss the advantage of Responsive Web Design. 
 
-[![rwdf1](/assets/images/sm_rwdf1.jpg)](/assets/images/full-size/rwdf1.png)
+[![rwdf1](../assets/images/sm_rwdf1.jpg)](../assets/images/full-size/rwdf1.png)
 
 They are teaching this course to help us create websites that look and feel great across every device. We'll learn basic guidelines that make sites look great across a wide range of devices in use today.
 
@@ -44,7 +44,7 @@ This course is about *thinking* responsively; about approaching responsive desig
 
 Cameron talks about redesigning his own site after having put this course together. He says it may not be the prettiest but is completely responsive and it took him only a couple hours over the weekend.
 
-[![rwdf2](/assets/images/sm_rwdf2.jpg)](/assets/images/full-size/rwdf2.png)
+[![rwdf2](../assets/images/sm_rwdf2.jpg)](../assets/images/full-size/rwdf2.png)
 
 What was key in that he approached responsiveness systematically from the start instead of just as an afterthought!
 
@@ -65,7 +65,7 @@ Open up Chrome Developer Tools, using Cmd+Option+J, or Control+Alt+J. Next, hit 
 
 The emulator is ready to go.
 
-[![rwdf3](/assets/images/sm_rwdf3.jpg)](/assets/images/full-size/rwdf3.png)
+[![rwdf3](../assets/images/sm_rwdf3.jpg)](../assets/images/full-size/rwdf3.png)
 
 I can start loading pages and see how they look, but before I do, I like to dock the tools to the right side of the browser window. Since most phones are viewed in portrait, docking to the right side gives me the most amount of vertical space.
 
@@ -91,7 +91,7 @@ Make sure the site you want to debug is open on your mobile device and then conn
 
 Back in our development machine, we can see a list of the attached devices and the Chrome tabs that are open on the devices. You can open other tabs, focus on specific tabs, reload a tab and even close a tab.
 
-[![rwdf4](/assets/images/sm_rwdf4.jpg)](/assets/images/full-size/rwdf4.png)
+[![rwdf4](../assets/images/sm_rwdf4.jpg)](../assets/images/full-size/rwdf4.png)
 
 You can inspect the pages that are running on your mobile device, from your development machine, and using screen-cast mode, you can drive the experience on your mobile device from your development machine.
 
