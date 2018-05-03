@@ -13,6 +13,8 @@ This site contains notes and project submissions related to the Google Udacity M
 - Restaurant Reviews App - Stage 2
 - Restaurant Reviews App - Stage 3
 
+---
+
 ## Core Curriculum
 The core curriculum is split into three parts and consists of courses provided by Udacity and developed by Google.
 
