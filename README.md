@@ -7,7 +7,7 @@ This site contains my notes and project submissions related to the Google Udacit
 Website: [https://james-priest.github.io/udacity-nanodegree-mws/](https://james-priest.github.io/udacity-nanodegree-mws/)
 
 ## Course Notes
-- [Responsive Web Design Fundamentals](course-notes/responsive-web-design-fundamentals.md)
+- [Responsive Web Design Fundamentals](docs/course-notes/responsive-web-design-fundamentals.md)
 - Responsive Images
 - Web Accessibility
 
