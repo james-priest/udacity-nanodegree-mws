@@ -19,13 +19,22 @@ nav {
     margin-left: -574px;
     top: 190px;
     max-height: 70vh;
+    text-align: inherit;
 }
 // End v3
-nav ul li { padding: 3px 0; line-height: 16px;}
-nav ul li.tag-h1 {}
-nav ul li.tag-h1 a {}
-nav ul li.tag-h2 {}
+nav ul { width: 175px; }
+nav ul a { white-space: nowrap; }
+nav ul li { 
+    padding: 3px 0;
+    line-height: 16px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+// nav ul li.tag-h1 {}
+// nav ul li.tag-h1 a {}
+// nav ul li.tag-h2 {}
 nav ul li.tag-h2 a { font-size: 1.1em; font-weight: bold; }
+nav ul li.tag-h3 a { margin-left: 10px; }
 
 nav li.active {
     background-color: #ffeca0;
@@ -40,7 +49,10 @@ nav li.active a {
 }
 a:focus { outline: none; }
 
-section { padding: 30px 20px 50px; }
+section { 
+    width: 615px;
+    padding: 30px 20px 50px;
+}
 
 section>p, h4, h5, h6 {
     // margin: 10px;
@@ -89,4 +101,15 @@ p>code, li>code, blockquote code, h1>code, h2>code, h3>code, h4>code, strong>cod
 blockquote { font-style: normal; margin-left: 40px;}
 footer {
     position: static;
+}
+
+@media print, screen and (max-width: 1060px) {
+    section {
+        max-width: 615px;
+    }
+}
+@media print, screen and (max-width: 720px) {
+    section {
+        width: auto;
+    }
 }
