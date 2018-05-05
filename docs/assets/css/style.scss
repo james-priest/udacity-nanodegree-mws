@@ -22,6 +22,7 @@ nav {
     text-align: inherit;
 }
 // End v3
+nav ol, nav ul { margin-left: 10px; }
 nav ul { width: 175px; }
 nav ul a { white-space: nowrap; }
 nav ul li { 
@@ -60,7 +61,8 @@ section>p, h4, h5, h6 {
     line-height: 1.2em;
 }
 hr { margin: 20px 0; }
-ol, ul { margin-left: 10px;}
+
+section ol, section ul { margin-left: 30px;}
 
 h1, h2, h3, h2+p>strong {
     line-height: 1.0;
