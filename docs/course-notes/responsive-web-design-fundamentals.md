@@ -741,4 +741,189 @@ In the next lesson, you'll experiment with four different techniques for creatin
 
 ## Lesson 4. Common Responsive Patterns
 
-## Lesson 5. Optimizations
+### 4.1 Intro to Patterns
+Responsive patterns are quickly evolving, but there are a handful of established patterns that work well across pretty much any device.
+
+Most patterns used by responsive web pages can be categorized into one of four patterns.
+
+- Mostly fluid
+- Column drop
+- Layout shifter
+- Off canvas
+
+In some cases, a page may use a combination of patterns. For example, column drop and off canvas.
+
+[![rwdf4-1](../assets/images/sm_rwdf4-1.jpg)](../assets/images/full-size/rwdf4-1.png)
+
+In each of these examples, and the examples moving forward, the colored boxes represent areas of content.
+
+Let's break them down one by one. I'm going to show you how these patterns work, and then using your Flexbox skills and media queries, you're going to practice implementing them.
+
+### 4.2 Pattern - Column Drop
+**Column Drop** is probably the easiest.
+
+[![rwdf4-2](../assets/images/sm_rwdf4-2.jpg)](../assets/images/full-size/rwdf4-2.png)
+[Live Sample - Column Drop (https://codepen.io/james-priest/pen/KRXeKo)](https://codepen.io/james-priest/pen/KRXeKo)
+
+At its narrowest viewport, each element simply stacks vertically, one on top of the other.
+
+As things get wider, the elements expand, until the first break point is hit. At the first break point, instead of having all the elements stacked, two elements are now side by side, and the third element is underneath.
+
+The elements keep expanding as the viewport gets wider until the next breakpoint is hit. Then, things reflow to a three-column layout.
+
+Generally, once the viewport hits a maximum width, the columns hit a maximum size, and instead of getting wider, margins are added to the left and right.
+
+#### Viewport #1
+So how do we code this? Let's start with the smallest viewport. We have our three divs, inside of a container div.
+
+[![rwdf4-3](../assets/images/sm_rwdf4-3.jpg)](../assets/images/full-size/rwdf4-3.png)
+
+The container is a flex container, with `flex-wrap: wrap`.
+
+```css
+.container {
+    display: flex;
+    flex-wrap: wrap;
+}
+```
+
+[![rwdf4-4](../assets/images/sm_rwdf4-4.jpg)](../assets/images/full-size/rwdf4-4.png)
+
+Next, I've set the width of all of the divs to 100% to give me that stacked layout.
+
+```css
+.box {
+    width: 100%;
+    height: 100px;
+}
+```
+
+#### Viewport #2
+Because this is just a sample, I'll pick a totally random break point at 450 pixels.
+
+I want that dark blue div to be 25% of the viewport width, and the light blue div to be 75%. And I want to keep the green at the full width.
+
+[![rwdf4-5](../assets/images/sm_rwdf4-5.jpg)](../assets/images/full-size/rwdf4-5.png)
+
+I'm going to add a new media query that checks if min width is greater than or equal to 450 pixels, and then change the width of dark blue to 25% and light blue to 75%.
+
+```css
+@media screen and (min-width: 450px) {
+    .dark_blue {
+        width: 25%;
+    }
+    .light_blue {
+        width: 75%;
+    }
+}
+```
+
+#### Viewport #3
+I'll add a third break point at 550 pixels and make the dark blue div 25%, the light blue div 50%, and the green div to be 25%.
+
+[![rwdf4-6](../assets/images/sm_rwdf4-6.jpg)](../assets/images/full-size/rwdf4-6.png)
+
+To get that to happen, I'll add a new media query that tests for screen, and min-width 550 pixels. Inside that media query, I'll set the width for dark blue and green to 25% and light blue to 50%.
+
+```css
+@media screen and (min-width: 550px) {
+    .dark_blue, .green {
+        width: 25%;
+    }
+    .light_blue {
+        width: 50%;
+    }
+}
+```
+
+Let's try it in the browser. We're all stacked at 400 pixels. At 450, our layout changes, and again at 550 pixels. Perfect.
+
+### 4.3 Pattern - Mostly Fluid
+The **Mostly Fluid** pattern, is very similar to *Column Drop*, but it tends to be a bit more grid like With more columns, and columns fitting in different ways, depending on the viewport width.
+
+[![rwdf4-7](../assets/images/sm_rwdf4-7.jpg)](../assets/images/full-size/rwdf4-7.png)
+
+Just like column drop, at its narrowest viewport, the layout is stacked, but as the layout gets wider, the grid pattern starts to appear. 
+
+Eventually, once the layout hits its widest viewport, margins are added on the left and right, instead of expanding things out.
+
+#### Layout #1
+I've made this one a bit more complex, with a few additional divs.
+
+[![rwdf4-8](../assets/images/sm_rwdf4-8.jpg)](../assets/images/full-size/rwdf4-8.png)
+
+Just like column drop, I'm using flexbox and setting the width of each element to 100% at their narrowest viewport.
+
+```css
+.container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.box {
+    width: 100%;
+    height: 100px;
+}
+```
+
+#### Layout #2
+At the first breakpoint, I'll make the light blue div and the green div, 50% width.
+
+[![rwdf4-9](../assets/images/sm_rwdf4-9.jpg)](../assets/images/full-size/rwdf4-9.png)
+
+Just like before, I'll add a min-width query, to check fora min-width of 450 pixels.If that's the case, I'll make the light blue and green 50% width.
+
+```css
+@media screen and (min-width: 450px) {
+    .light_blue, .green {
+        width: 50%;
+    }
+}
+```
+
+#### Layout #3
+I want another breakpoint at 550 pixels.
+
+[![rwdf4-10](../assets/images/sm_rwdf4-10.jpg)](../assets/images/full-size/rwdf4-10.png)
+
+I'll add the media query, and set the appropriate widths on the right elements.
+
+```css
+@media screen and (min-width: 550px) {
+    .dark_blue, .light_blue {
+        width: 50%;
+    }
+    .green, .red, .orange {
+        width: 33.333333%;
+    }
+}
+```
+
+#### Layout #4
+And finally I'll add a breakpoint that adds margins to the side when the viewport is beyond 700 pixels.
+
+[![rwdf4-11](../assets/images/sm_rwdf4-11.jpg)](../assets/images/full-size/rwdf4-11.png)
+
+```css
+@media screen and (min-width: 700px) {
+    .container {
+        width: 700px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+```
+
+Let's take a look at it in the browser.
+
+- Everything is stacked as I expect at below 450 pixels.
+- And as I expand up, I get a switch and 450.
+- I'll get a switch again at 550 pixels.
+- And above 700 pixels, I'll start getting margins added to the side.
+
+[![rwdf4-12](../assets/images/sm_rwdf4-12.jpg)](../assets/images/full-size/rwdf4-12.png)
+
+That's exactly what I wanted.
+
+<!-- 
+## Lesson 5. Optimizations -->
