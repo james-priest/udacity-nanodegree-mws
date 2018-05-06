@@ -9,6 +9,9 @@
 // }
 // a { color:#1A7F33;}
 a:hover { color:#999999; text-decoration: underline; }
+section a { border-bottom: 1px dotted; }
+section a > img { vertical-align: top; }
+section a:hover { border-bottom: none; }
 input[type="checkbox"], input[type="radio"] {
     margin-right: 6px;
 }
