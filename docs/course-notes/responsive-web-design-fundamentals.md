@@ -842,12 +842,13 @@ Let's try it in the browser. We're all stacked at 400 pixels. At 450, our layout
 The **Mostly Fluid** pattern, is very similar to *Column Drop*, but it tends to be a bit more grid like With more columns, and columns fitting in different ways, depending on the viewport width.
 
 [![rwdf4-7](../assets/images/sm_rwdf4-7.jpg)](../assets/images/full-size/rwdf4-7.png)
+[Live Sample - Mostly Fluid (https://codepen.io/james-priest/pen/XqeYjQ)](https://codepen.io/james-priest/pen/XqeYjQ)
 
 Just like column drop, at its narrowest viewport, the layout is stacked, but as the layout gets wider, the grid pattern starts to appear. 
 
 Eventually, once the layout hits its widest viewport, margins are added on the left and right, instead of expanding things out.
 
-#### Layout #1
+#### Viewport #1
 I've made this one a bit more complex, with a few additional divs.
 
 [![rwdf4-8](../assets/images/sm_rwdf4-8.jpg)](../assets/images/full-size/rwdf4-8.png)
@@ -866,7 +867,7 @@ Just like column drop, I'm using flexbox and setting the width of each element t
 }
 ```
 
-#### Layout #2
+#### Viewport #2
 At the first breakpoint, I'll make the light blue div and the green div, 50% width.
 
 [![rwdf4-9](../assets/images/sm_rwdf4-9.jpg)](../assets/images/full-size/rwdf4-9.png)
@@ -881,7 +882,7 @@ Just like before, I'll add a min-width query, to check fora min-width of 450 pix
 }
 ```
 
-#### Layout #3
+#### Viewport #3
 I want another breakpoint at 550 pixels.
 
 [![rwdf4-10](../assets/images/sm_rwdf4-10.jpg)](../assets/images/full-size/rwdf4-10.png)
@@ -899,7 +900,7 @@ I'll add the media query, and set the appropriate widths on the right elements.
 }
 ```
 
-#### Layout #4
+#### Viewport #4
 And finally I'll add a breakpoint that adds margins to the side when the viewport is beyond 700 pixels.
 
 [![rwdf4-11](../assets/images/sm_rwdf4-11.jpg)](../assets/images/full-size/rwdf4-11.png)
