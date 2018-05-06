@@ -763,7 +763,7 @@ Let's break them down one by one. I'm going to show you how these patterns work,
 **Column Drop** is probably the easiest.
 
 [![rwdf4-2](../assets/images/sm_rwdf4-2.jpg)](../assets/images/full-size/rwdf4-2.png)
-[Live Sample - Column Drop (https://codepen.io/james-priest/pen/KRXeKo)](https://codepen.io/james-priest/pen/KRXeKo)
+Live Sample - [Column Drop Pattern](https://codepen.io/james-priest/pen/KRXeKo)
 
 At its narrowest viewport, each element simply stacks vertically, one on top of the other.
 
@@ -842,7 +842,7 @@ Let's try it in the browser. We're all stacked at 400 pixels. At 450, our layout
 The **Mostly Fluid** pattern, is very similar to *Column Drop*, but it tends to be a bit more grid like With more columns, and columns fitting in different ways, depending on the viewport width.
 
 [![rwdf4-7](../assets/images/sm_rwdf4-7.jpg)](../assets/images/full-size/rwdf4-7.png)
-[Live Sample - Mostly Fluid (https://codepen.io/james-priest/pen/XqeYjQ)](https://codepen.io/james-priest/pen/XqeYjQ)
+Live Sample - [Mostly Fluid Pattern](https://codepen.io/james-priest/pen/XqeYjQ)
 
 Just like column drop, at its narrowest viewport, the layout is stacked, but as the layout gets wider, the grid pattern starts to appear. 
 
