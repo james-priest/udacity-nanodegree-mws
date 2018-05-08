@@ -490,9 +490,9 @@ footer ul {
     order: 5;
   }
 }
-@media screen and (min-width: 800px) {
+@media screen and (min-width: 850px) {
   .header__inner, .nav__list, main, footer {
-    width: 800px;
+    width: 850px;
     margin-left: auto;
     margin-right: auto;
   }
