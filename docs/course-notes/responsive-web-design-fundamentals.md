@@ -1172,7 +1172,6 @@ Use the CSS below to identify the set of drawings that accurately shows the way 
 
 Option 1 is correct because the nav is actually positioned off the page - outside the viewport.
 
-<!-- 
 ### 4.11 Quiz: Project Update Part 2
 #### Building the Home Town App (part 2 of 3)
 
@@ -1181,5 +1180,15 @@ For this part of the project you need to:
 1. Pick a set of breakpoints and use one of the patterns that you learned to style the page so that it works across different devices.
 2. Test on multiple phones, tables, and browser window sizes and adjust breakpoints until you're happy.
 
+#### Solution
 
+[![rwdf4-29](../assets/images/sm_rwdf4-29.jpg)](../assets/images/full-size/rwdf4-29.png)
+Live Sample - [The Brighton Times](https://codepen.io/james-priest/pen/ZovQQp)
+
+### 4.12 Lesson Summary
+In these last two lessons, you learned how to use grid layouts for responsive design, and you also learned the four common responsive design patterns.
+
+In the next lesson, you'll learn about some advanced optimization techniques that you can use to really make a site shine.
+
+<!-- 
 ## Lesson 5. Optimizations -->
