@@ -382,15 +382,19 @@ footer a {
  * My Additions
  *
  */
- #menu {
+#menu {
   text-decoration: none;
   color: #666;
+}
+a#menu svg {
+  width: 24px;
+  fill: #666;
 }
 .content {
   display: flex;
   flex-wrap: wrap;
 }
-.scores, .top-news {
+.scores, .top-news, .weather {
   width: 100%;
 }
 footer ul {
