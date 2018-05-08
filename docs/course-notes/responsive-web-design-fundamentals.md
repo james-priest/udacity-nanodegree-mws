@@ -310,8 +310,7 @@ But my favorite reason to start from small and work up is performance.
 
 By designing for the smallest viewport first, I'm forced to think about performance from the beginning. I have to make a conscious decision about prioritizing content, and how much data I'm sending to the user.
 
-### 2.15 Quiz Project Part 1
-
+### 2.15 Quiz: Project Part 1
 #### Building the Home Town App (part 1 of 3)
 
 1. Add a `<meta>` viewport to the page with initial scale set.
@@ -729,7 +728,7 @@ Let's compare this to our sample. Looks about right to me.
 
 Let's see how you do.
 
-### 3.19 Deconstructing a Flexbox Layout
+### 3.19 Quiz: Deconstructing a Flexbox Layout
 Fill in numbers corresponding to the width  and order of each element.
 
 [![rwdf43](../assets/images/sm_rwdf43.jpg)](../assets/images/full-size/rwdf43.png)
@@ -794,7 +793,7 @@ Next, I've set the width of all of the divs to 100% to give me that stacked layo
 ```css
 .box {
     width: 100%;
-    height: 100px;
+    min-height: 150px;
 }
 ```
 
@@ -863,7 +862,7 @@ Just like column drop, I'm using flexbox and setting the width of each element t
 
 .box {
     width: 100%;
-    height: 100px;
+    min-height: 150px;
 }
 ```
 
@@ -926,5 +925,261 @@ Let's take a look at it in the browser.
 
 That's exactly what I wanted.
 
+### 4.4 Quiz: Mostly Fluid Part 1
+Fill in numbers corresponding to the width and order of each element.
+
+[![rwdf4-13](../assets/images/sm_rwdf4-13.jpg)](../assets/images/full-size/rwdf4-13.png)
+
+### 4.5 Quiz: Mostly Fluid Part 2
+Fill in numbers corresponding to the width and order of each element.
+
+[![rwdf4-14](../assets/images/sm_rwdf4-14.jpg)](../assets/images/full-size/rwdf4-14.png)
+
+### 4.6 Quiz: Combining Fluid Layouts
+Complete the Mostly Fluid layout exercise.
+
+[![rwdf4-15](../assets/images/sm_rwdf4-15.jpg)](../assets/images/full-size/rwdf4-15.png)
+
+#### Solution
+
+```css
+@media screen and (min-width: 450px) {
+    .light_blue, .green {
+        width: 50%;
+    }
+}
+@media screen and (min-width: 550px) {
+    .red {
+        width: 33.333333%;
+    }
+    .orange {
+        width: 66.666666%;
+    }
+}
+@media screen and (min-width: 800px) {
+    .container {
+        width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+```
+
+### 4.7 Pattern - Layout Shifter
+The layout shifter pattern is probably the most responsive pattern with multiple break points across several different screen widths. The key to this layout is the way that content moves about instead of reflowing and dropping below other columns.
+
+[![rwdf4-16](../assets/images/sm_rwdf4-16.jpg)](../assets/images/full-size/rwdf4-16.png)
+Live Sample - [Layout Shifter Pattern](https://codepen.io/james-priest/pen/KRygva)
+
+Flexbox really shines here, because we can use the order CSS attribute. Because so much can change in each layout, it does require a bit more planning to maintain.
+
+#### Viewport #1
+I'll go for something a bit more complex this time. In order to get the layout I want, I've wrapped the light blue div, and the green div inside container two.
+
+[![rwdf4-17](../assets/images/sm_rwdf4-17.jpg)](../assets/images/full-size/rwdf4-17.png)
+
+I've made one small change to the container class from the last example and I've set it's width to 100%, so that the element inside takes up the full width.
+
+```css
+.container {
+    width: 100%;    /* <-- new change */
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.box {
+    width: 100%;
+    min-height: 150px;
+}
+```
+
+When no break point has been hit, only the default styles are applied making each element 100% width, stacked on top of the other.
+
+#### Viewport #2
+When the first media query is hit at 500 pixels, the break point changes the dark blue and the container, each to be width of 50%.
+
+[![rwdf4-18](../assets/images/sm_rwdf4-18.jpg)](../assets/images/full-size/rwdf4-18.png)
+
+The red div remains at 100%, because we haven't changed it.
+
+```css
+@media screen and (min-width: 500px) {
+    .dark_blue {
+        width: 50%;
+    }
+    #container2 {
+        width: 50%;
+    }
+}
+```
+
+#### Viewport #3
+At 600 pixels things start to get really fun. To get everything to fit, I need to change the width on container2 to 50% and the width on dark blue and red to 25% each.
+
+Next, to change the order, I need to specify an order for each element.
+
+[![rwdf4-19](../assets/images/sm_rwdf4-19.jpg)](../assets/images/full-size/rwdf4-19.png)
+
+Remember, the default order value for an element is zero. If I set order to negative 1 on the red div it'll appear first.
+
+To get the dark blue element, to show up last, I need to set it's value to anything greater than zero, so one.
+
+```css
+@media screen and (min-width: 600px) {
+    .dark_blue {
+        width: 25%;
+        order: 1;
+    }
+    #container2 {
+        width: 50%;
+    }
+    .red {
+        width: 25%;
+        order: -1
+    }
+}
+```
+
+Let's take a look in the browser.
+
+- It's all stacked to start.
+- As it gets wider and hits the first break point, the dark blue goes to the left with light blue and green on the right
+- Finally it switches up again
+
+[![rwdf4-20](../assets/images/sm_rwdf4-20.jpg)](../assets/images/full-size/rwdf4-20.png)
+
+### 4.8 Quiz: Which is Which
+Fill out the answers with the CSS box name.
+
+[![rwdf4-21](../assets/images/sm_rwdf4-21.jpg)](../assets/images/full-size/rwdf4-21.png)
+
+I'll take a look at the smaller layout first.
+
+1. Box A takes up 50% of the viewport, and has an order of negative 1, which looks like it's the lowest meaning box A comes first, which probably means the Red Box is box A.
+2. Container 2 has a width of 50% and no order. So, I think it's probably a good guess that container 2 is talking about the light blue and the green divs.
+3. I can see that boxB must come after boxA, and because this doesn't have an order, it's probably order 0, so that means that boxB is going to be the Dark Blue Box.That probably means the Green Box is boxC.
+
+I want to take up the larger viewport to confirm my suspicions.
+- I can see that boxC has an order of negative 1 in the larger viewport, which means that it looks like it's going to come first.
+
+That's a pretty good argument that the Green Box is boxC, but let’s just goes ahead and make sure.
+
+- Box B has a width of 25%, and an order of 2 which is the largest one I see here, so it's probably going to come last.
+
+That seems to make sense, because I said that the Dark Blue Box is boxB, and here boxB seems to be the last one.
+
+- BoxA is 25% and comes right before boxB which makes it the red one. So, I'm feeling pretty good about my answer that the Red Box is boxA.
+- Lastly, there's still this container class with a width of 50%.And it looks like it's still being applied to the light blue, and the green boxes.
+
+[![rwdf4-22](../assets/images/sm_rwdf4-22.jpg)](../assets/images/full-size/rwdf4-22.png)
+
+So, in the end, boxA is Red, boxC is Green, and boxB is Dark Blue.
+
+### 4.9 Pattern - Off Canvas
+With off canvas, instead of stacking content vertically, the off canvas places less frequently used content, for example navigation or app menus, off screen, only showing them if the screen is large enough.
+
+[![rwdf4-23](../assets/images/sm_rwdf4-23.jpg)](../assets/images/full-size/rwdf4-23.png)
+Live Sample - [Off Canvas Pattern](https://codepen.io/james-priest/pen/xjPdwe)
+
+On smaller screens, the off canvas content is typically shown when the user taps on the hamburger icon.
+
+Let's take a look and see how it's done on the Web Fundamentals site.
+
+[![rwdf4-24](../assets/images/sm_rwdf4-24.jpg)](../assets/images/full-size/rwdf4-24.png)
+
+In narrow viewport, the navigation menu is often hidden until you click the hamburger menu. This was the case in an earlier version of Web Fundamentals. Now, the off screen content actually animates in from off the screen (on the left).
+
+In the sample page below, the content is coming in from the left. But in other cases, it could come in from the right.
+
+[![rwdf4-23](../assets/images/sm_rwdf4-23.jpg)](../assets/images/full-size/rwdf4-23.png)
+
+#### Viewport #1
+Let's take a look at the code for this example. I have two elements, the dark blue nav and the main content in light blue.
+
+[![rwdf4-25](../assets/images/sm_rwdf4-25.jpg)](../assets/images/full-size/rwdf4-25.png)
+
+In order to make sure the elements take up the full viewport width, I need to set the width on html, body, and main to 100%.
+
+```css
+html, body, main {
+    width: 100%;
+}
+```
+
+Next, I'll set the styles for the off-canvas nav element. I'll set a specific width of 300 pixels, being careful to keep it reasonably sized so that it doesn't overflow the viewport.
+
+I'll use translate minus 300 pixels to move it off the screen and add a transition of 0.3 seconds, so that it animates in nicely.
+
+```css
+nav {
+    width: 300px;
+    height: 100%;
+    position: absolute;
+    transform: translate(-300px, 0);
+    transition: transform 0.3s ease;
+}
+```
+
+When I want it to appear, I'll add an open class that resets the transform.
+
+```css
+nav.open {
+    transform: translate(0, 0);
+}
+```
+
+#### Viewport #2
+Now, I'll add a break point at 600 pixels that repositions everything back to its normal spot.
+
+[![rwdf4-26](../assets/images/sm_rwdf4-26.jpg)](../assets/images/full-size/rwdf4-26.png)
+
+The media query at 600 pixels resets the transform. Adding flex grow 1 to the main element allows the element to grow and take up the full remaining width of the viewport.
+
+```css
+@media screen and (min-width: 600px) {
+    nav {
+        position: relative;
+        transform: translate(0, 0);
+    }
+    body {
+        display: flex;
+        flex-flow: row nowrap;
+    }
+    main {
+        width: auto;
+        flex-grow: 1;
+    }
+}
+```
+
+The last piece necessary is the javascript to toggle the `open` class.
+
+```js
+menu.addEventListener('click', function(e) {
+    drawer.classList.toggle('open');
+    e.stopPropagation();
+});
+```
+
+Now we give it a shot in the browser. When the viewport is small, the navigation panel is hidden until I hit the hamburger menu. But, on wider view port, it's shown by default.
+
+[![rwdf4-27](../assets/images/sm_rwdf4-27.jpg)](../assets/images/full-size/rwdf4-27.png)
+
+### 4.10 Quiz: Off Canvas Visualization
+Use the CSS below to identify the set of drawings that accurately shows the way the nav shows up on screen.  The open class is applied onclick.
+
+[![rwdf4-28](../assets/images/sm_rwdf4-28.jpg)](../assets/images/full-size/rwdf4-28.png)
+
+Option 1 is correct because the nav is actually positioned off the page - outside the viewport.
+
 <!-- 
+### 4.11 Quiz: Project Update Part 2
+#### Building the Home Town App (part 2 of 3)
+
+For this part of the project you need to:
+
+1. Pick a set of breakpoints and use one of the patterns that you learned to style the page so that it works across different devices.
+2. Test on multiple phones, tables, and browser window sizes and adjust breakpoints until you're happy.
+
+
 ## Lesson 5. Optimizations -->
