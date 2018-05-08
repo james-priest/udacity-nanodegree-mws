@@ -1,0 +1,49 @@
+.container {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.box {
+    width: 100%;
+    min-height: 150px;
+}
+
+.light_blue {
+    background-color: rgb(63, 192, 235);
+}
+.dark_blue {
+    background-color: darkblue;
+}
+.green {
+    background-color: green;
+}
+.red {
+    background-color: red;
+}
+.orange {
+    background-color: orange;
+}
+
+@media screen and (min-width: 500px) {
+    .dark_blue {
+        width: 50%;
+    }
+    #container2 {
+        width: 50%;
+    }
+}
+
+@media screen and (min-width: 600px) {
+    .dark_blue {
+        width: 25%;
+        order: 1;
+    }
+    #container2 {
+        width: 50%;
+    }
+    .red {
+        width: 25%;
+        order: -1
+    }
+}
