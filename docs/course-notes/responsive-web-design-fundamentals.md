@@ -1228,7 +1228,7 @@ To fix this, there's several options, and I'm going to show you three.
 
 Like breakpoints, you want to experiment to decide what works best for your content, and remember, different content might call for different answers.
 
-### 5.4 RT - Hidden Columns
+### 5.4 RT: Hidden Columns
 Hidden columns essentially hides columns based on their importance as the viewports size gets smaller.
 
 Let's see how you might do this with a baseball scoreboard. 
@@ -1299,7 +1299,7 @@ Here, let me show you. And there you have it. That data-th is used as the label 
 
 [![rwdf5-12](../assets/images/sm_rwdf5-12.jpg)](../assets/images/full-size/rwdf5-12.png)
 
-### 5.7 RT - Contained Scrolling
+### 5.7 RT: Contained Scrolling
 One of the easiest things you can do, to contain the table in the viewport is to wrap it in a div and set the width to 100%.And overflow x to auto.
 
 Then, instead of breaking out of the view port. The table will instead, take up the same width but will scroll within the view port.
