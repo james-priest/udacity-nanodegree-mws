@@ -1190,5 +1190,256 @@ In these last two lessons, you learned how to use grid layouts for responsive de
 
 In the next lesson, you'll learn about some advanced optimization techniques that you can use to really make a site shine.
 
+## Lesson 5. Optimizations
+### 5.1 Lesson Intro
+You've now got the most important skills that you need to build responsive websites.
+
+1. You've got a good understanding of what responsive means
+2. You know how to use flexbox to lay out your designs
+3. You've now got several common design patterns at your disposal
+
+In this lesson, you're going to learn about some of the other things that are important to responsive design, like images, tables, and typography.
+
+### 5.2 Images
+Images play an integral part of every website. The HTTP archive has it pegged at near 1.2 megabytes per page, which means images take up 65% of every website.
+
+In order to do responsive web design, we need to consider images. If the rest of my page is changing based on device characteristics wouldn't it make sense that my images should be changing too?
+
+Using the same image, but changing the resolution is probably one of the most common use cases. Think providing a standard image for a laptop, but a 2X image for a high DPI display, like a Chromebook Pixel, or a Retina iMac.
+
+The best way to do this is using the `srcset` attribute on an `<image>` tag. With `srcset`, the browser will choose which file it wants, and then only download that one.
+
+What about the case where I want a different crop of an image? It doesn't make sense to show a big, wide image on a narrow portrait phone.
+
+That's what's called art direction, and where the new `<picture>` element come in. The `<picture>` element uses media queries to select which image to use which we'll cover in our next course.
+
+### 5.3 Responsive Tables Intro
+Tables can be tricky. If they're more than a few columns, there's a pretty good chance that it's going to overflow the viewport on smaller screens, forcing horizontal scrolling.
+
+[![rwdf5-1](../assets/images/sm_rwdf5-1.jpg)](../assets/images/full-size/rwdf5-1.png)
+
+To fix this, there's several options, and I'm going to show you three.
+
+- Hidden columns
+- No more tables
+- Contained tables.
+
+[![rwdf5-2](../assets/images/sm_rwdf5-2.jpg)](../assets/images/full-size/rwdf5-2.png)
+
+Like breakpoints, you want to experiment to decide what works best for your content, and remember, different content might call for different answers.
+
+### 5.4 RT - Hidden Columns
+Hidden columns essentially hides columns based on their importance as the viewports size gets smaller.
+
+Let's see how you might do this with a baseball scoreboard. 
+
+[![rwdf5-3](../assets/images/sm_rwdf5-3.jpg)](../assets/images/full-size/rwdf5-3.png)
+
+As you can see all of the data is there. The short name, the long name and the runs scored during each of the innings plus the final score.
+
+I'm going to start small and ask myself what's the most important information.
+
+In this case, I'm going to go with the short team name and the final score. I'm going to use `display: none`, to hide everything else. 
+
+Then, as the viewport size gets bigger, let's swap out the full team name and start showing each of the runs per inning.
+
+[![rwdf5-4](../assets/images/sm_rwdf5-4.jpg)](../assets/images/full-size/rwdf5-4.png)
+
+The biggest problem of hidden columns is that you're hiding content from the user.
+
+What happens if I need to know how many runs were scored in the 7th inning? If I'm a device with a narrow viewport, it's just not there, I can't see it.
+
+So use this technique with caution, and if possible, use abbreviated data instead of hiding it completely.
+
+### 5.5 Quiz: Hide Some Columns
+A simple table has the following HTML. Fill in the blanks in the CSS below so that the gametime class is hidden from viewports 499px wide or smaller.
+
+[![rwdf5-5](../assets/images/sm_rwdf5-5.jpg)](../assets/images/full-size/rwdf5-5.png)
+
+### 5.6 RT: No More Tables
+With the no more tables technique, below a certain viewport width, the table is collapsed and resembles a long list, as opposed to a table data.
+
+The nice thing about this technique is all of the data is visible no matter what the size of the viewport is.
+
+Let's take a look with the baseball score again.
+
+[![rwdf5-6](../assets/images/sm_rwdf5-6.jpg)](../assets/images/full-size/rwdf5-6.png)
+
+In a wider viewport, everything looks good, but as the viewport shrinks, the table collapses.
+
+[![rwdf5-7](../assets/images/sm_rwdf5-7.jpg)](../assets/images/full-size/rwdf5-7.png)
+
+Every column has essentially become its own row with the table header beside it.
+
+Using a media query, I need to tell the table that below a certain width, in this case 500 pixels, I don't want it to act like a table anymore.
+
+[![rwdf5-8](../assets/images/sm_rwdf5-8.jpg)](../assets/images/full-size/rwdf5-8.png)
+
+Inside my media query, I'm going to force all `table`, `thead`, `tbody`, `th`, `tr` and `td` elements to render as `display: block`.
+
+Next, I need to get rid of the table header. I could set `display: none`, but that would cause accessibility problems for people using screen readers because the browser won't tell them the column headers.
+
+[![rwdf5-9](../assets/images/sm_rwdf5-9.jpg)](../assets/images/full-size/rwdf5-9.png)
+
+Instead, I'm just going to position the content way off screen.
+
+Since the table cells are now displayed as full width block elements, I need to add some left padding and also set the position on these elements to relative.
+
+To add the row labels, I'm going to use the before pseudo selector and add `td:before`, and inside, I'll set the position to `left: 6` pixels so that I get it positioned in the right place.
+
+[![rwdf5-10](../assets/images/sm_rwdf5-10.jpg)](../assets/images/full-size/rwdf5-10.png)
+
+Now I need to add the content. I could put the labels in my CSS, but that's icky and will mean that these styles will only work for this table.
+
+Instead, I'll use `content: attr(data-th)`. That will then pull the values from the `data-th` of each of the td elements.
+
+[![rwdf5-11](../assets/images/sm_rwdf5-11.jpg)](../assets/images/full-size/rwdf5-11.png)
+
+Here, let me show you. And there you have it. That data-th is used as the label for each of the rows.
+
+[![rwdf5-12](../assets/images/sm_rwdf5-12.jpg)](../assets/images/full-size/rwdf5-12.png)
+
+### 5.7 RT - Contained Scrolling
+One of the easiest things you can do, to contain the table in the viewport is to wrap it in a div and set the width to 100%.And overflow x to auto.
+
+Then, instead of breaking out of the view port. The table will instead, take up the same width but will scroll within the view port.
+
+[![rwdf5-13](../assets/images/sm_rwdf5-13.jpg)](../assets/images/full-size/rwdf5-13.png)
+
+### 5.8 Fonts
+Let's try a little experiment. I want you to read the first paragraph of Alice's Adventure in Wonderland out loud.
+
+[![rwdf5-14](../assets/images/sm_rwdf5-14.jpg)](../assets/images/full-size/rwdf5-14.png)
+
+It's a little weird right? With only a few words per line, it's kind of awkward to read. Words or phrases that might be read as groups, end up getting broken across multiple lines, making it hard to parse the sentences.
+
+Why don't you try this one instead. It's got a few more words per line, so maybe we won't have the same problem.
+
+[![rwdf5-15](../assets/images/sm_rwdf5-15.jpg)](../assets/images/full-size/rwdf5-15.png)
+
+It's the same content but with more words and it still doesn't work. If a line of text is too long, readers get lost when trying to find the next line and end up reading the same thing over and over again.
+
+Or they get lazy and might read the first part of each line, but by the end, they're skimming. 
+
+Over the last century, there's been lots of research done to determine the ideal measure. That's the technical term for the length of a line.
+
+I've seen research ranging from 45 characters per line to as many as 90 characters per line, depending on the font used, if it's in print, if it's projected, or on a computer screen.
+
+[![rwdf5-16](../assets/images/sm_rwdf5-16.jpg)](../assets/images/full-size/rwdf5-16.png)
+
+But, there seems to be a pretty solid consensus around 65 characters per line for the web .It's not a hard and fast rule, but it's a good place to start.
+
+[![rwdf5-17](../assets/images/sm_rwdf5-17.jpg)](../assets/images/full-size/rwdf5-17.png)
+
+We need to consider the way people read as we create our designs, since it can affect our layout. 
+
+That's why line length is an important factor to consider as you're building sites, and something I always take into consideration as I choose my breakpoints.
+
+[![rwdf5-18](../assets/images/sm_rwdf5-18.jpg)](../assets/images/full-size/rwdf5-18.png)
+
+#### Base Font Size
+It's also important to make sure that fonts are big enough to read across any device. **I always set my base font to at least 16 pixels, and at least a 1.2em line height.**
+
+[![rwdf5-24](../assets/images/sm_rwdf5-24.jpg)](../assets/images/full-size/rwdf5-24.png)
+
+Depending on the situation, I may even increase it for text heavy sites to something like 18px and 1.25em line-hight.
+
+```css
+body {
+    font-size: 16px;
+    line-height: 1.2em;
+}
+.bigger-fonts {
+    font-size: 18px;
+    line-height: 1.25em;
+}
+```
+
+14 pixels is just too small. That may sound big, but makes for a much better reading experience. Even on a desktop, it works quite well.
+
+### 5.9 Minor Breakpoints
+In addition to choosing **major breakpoints**, where layout changes significantly, it's also helpful to add **minor breakpoints** to make some small changes.
+
+For example, between major breakpoints, it may be helpful to adjust margins and paddings on an element. Or to increase the font size to make things, a little bit easier to read and feel more natural in the layout.
+
+In this case let's boost the font, when the viewport width is between 400 and 550 pixels, where our break point kicks in.
+
+[![rwdf5-19](../assets/images/sm_rwdf5-19.jpg)](../assets/images/full-size/rwdf5-19.png)
+
+I'll also separate the low and high temperature, so that they're not on the same line and make the weather icons bigger as well.
+
+[![rwdf5-20](../assets/images/sm_rwdf5-20.jpg)](../assets/images/full-size/rwdf5-20.png)
+
+Let's switch to the source and I'll add a media query that's applied when the viewport is between 450 and 550 pixels.
+
+```css
+@media screen and (min-width: 450px) and (max-width: 550px) {
+    body { font-size: 1em; }
+
+    .seven-day-fc .temp-low,
+    .seven-day-fc .temp-hi {
+        display: inline-block;
+        width: 30%;
+    }
+    .seven-day-fc, .icon {
+        width: 60px;
+        height: 60px;
+    }
+}
+```
+
+It ups the base font, changes the low and high temperature to be inline block, and increases the icon size.
+
+I'll save the file, and then take a look in the browser. Sure enough, my icons are now bigger, my fonts are now bigger, and everything looks like I expect it to.
+
+In this before and after, you can see how things have really changed. The icons are much bigger, the font sizes have also changed, and the minimum and maximum temperatures are now shown in a slightly different way.
+
+[![rwdf5-21](../assets/images/sm_rwdf5-21.jpg)](../assets/images/full-size/rwdf5-21.png)
+
+For larger view ports I want to limit the maximum width of the forecast page panel, so that it doesn't consume the entire view port as it gets wider.
+
+[![rwdf5-22](../assets/images/sm_rwdf5-22.jpg)](../assets/images/full-size/rwdf5-22.png)
+
+I already have a link style sheet with min-width query of 700 pixels. 
+
+```html
+<!DOCTYPE html>
+<html>
+    ...
+    <link rel="stylesheet" media="screen and (min-width: 700px)" href="700.css">
+```
+
+So in there, I just need to set some margins and padding.Let's take a look.I'll set the width to 700 pixels, and set margin left and margin right to auto.
+
+```css
+.weather-forecast {
+    width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}
+```
+
+I'll come back to Chrome, hit Refresh, and now we've got what I want. There you have it.
+
+[![rwdf5-23](../assets/images/sm_rwdf5-23.jpg)](../assets/images/full-size/rwdf5-23.png)
+
+You can use minor break points, to adjust the little things and really make things shine.
+
 <!-- 
-## Lesson 5. Optimizations -->
+### 5.10 Quiz: Final Project Updates
+#### Building the Home Town App (part 3 of 3)
+For the final part of the project you need to:
+
+1. Update the sports score table with your favorite sports team (make sure it's responsive!).
+2. Double check your text. Is it too long? If so, make it fit more naturally.
+3. Add a minor breakpoint if possible.
+4. Try replacing a few of the images with responsive images. Check out the [Responsive Images section of Web Fundamentals](https://developers.google.com/web/fundamentals/media/images/).
+5. Share you final project in the forums.
+
+How did the ellipsis happen?
+
+- [Truncating string with ellipsis](http://css-tricks.com/snippets/css/truncate-string-with-ellipsis/) - for adding an ellipsis to a single line
+- [Multiline truncation with ellipsis](http://hackingui.com/front-end/a-pure-css-solution-for-multiline-text-truncation/) - adding an ellipsis when you have multiple lines.
+ 
+These can be tricky. It took a bit of trial-and-error on my part before I was happy with the result. -->
