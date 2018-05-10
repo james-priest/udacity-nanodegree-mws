@@ -160,6 +160,9 @@ footer ul {
     font-size: 3.2em;
     margin: 0.7em 0 0;
   }
+  .header__menu {
+    display: none;
+  }
   .hero {
     width: 50%;
     order: 1;
