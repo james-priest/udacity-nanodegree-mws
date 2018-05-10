@@ -1426,7 +1426,6 @@ I'll come back to Chrome, hit Refresh, and now we've got what I want. There you 
 
 You can use minor break points, to adjust the little things and really make things shine.
 
-<!-- 
 ### 5.10 Quiz: Final Project Updates
 #### Building the Home Town App (part 3 of 3)
 For the final part of the project you need to:
@@ -1441,5 +1440,17 @@ How did the ellipsis happen?
 
 - [Truncating string with ellipsis](http://css-tricks.com/snippets/css/truncate-string-with-ellipsis/) - for adding an ellipsis to a single line
 - [Multiline truncation with ellipsis](http://hackingui.com/front-end/a-pure-css-solution-for-multiline-text-truncation/) - adding an ellipsis when you have multiple lines.
- 
-These can be tricky. It took a bit of trial-and-error on my part before I was happy with the result. -->
+
+These can be tricky. It took a bit of trial-and-error on my part before I was happy with the result.
+
+#### Solution
+
+[![rwdf5-25](../assets/images/sm_rwdf5-25.jpg)](../assets/images/full-size/rwdf5-25.png)
+Live Sample - [The Brighton Times](https://codepen.io/james-priest/pen/ZovQQp)
+
+### 5.11 Wrap Up
+We've learned the basics of well-sized elements for mobile using breakpoints and media queries to change the page layout for different devices.
+
+We've also learned common responsive design patterns, and we've gone into some advanced techniques, like minor breakpoints.
+
+At this point, you've got all the tools and concepts you need to build amazing responsive sites. It's fair to say that, all you need now, is an idea for a site, and some time to let your content inform your responsive design.
