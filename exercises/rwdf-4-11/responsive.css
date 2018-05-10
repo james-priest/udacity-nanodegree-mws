@@ -1,0 +1,128 @@
+
+ #menu {
+    text-decoration: none;
+    color: #666;
+  }
+  a#menu svg {
+    width: 24px;
+    fill: #666;
+  }
+  .content {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .scores, .top-news, .weather {
+    width: 100%;
+  }
+  footer ul {
+    display: flex;
+    justify-content: center;
+  }
+  
+  @media screen and (max-width: 580px) {
+    /* make header smaller */
+    .header__logo {
+      height: 24px;
+      margin-top: 10px;
+    }
+    .header__title {
+      font-size: 1.8em;
+    }
+    .header__menu {
+      font-size: 24px;
+      display: inline-block;
+      margin: 0 20px;
+    }
+    footer li {
+      margin: 0;
+    }
+    
+    /* Off Canvas Pattern */
+    .nav {
+      width: 300px;
+      position: absolute;
+      z-index: 1;
+      background-color: #eee;
+      transform: translate(-300px, 0);
+      transition: transform 0.35s ease;
+    }
+    .nav.open {
+      transform: translate(0, 0);
+    }
+    .nav__item {
+      display: block;
+      width: 100%;
+      border-bottom: 1px solid #ccc;
+      text-align: left;
+    }
+  }
+
+  /* minor breakpoint */
+@media screen and (min-width: 400px) and (max-width: 580px) {
+  .header__logo {
+    height: 50px;
+    margin-top: 5px;
+    margin-right: 1em;
+  }
+  .header__title {
+    font-size: 2.3em;
+  }
+}
+  
+  @media screen and (min-width: 581px) {
+    .nav {
+      font-size: 1.3em;
+    }
+    .header__menu {
+      display: none;
+    }
+    .hero {
+      width: 60%;
+      order: 1;
+    }
+    .weather {
+      width: 40%;
+      order: 2;
+    }
+    .top-news {
+      width: 40%;
+      order: 4;
+    }
+    .scores {
+      width: 60%;
+      order: 3;
+    }
+    .recent-news {
+      width: 100%;
+      order: 5;
+    }
+  }
+  @media screen and (min-width: 700px) {
+    .hero {
+      width: 50%;
+      order: 1;
+    }
+    .weather {
+      width: 30%;
+      order: 4;
+    }
+    .top-news {
+      width: 50%;
+      order: 2;
+    }
+    .scores {
+      width: 70%;
+      order: 3;
+    }
+    .recent-news {
+      width: 100%;
+      order: 5;
+    }
+  }
+  @media screen and (min-width: 850px) {
+    .header__inner, .nav__list, main, footer {
+      width: 850px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
