@@ -1454,3 +1454,9 @@ We've learned the basics of well-sized elements for mobile using breakpoints and
 We've also learned common responsive design patterns, and we've gone into some advanced techniques, like minor breakpoints.
 
 At this point, you've got all the tools and concepts you need to build amazing responsive sites. It's fair to say that, all you need now, is an idea for a site, and some time to let your content inform your responsive design.
+
+[![mobile1](../assets/images/sm_mobile1.jpg)](../assets/images/full-size/mobile1.jpg)
+
+[![mobile2](../assets/images/sm_mobile2.jpg)](../assets/images/full-size/mobile2.jpg)
+
+[![mobile3](../assets/images/sm_mobile3.jpg)](../assets/images/full-size/mobile3.jpg)
