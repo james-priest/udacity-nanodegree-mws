@@ -9,7 +9,7 @@ description: Notes by James Priest
 [<-- back to Mobile Web Specialist Nanodegree homepage](../index.html)
 <!--
 | Lesson 1 | Lesson 2 | Lesson 3 | Lesson 4 | Lesson 5 |
-| --- | --- | --- | --- | --- | --- |
+| --- | --- | --- | --- | --- |
 | Why Responsive? | Starting Small | Building Up | Common Responsive Patterns | Optimizations | -->
 
 ### Supporting Links
@@ -843,7 +843,7 @@ The **Mostly Fluid** pattern, is very similar to *Column Drop*, but it tends to 
 [![rwdf4-7](../assets/images/sm_rwdf4-7.jpg)](../assets/images/full-size/rwdf4-7.png)
 Live Sample - [Mostly Fluid Pattern](https://codepen.io/james-priest/pen/XqeYjQ)
 
-Just like column drop, at its narrowest viewport, the layout is stacked, but as the layout gets wider, the grid pattern starts to appear. 
+Just like column drop, at its narrowest viewport, the layout is stacked, but as the layout gets wider, the grid pattern starts to appear.
 
 Eventually, once the layout hits its widest viewport, margins are added on the left and right, instead of expanding things out.
 
@@ -1231,7 +1231,7 @@ Like breakpoints, you want to experiment to decide what works best for your cont
 ### 5.4 RT: Hidden Columns
 Hidden columns essentially hides columns based on their importance as the viewports size gets smaller.
 
-Let's see how you might do this with a baseball scoreboard. 
+Let's see how you might do this with a baseball scoreboard.
 
 [![rwdf5-3](../assets/images/sm_rwdf5-3.jpg)](../assets/images/full-size/rwdf5-3.png)
 
@@ -1239,7 +1239,7 @@ As you can see all of the data is there. The short name, the long name and the r
 
 I'm going to start small and ask myself what's the most important information.
 
-In this case, I'm going to go with the short team name and the final score. I'm going to use `display: none`, to hide everything else. 
+In this case, I'm going to go with the short team name and the final score. I'm going to use `display: none`, to hide everything else.
 
 Then, as the viewport size gets bigger, let's swap out the full team name and start showing each of the runs per inning.
 
@@ -1252,7 +1252,7 @@ What happens if I need to know how many runs were scored in the 7th inning? If I
 So use this technique with caution, and if possible, use abbreviated data instead of hiding it completely.
 
 ### 5.5 Quiz: Hide Some Columns
-A simple table has the following HTML. Fill in the blanks in the CSS below so that the gametime class is hidden from viewports 499px wide or smaller.
+A simple table has the following HTML. Fill in the blanks in the CSS below so that the `gametime` class is hidden from viewports 499px wide or smaller.
 
 [![rwdf5-5](../assets/images/sm_rwdf5-5.jpg)](../assets/images/full-size/rwdf5-5.png)
 
@@ -1319,7 +1319,7 @@ Why don't you try this one instead. It's got a few more words per line, so maybe
 
 It's the same content but with more words and it still doesn't work. If a line of text is too long, readers get lost when trying to find the next line and end up reading the same thing over and over again.
 
-Or they get lazy and might read the first part of each line, but by the end, they're skimming. 
+Or they get lazy and might read the first part of each line, but by the end, they're skimming.
 
 Over the last century, there's been lots of research done to determine the ideal measure. That's the technical term for the length of a line.
 
@@ -1331,7 +1331,7 @@ But, there seems to be a pretty solid consensus around 65 characters per line fo
 
 [![rwdf5-17](../assets/images/sm_rwdf5-17.jpg)](../assets/images/full-size/rwdf5-17.png)
 
-We need to consider the way people read as we create our designs, since it can affect our layout. 
+We need to consider the way people read as we create our designs, since it can affect our layout.
 
 That's why line length is an important factor to consider as you're building sites, and something I always take into consideration as I choose my breakpoints.
 
@@ -1400,7 +1400,7 @@ For larger view ports I want to limit the maximum width of the forecast page pan
 
 [![rwdf5-22](../assets/images/sm_rwdf5-22.jpg)](../assets/images/full-size/rwdf5-22.png)
 
-I already have a link style sheet with min-width query of 700 pixels. 
+I already have a link style sheet with min-width query of 700 pixels.
 
 ```html
 <!DOCTYPE html>

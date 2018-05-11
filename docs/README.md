@@ -1,16 +1,53 @@
 <!-- markdownlint-disable MD022 MD024 MD032 -->
 # Mobile Web Specialist Nanodegree
-This site contains notes and project submissions related to the Google Udacity Mobile Web Specialist Nanodegree program.
-
-## Course Notes
-- [Responsive Web Design Fundamentals](course-notes/responsive-web-design-fundamentals.html)
-- Responsive Images
-- Web Accessibility
+This site contains notes and project submissions for Udacity's Mobile Web Specialist Nanodegree program.
 
 ## Course Projects
-
 - Restaurant Reviews App - Stage 1
 - Restaurant Reviews App - Stage 2
+- Restaurant Reviews App - Stage 3
+
+## Course Notes
+### Part 1 - Accessible & Responsive Web Apps
+- [Responsive Web Design Fundamentals](course-notes/responsive-web-design-fundamentals.html) (Lessons 1-5)
+- [Responsive Images](course-notes/responsive-images.html) (Lessons 6-9)
+- Web Accessibility (Lessons 10-15)
+- Offline Web Applications (Lesson 16 & 17)
+
+### Part 2 - Dynamic & Offline Capable Web Apps
+- Asynchronous JavaScript Requests (Lessons 1-3)
+- ES6 JavaScript Improved (Lessons 4-7)
+- Offline Web Applications (Lesson 8)
+- Web Tooling and Automation (Lessons 9-15)
+
+### Part 3 - Performant Web Apps
+- Client Server Communication (Lessons 1-5)
+- Requests, Responses, & Real World HTTP (Lessons 6-8)
+- Browser Rendering Optimization (Lessons 9-14)
+
+---
+## Chronological List
+### Part 1 - Accessible & Responsive Web Apps
+- [Responsive Web Design Fundamentals](course-notes/responsive-web-design-fundamentals.html) (Lessons 1-5)
+- [Responsive Images](course-notes/responsive-images.html) (Lessons 6-9)
+- Web Accessibility (Lessons 10-15)
+- Offline Web Applications (Lesson 16 & 17)
+
+- Restaurant Reviews App - Stage 1
+
+### Part 2 - Dynamic & Offline Capable Web Apps
+- Asynchronous JavaScript Requests (Lessons 1-3)
+- ES6 JavaScript Improved (Lessons 4-7)
+- Offline Web Applications (Lesson 8)
+- Web Tooling and Automation (Lessons 9-15)
+
+- Restaurant Reviews App - Stage 2
+
+### Part 3 - Performant Web Apps
+- Client Server Communication (Lessons 1-5)
+- Requests, Responses, & Real World HTTP (Lessons 6-8)
+- Browser Rendering Optimization (Lessons 9-14)
+
 - Restaurant Reviews App - Stage 3
 
 ---

@@ -2,22 +2,24 @@
 title: Web Accessibility
 description: Notes by James Priest
 ---
-# Mobile Web Specialist Nanodegree
+<!-- markdownlint-disable MD022 MD032 -->
+<!-- # Mobile Web Specialist Nanodegree -->
+# Web Accessibility
 
 [<-- back to Mobile Web Specialist Nanodegree homepage](../index.html)
 
 ---
 
-# Web Accessibility
+### Supporting Links
 
-## 1. Accessibility Overview
+## 10. Accessibility Overview
 
-## 2. Focus
+## 12. Focus
 
-## 3. Semantic Basics
+## 12. Semantic Basics
 
-## 4. Navigating Content
+## 13. Navigating Content
 
-## 5. ARIA
+## 14. ARIA
 
-## 6. Style
+## 15. Style
