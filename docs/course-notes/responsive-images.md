@@ -101,11 +101,59 @@ Now that you've got your environment set up, you're ready to start developing wi
 
 In the next lesson, you'll start experimenting with image sizing, compression, and formats. By the end, you'll be ready to intelligently reduce the number of bytes required for your images.
 
-<!--
 ## Lesson 7. Units, Formats, Environments
 ### 7.1 Quiz: Sizing Intro
+By the end of this lesson, you will be prepared with a workflow that will make it easy for you to optimize your images so that they take up as little bandwidth as possible while still looking great.
 
- 
+You'll be thinking about image quality and size. With images on the web, it all comes down to size, but what does that actually mean?
+
+Here's a question for you.Can you spot the differences between these three images? 
+
+[![ri7-1](../assets/images/sm_ri7-1.jpg)](../assets/images/full-size/ri7-1.png)
+
+To be honest, I can't tell the difference with my eye. These three look the same to me.
+
+For this quiz, check out [this site](http://udacity.github.io/responsive-images/examples/1-05/identicalImagesDifferentCompressionAndSize/index.html), then use DevTools to work out the difference between the three images.
+
+Are the differences caused by compression level, display resolution, the natural resolution, or the file type? Check all that apply.
+
+If the image data looks the same for all images, make sure to check the `Disable cache` checkbox in DevTools.
+
+[![ri7-2](../assets/images/sm_ri7-2.jpg)](../assets/images/full-size/ri7-2.png)
+
+#### Answer
+I've opened up DevTools, and I've navigated to the Network tab. I'm ready to record so I will refresh the page. You can see the three requests for the three different images, horse1, horse2, and horse3. It looks like their sizes are really different.
+
+[![ri7-4](../assets/images/sm_ri7-4.jpg)](../assets/images/full-size/ri7-4.png)
+
+Notice how horse2 is almost ten times bigger than horse1, and horse3 is also bigger than horse1. Given that the images look identical, it seems like there could be some wasted bytes here.
+
+Inside the Elements pane, I can find out the actual dimensions of these three images. There are a couple of ways doing it. I'm going to show you a hard way and then an easy way.
+
+DevTools has this awesome feature where you can manipulate an element in the DOM by clicking on it. So I've clicked on the first horse. Then inside the console, I can access it by typing `$0`.
+
+[![ri7-3](../assets/images/sm_ri7-3.jpg)](../assets/images/full-size/ri7-3.png)
+
+When I press Enter, the horse `<img>` element is returned. To find out the horse's actual width, I'll simply access the property `naturalWidth`. When I do that, the width returned is `426`.
+
+I then select horse2 and run the same command to see that one is also 426 pixels wide. So I'll try the third one.And ah-ha that one is twice as large at 852 pixels. So it looks like these three images have different sizes.
+
+Okay, now here's the easy way of figuring that out. Simply hover over the image, and you can see it right here. There is the natural width and height.Horse2 is the same just like we saw a second ago.And then horse3 is twice as large.
+
+[![ri7-5](../assets/images/sm_ri7-5.jpg)](../assets/images/full-size/ri7-5.png)
+
+So then what could be different about horse1 and horse2?
+
+As it turns out, their compression levels are different. So at this point it's clear that horse3 is definitely a larger image but then what's different about horse1 and horse2?
+
+If they have the same resolution but different sizes, then they have different compression levels. So, the answer to this quiz is that they have different compression levels and different resolutions.
+
+- [x] Compression level
+- [ ] Display resolution
+- [x] Actual (natural) resolution
+- [ ] File type
+
+<!--  
 ## Lesson 7. Units, Formats, Environments
 
 ## Lesson 8. Images with Markup
