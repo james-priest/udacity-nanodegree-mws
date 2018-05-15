@@ -255,7 +255,6 @@ This is done simply by opening up a quiz that uses the extension and clicking th
 
 4. As edits are made, changes are reflected in the Udacity Front End Feedback dialogue box.😃
 
-<!--
 ### 7.6 Quiz: calc()
 For this quiz I want you to fix this website.
 
@@ -341,6 +340,7 @@ So, if you set both the height and the width to `100vmax`, the image responsivel
 
 **Note:** setting both the height and the width to `100vmax` or `100vmin` changes the image's aspect ratio. It'll compress your images to squares, so be careful if you want to maintain a different aspect ratio!
 
+<!--
 ### 7.9 Raster and Vector
 There are two fundamentally different ways to create and store images and this affects how you deploy images responsibly. Raster and vector.
 
