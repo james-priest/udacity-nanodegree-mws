@@ -153,9 +153,238 @@ If they have the same resolution but different sizes, then they have different c
 - [x] Actual (natural) resolution
 - [ ] File type
 
-<!--  
-## Lesson 7. Units, Formats, Environments
+### 7.2 All about Bits and Pixels
+With images like photos, the total file size depends on the number of pixels multiplied by the number of bits it takes to store each pixel.
 
+[![ri7-6](../assets/images/sm_ri7-6.jpg)](../assets/images/full-size/ri7-6.png)
+
+So, to improve performance, you need to keep images as small as possible and compression as high as possible. It's a common mistake to save images with dimensions too large, and quality too high.
+
+It might sound counter-intuitive, but the first rule for saving images to a range of devices is to save images with the lowest possible quality, and the smallest size as possible. But, how do you reduce file size while maintaining quality?
+
+Throughout this course, you'll learn how to use responsive techniques to do just that.
+
+### 7.3 Requests and Revenue
+The average webpage makes a whopping 56 requests for images. Every one of those image requests has a cost in terms of page load and studies by Google, Amazon, and others have shown that even very small delays in loading pages can result in a significant loss of traffic and revenue.
+
+[![ri7-7](../assets/images/sm_ri7-7.jpg)](../assets/images/full-size/ri7-7.png)
+
+Here we see from Google that a 0.4 to 0.9 second increase resulted in traffic and ad revenues down by 20% and for Amazon, every 100 millisecond increase in page load time means a loss of sales of 1%.
+
+### 7.4 Relative Sizing
+Let's have a deeper look at CSS sizing.  I've given this image a fixed size of 640 by 360 pixels, which is the natural size of the image.It looks great. But of course, when I resize the window,the image gets cropped.
+
+[![ri7-8](../assets/images/sm_ri7-8.jpg)](../assets/images/full-size/ri7-8.png)
+
+On a phone, the image is larger than the view port.Which means that to see the whole image, you have to scroll horizontally.
+
+Let's try relative sizing. I set the image width to 100%.
+
+It looks good in the smaller browser window and looks good on the phone, but when I resize the image larger by resizing the browser window, it starts to get pixelated and blurry.
+
+[![ri7-9](../assets/images/sm_ri7-9.jpg)](../assets/images/full-size/ri7-9.png)
+
+Let's do something about that. If we set the max-width of the image to 100%, the image will expand nicely, but only ever as wide as its natural width.
+
+[![ri7-10](../assets/images/sm_ri7-10.jpg)](../assets/images/full-size/ri7-10.png)
+
+Two simple things you can learn from this. For devices such as laptops and desktop monitors.
+
+1. Don't assume the window size is the same as the screen size 
+2. Don't assume the window size will always stay the same.
+
+- **Using `max-width` is a good way to respond gracefully to a change to a larger view port.**
+- When you're thinking responsively, consider large displays as well as small.
+
+So what if you want two images to fit side by side, no matter the size of the view port? Well, that's easy. Just use relative sizing, 50% width.
+
+[![ri7-11](../assets/images/sm_ri7-11.jpg)](../assets/images/full-size/ri7-11.png)
+
+But what if you want to add a ten pixel margin between the images? You can just add margin-right, 10 pixels, right?
+
+You can get around this with our old friend `calc()`.
+
+Calc allows you to do simple calculations in CSS values and that's a great way to combine absolute and relative values. For example, combining a percentage width with a fixed margin.
+
+[![ri7-12](../assets/images/sm_ri7-12.jpg)](../assets/images/full-size/ri7-12.png)
+
+Now the calculation here looks a little complex but all we're saying is to give each image half of the width available.
+
+I've also used the `last-of-type` selector to ensure there's only a margin between the images and none to the right of the second image.
+
+```css
+img {
+    margin-right: 10px;
+    max-width: 426px;
+    width: calc((100% - 10px)/2);
+}
+img:last-of-type {
+    margin-right: 0;
+}
+```
+
+#### Image Examples
+
+- [Fixed size image](http://udacity.github.io/responsive-images/examples/1-07/singleImage640x360/)
+- [width: 100%](http://udacity.github.io/responsive-images/examples/1-07/singleImageNotBigEnough100pc/)
+- [max width: 100%](http://udacity.github.io/responsive-images/examples/1-07/singleImageMaxWidth100pc/)
+- [Two images, 50% width](http://udacity.github.io/responsive-images/examples/1-07/twoImages50pc)
+- [Two images, 50% width with margin](http://udacity.github.io/responsive-images/examples/1-07/twoImages50pcWithMargin)
+
+You can find out more about `calc()` from [Mozilla Developer Network](https://developer.mozilla.org/en-US/docs/Web/CSS/calc).
+
+The horse and giraffe are from [lorempixel.com](http://lorempixel.com/), which provides URLs for random placeholder images. For example, [check this out](http://lorempixel.com/400/200/animals/).
+
+### 7.5 IMPORTANT! Udacity Front End Extension
+We think it's incredibly important that you get feedback on your code as you write it. So, we created the Udacity Front End Feedback Chrome extension to give you feedback on quizzes as you work on your own computer.
+
+[![ri7-13](../assets/images/sm_ri7-13.jpg)](../assets/images/full-size/ri7-13.png)
+
+This is done simply by opening up a quiz that uses the extension and clicking the extension icon in the toolbar.
+
+#### How to Load the Extension
+1. Install the Udacity Front End Feedback Extension from the Chrome Web Store or from Mozilla's Add-ons for Firefox (it's free).
+
+2. If you're using Google Chrome, go to the Chrome extensions menu (chrome://extensions) and give the extension permission to run against file URLs.
+
+    ![click this checkbox in the chrome extensions menu that says "allow access to file urls"](http://udacity.github.io/fend/resources/chrome-extension/settings.png)
+
+3. To use the extension, open the webpage you want to edit, click on the extension icon, and check "Allow feedback on this domain":
+
+    ![open the extension and click "allow feedback on this domain"](http://udacity.github.io/fend/resources/chrome-extension/allow-feedback.png)
+
+4. As edits are made, changes are reflected in the Udacity Front End Feedback dialogue box.😃
+
+<!--
+### 7.6 Quiz: calc()
+For this quiz I want you to fix this website.
+
+[![ri7-14](../assets/images/sm_ri7-14.jpg)](../assets/images/full-size/ri7-14.png)
+
+You'll be trying out Calc with these images but this time, I want you to fit these three images all the way across the screen.
+
+Each of the three images will need to be a third of the available width, and there should be a ten pixel margin between them.
+
+Pop open DevTools and inside the head you'll find this style tag. Inside the style tag, you'll see some comments. These are the places where I want you to make some changes.
+
+You can find a link to the website [here](http://udacity.github.io/responsive-images/examples/1-08/imageRelativeWidth/index-quiz.html).
+
+When all three images are aligned correctly, with ten pixels between these images, a code will appear on the website. Type that code into this box to continue.
+
+[![ri7-15](../assets/images/sm_ri7-15.jpg)](../assets/images/full-size/ri7-15.png)
+
+#### Solution
+The solution consisted of the following css:
+
+```css
+img {
+    width: calc((100% - 20px)/3);
+    max-width: 100%;
+    margin-right: 10px;
+}
+img:last-of-type {
+    margin-right: 0;
+}
+```
+
+**Note:** There MUST be a space on each side of the `+` and `-` operators. (A space is not required around `*` and `/` as the problem is an ambiguity around negation.)
+
+For example: `calc(100px - 10%)` **will work**. `calc(100px-10%)` **will not**.
+
+[![ri7-16](../assets/images/sm_ri7-16.jpg)](../assets/images/full-size/ri7-16.png)
+
+### 7.7 Landscape and Portrait
+Let's think some more about the size and the shape of the viewport. Think about the way you use devices. Phones and tablets are often used in portrait orientation whereas a full screen browser window on a laptop is landscape.
+
+[![ri7-17](../assets/images/sm_ri7-17.jpg)](../assets/images/full-size/ri7-17.png)
+
+Now, even though you can't change the window size on a phone or tablet, these devices have another rather tricky feature when it comes to responsive resizing. Orientation can change, and when it comes to landscape and portrait, you need to think about content as well as size.
+
+[![ri7-18](../assets/images/sm_ri7-18.jpg)](../assets/images/full-size/ri7-18.png)
+
+Tall or square images can work well in portrait mode on a phone but wide images can be a real problem. Again, for responsive design the golden rule is don't assume the viewport size will always stay the same.
+
+You'll learn the impact of image choice and art direction later in the course when you find out how to use the `<picture>` element. Later in this lesson, we'll look at ways to work with orientation using media queries.
+
+### 7.8 vh vw vmin vmax
+On the subject of sizing, there are some CSS units that you may not have heard of, but which are now really widely supported.
+
+How about if you want an image to responsively cover the whole height of the viewport?
+
+Now, you can always do that by setting the height of the image to 100%, but that only works if the height of the HTML and the body elements are also set to 100%.
+
+A simple way is to use the `vh` unit, which stands for viewport height. One `vh` unit corresponds to 1% of the viewport height, and so `100vh` means 100% height.
+
+[![ri7-19](../assets/images/sm_ri7-19.jpg)](../assets/images/full-size/ri7-19.png)
+
+You can do the same with `vw` for viewport width.
+
+Here you can see we've set the width of the image to be `100vw`, 100% of the viewport width, and you can see that it resizes responsibly.
+
+[![ri7-20](../assets/images/sm_ri7-20.jpg)](../assets/images/full-size/ri7-20.png)
+
+Another common responsive use case is when you want an image to resize to fit the smaller of the height or the width of the viewport.
+
+The `vmin` unit, viewport minimum, corresponds to 1% of the viewport width or height, whichever is smaller.
+
+If you set both the width and the height to `100vmin`, you'll get the effect you're after.
+
+[![ri7-21](../assets/images/sm_ri7-21.jpg)](../assets/images/full-size/ri7-21.png)
+
+How about if you want an image to cover the whole viewport but without stretching or squashing?
+
+For this you can use the `vmax` unit, which corresponds to 1% of the viewport width or height, whichever is greater.
+
+So, if you set both the height and the width to `100vmax`, the image responsively resizes to cover the viewport.
+
+[![ri7-22](../assets/images/sm_ri7-22.jpg)](../assets/images/full-size/ri7-22.png)
+
+**Note:** setting both the height and the width to `100vmax` or `100vmin` changes the image's aspect ratio. It'll compress your images to squares, so be careful if you want to maintain a different aspect ratio!
+
+### 7.9 Raster and Vector
+There are two fundamentally different ways to create and store images and this affects how you deploy images responsibly. Raster and vector.
+
+**Raster images:** photographs and other images represented as a grid of individual dots of color.
+
+Raster images might come from a camera or a scanner, or be created with the HTML `<canvas>` element.
+
+**Vector images:** images such as logos and line art, which can be defined as a set of curves, lines, shapes, fill colors and gradients.
+
+Vector images can be created with programs like Adobe Illustrator or Inkscape, or from using a vector format such as SVG.
+
+SVG makes it possible to include responsive vector graphics in a webpage, and we'll talk more about this format later.
+
+The advantage of vector file formats over raster file formats is that the browser can render a vector image at any size. After all, vector formats describe the geometry of the image; how it's constructed from lines, curves, and colors and so on, not individual dots of color.
+
+Open the [SVG vs PNG example](http://udacity.github.io/responsive-images/examples/1-11/svgVersusPng/) in a large display - you'll see a massive difference in quality!
+
+[![ri7-23](../assets/images/sm_ri7-23.jpg)](../assets/images/full-size/ri7-23.png)
+
+Let's see what happens when we resize this page. Now, that's an SVG image on the right and a PNG on the left, and you can see as the size increases, the PNG is looking to start a little blurry, whereas the SVG is perfect at any size.
+
+### 7.10 Quiz: Raster or Vector Banner
+Imagine you're a graphic designer and you need ot design a 50m (~165ft) banner. Should you give you friend a vector or raster image? Why?
+
+- [ ] **Vector**. File size is smaller.
+- [x] **Vector**. It scales without quality loss.
+- [ ] **Raster**. File size is smaller.
+- [ ] **Raster**. It scales without quality loss.
+
+Vector images can be scaled infinitely, which means that it'll be sharp and clear even on a 50m banner!
+
+### 7.11 Quiz Raster & Vector identification
+Take a look at the images in [this link](http://udacity.github.io/responsive-images/examples/1-14/differentImages/index.html). Are they **raster** or **vector** graphics?
+
+| Image | Raster | Vector |
+| --- | --- | --- |
+Chrome Logo | | x |
+Kitten Photo | x | |
+Flag of Mexico | | x |
+Repeat BG |  | x |
+Gradient BG |  | x |
+-->
+
+<!--  
 ## Lesson 8. Images with Markup
 
 ## Lesson 9. Full Responsiveness -->
