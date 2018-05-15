@@ -247,11 +247,11 @@ This is done simply by opening up a quiz that uses the extension and clicking th
 
 2. If you're using Google Chrome, go to the Chrome extensions menu (chrome://extensions) and give the extension permission to run against file URLs.
 
-    ![click this checkbox in the chrome extensions menu that says "allow access to file urls"](http://udacity.github.io/fend/resources/chrome-extension/settings.png)
+    [![click this checkbox in the chrome extensions menu that says "allow access to file urls"](../assets/images/sm_settings.jpg)](../assets/images/full-size/settings.png)
 
 3. To use the extension, open the webpage you want to edit, click on the extension icon, and check "Allow feedback on this domain":
 
-    ![open the extension and click "allow feedback on this domain"](http://udacity.github.io/fend/resources/chrome-extension/allow-feedback.png)
+    [![open the extension and click "allow feedback on this domain"](../assets/images/sm_allow-feedback.jpg)](../assets/images/full-size/allow-feedback.png)
 
 4. As edits are made, changes are reflected in the Udacity Front End Feedback dialogue box.😃
 
@@ -382,6 +382,118 @@ Kitten Photo | x | |
 Flag of Mexico | | x |
 Repeat BG |  | x |
 Gradient BG |  | x |
+
+### 7.12 File Formats
+This image combining line art and a photo was saved as a JPEG and it looks fine on a phone at small display sizes.
+
+[![ri7-24](../assets/images/sm_ri7-24.jpg)](../assets/images/full-size/ri7-24.png)
+
+But on a desktop monitor by resizing the browser window, the JPEG format begins to show its weaknesses.
+
+It may be a bit hard to see but the edges of the text "HTML" are blurry and less sharp. Click the image to view a larger version.
+
+[![ri7-25](../assets/images/sm_ri7-25.jpg)](../assets/images/full-size/ri7-25.png)
+**Live Sample:** [Photo with logo as JPEG](https://rawgit.com/james-priest/udacity-nanodegree-mws/master/exercises/ri-7-12/kittensPlusHtml5Logo.html)
+
+![ri7-27](../assets/images/full-size/ri7-27.png)
+
+With JPEG, edges can lead to artifacts. For this example, SVG for the logo would have scaled better.
+
+Here's the same with SVG for the logo over a JPEG of the photograph.
+
+[![ri7-26](../assets/images/sm_ri7-26.jpg)](../assets/images/full-size/ri7-26.png)
+**Live Sample:** [Photo as JPEG, logo overlaid as SVG](https://rawgit.com/james-priest/udacity-nanodegree-mws/master/exercises/ri-7-12/kittensPlusHtml5LogoSvg.htmlhttp://udacity.github.io/responsive-images/examples/1-15/kittensPlusHtml5LogoSvg)
+
+![ri7-28](../assets/images/full-size/ri7-28.png)
+
+The photo and the logo both look good small or large. You can see the crisp edges as well. Both look great.
+
+File sizes are down too. Here's the version with the logo over the image as a, one single JPEG.
+
+![ri7-29](../assets/images/full-size/ri7-29.png)
+
+And here we have the version with the SVG over the JPEG.
+
+![ri7-30](../assets/images/full-size/ri7-30.png)
+
+You can see that even though we need an extra file request, we're actually only using about half as many bytes.
+
+Take a look at these three logos. They look identical, right? But if you check with the dev tools, you'll see that we've used three different file formats and there's a massive difference in file sizes.
+
+[![ri7-31](../assets/images/sm_ri7-31.jpg)](../assets/images/full-size/ri7-31.png)
+**Live Sample:** [Chrome log SVG v PNG v JPG](https://rawgit.com/james-priest/udacity-nanodegree-mws/master/exercises/ri-7-12/svgPngJpg.html)
+
+The chrome SVG is about 50 times smaller than the PNG.
+
+There are some good general rules for improving cross-platform image performance.
+
+#### Use JPEG for photographic images
+Browsers such as Chrome also support other formats, such as WebP, which can deliver better compression and features.
+
+WebP supports alpha transparency, animation, along with lossy and lossless compression.
+
+#### If you can, use SVG for vector images
+We'll show you how to do that later. For vector art and solid color graphics, such as logo and line art, if you're unable to use SVG, use PNG.
+
+And do use PNG rather than GIF; more colors, better compression, and no licensing issues.
+
+[![ri7-32](../assets/images/sm_ri7-32.jpg)](../assets/images/full-size/ri7-32.png)
+
+For more information about image formats, take a look at theses links.
+
+#### Links
+- [Image Formats Overview](https://litmus.com/blog/png-gif-or-jpeg-which-ones-should-you-use-in-email)
+- [Google Web Fundamentals - Image Optimization](https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/image-optimization)
+- [WebP Image Format Overview](https://developers.google.com/speed/webp/?csw=1)
+- [CanIUse WebP](https://caniuse.com/#feat=webp)
+
+#### Examples
+- [Photo with logo as JPEG](https://rawgit.com/james-priest/udacity-nanodegree-mws/master/exercises/ri-7-12/kittensPlusHtml5Logo.html)
+- [Photo as JPEG, logo overlaid as SVG](https://rawgit.com/james-priest/udacity-nanodegree-mws/master/exercises/ri-7-12/kittensPlusHtml5LogoSvg.htmlhttp://udacity.github.io/responsive-images/examples/1-15/kittensPlusHtml5LogoSvg)
+- [Chrome log SVG v PNG v JPG](https://rawgit.com/james-priest/udacity-nanodegree-mws/master/exercises/ri-7-12/svgPngJpg.html)
+
+### 7.13 Quiz: Spot the Differences
+Use DevTools to inspect two images you see. What's different between them?
+
+[Here's the site](http://udacity.github.io/responsive-images/examples/1-17/sameImage/index.html)
+
+#### Solution
+Looks like both are JPEGs but the file sizes are different.
+
+[![ri7-33](../assets/images/sm_ri7-33.jpg)](../assets/images/full-size/ri7-33.png)
+
+Also, while the display size is the same, it looks like the natural size is different when I inspect the `<img>` element.
+
+[![ri7-34](../assets/images/sm_ri7-34.jpg)](../assets/images/full-size/ri7-34.png)
+
+- [ ] Compression Level
+- [ ] Display Size
+- [x] Actual (Natural) Size
+- [ ] Type
+
+### 7.14 Quiz: Spot More Differences
+Use DevTools to inspect two images you see. What's different between them?
+
+[Here's the site](http://udacity.github.io/responsive-images/examples/1-19/sameImage/index.html)
+
+#### Solution
+Looks like both are JPEGs but the file sizes are different.
+
+[![ri7-35](../assets/images/sm_ri7-35.jpg)](../assets/images/full-size/ri7-35.png)
+
+When I check the dimensions, it looks like the natural size is the same for both images. This means that the compression must be different.
+
+- [x] Compression Level
+- [ ] Display Size
+- [ ] Actual (Natural) Size
+- [ ] Type
+
+### 7.15 Image Compression
+How can we check if all the images on a site have been optimized?
+
+Remember that in order to serve the smallest possible image file on your site, you need to make sure you've run images through optimization tools.
+
+Now, one great tool for checking this is [PageSpeed Insights](https://developers.google.com/speed/pagespeed/insights/?url=simpl.info%2Fcssfilters). Let's use that to check a page from our website.One image that needs some help
 -->
 
 <!--  
