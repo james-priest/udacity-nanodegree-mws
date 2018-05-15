@@ -21,12 +21,29 @@ nav {
     padding-right: 20px;
     margin-left: -574px;
     top: 190px;
-    max-height: 70vh;
+    max-height: calc(100% - 190px);
     text-align: inherit;
+}
+// scrollbar
+::-webkit-scrollbar {
+    width: 10px;
+}
+::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+}
+::-webkit-scrollbar-thumb {
+    // background: #888; 
+    // background: #e0cc90; 
+    // background: #e2d7b4; 
+    background: #e0d7b9; 
+}
+::-webkit-scrollbar-thumb:hover {
+    // background: #555; 
+    background: #ccc; 
 }
 // End v3
 nav ol, nav ul { margin-left: 10px; }
-nav ul { width: 175px; }
+nav ul { width: 175px; margin-bottom: 20px;}
 nav ul a { white-space: nowrap; }
 nav ul li { 
     padding: 3px 0;
@@ -59,13 +76,18 @@ section {
 }
 
 section>p, h4, h5, h6 {
-    // margin: 10px;
     margin: 8px 40px;
     line-height: 1.2em;
 }
 hr { margin: 20px 0; }
 
-section ol, section ul { margin-left: 30px;}
+section ol, section ul { 
+    margin: 0 40px 0 30px;
+}
+section table {
+    margin: 0 40px;
+    width: calc(100% - 80px);
+}
 
 h1, h2, h3, h2+p>strong {
     line-height: 1.0;
@@ -83,7 +105,10 @@ h3, h2+p>strong {
     color: #666;
     margin: 20px 20px 6px
 }
-h4 { text-decoration: underline; }
+h4 { 
+    text-decoration: underline;
+    margin: 20px 40px 8px;
+}
 
 pre{ line-height: 1em; margin: 0 40px;}
 code {
