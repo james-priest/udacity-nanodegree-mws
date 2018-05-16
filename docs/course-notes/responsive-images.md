@@ -340,7 +340,6 @@ So, if you set both the height and the width to `100vmax`, the image responsivel
 
 **Note:** setting both the height and the width to `100vmax` or `100vmin` changes the image's aspect ratio. It'll compress your images to squares, so be careful if you want to maintain a different aspect ratio!
 
-<!--
 ### 7.9 Raster and Vector
 There are two fundamentally different ways to create and store images and this affects how you deploy images responsibly. Raster and vector.
 
@@ -481,7 +480,11 @@ Looks like both are JPEGs but the file sizes are different.
 
 [![ri7-35](../assets/images/sm_ri7-35.jpg)](../assets/images/full-size/ri7-35.png)
 
-When I check the dimensions, it looks like the natural size is the same for both images. This means that the compression must be different.
+When I check the dimensions, it looks like the natural size is the same for both images.
+
+[![ri7-36](../assets/images/sm_ri7-36.jpg)](../assets/images/full-size/ri7-36.png)
+
+This means that the compression must be different.
 
 - [x] Compression Level
 - [ ] Display Size
@@ -493,8 +496,34 @@ How can we check if all the images on a site have been optimized?
 
 Remember that in order to serve the smallest possible image file on your site, you need to make sure you've run images through optimization tools.
 
-Now, one great tool for checking this is [PageSpeed Insights](https://developers.google.com/speed/pagespeed/insights/?url=simpl.info%2Fcssfilters). Let's use that to check a page from our website.One image that needs some help
+Now, one great tool for checking this is [PageSpeed Insights](https://developers.google.com/speed/pagespeed/insights/?url=simpl.info%2Fcssfilters). Let's use that to check a page from our website.
+
+[![ri7-37](../assets/images/sm_ri7-37.jpg)](../assets/images/full-size/ri7-37.png)
+
+PageSpeed Insights give us information on how best to optimize our page for speed. It will also provide links to optimization resources.
+
+#### Links
+
+- [PageSpeed Insights](https://developers.google.com/speed/pagespeed/insights/?url=simpl.info%2Fcssfilters)
+- [PageSpeed Insights - Optimize Images instructions](https://developers.google.com/speed/docs/insights/OptimizeImages)
+- [PageSpeed Insights Node module](https://github.com/addyosmani/psi/)
+- [15 Practical cURL examples](http://www.thegeekstuff.com/2012/04/curl-examples/)
+
+<!--
+### 7.16 Project Part 1
+
+
+
+### 7.16a Build Process
+
+### 7.16b ImageMagick
+
+### 7.16c Grunt
+
+### 7.16d Image Processing Tools
 -->
+
+
 
 <!--  
 ## Lesson 8. Images with Markup
