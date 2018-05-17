@@ -509,21 +509,161 @@ PageSpeed Insights give us information on how best to optimize our page for spee
 - [PageSpeed Insights Node module](https://github.com/addyosmani/psi/)
 - [15 Practical cURL examples](http://www.thegeekstuff.com/2012/04/curl-examples/)
 
-<!--
 ### 7.16 Project Part 1
+It's time to get started on The **Responsive Blog Project**.  This is what the blog looks like right now and you should be asking yourself, ugh, what the heck is this ugly thing?
 
+[![ri7-38](../assets/images/sm_ri7-38.jpg)](../assets/images/full-size/ri7-38.png)
 
+The good news is that, by the end of the course, you'll be turning it into something that looks a lot nicer.
 
-### 7.16a Build Process
+Now, responsive images can be as much of an art as it is a science. To start working on this project, which is really zoomed out here by the way, I'm going to give you a few changes.
 
-### 7.16b ImageMagick
+Your goal is to make these images look reasonable. Right now, they're massive, both in their visual size on the page, and in terms of file size or number of bytes. The browser is zoomed out to 25% so you can get a sense of how really, really big they are.
 
-### 7.16c Grunt
+#### Requirement 1
+Back at 100%, it's pretty clear these images aren't fitting inside their containers. The images in the website need some kind of width applied to them so that they stay inside their container, which in this case is an `<article>`.
 
-### 7.16d Image Processing Tools
+#### Requirement 2
+Once you've done that, set a maximum width on the `<article>` element to give the blog a little bit better structure. I recommend starting with a width of something around 50em's. Remember an `em` refers to the font size. So a 50em element with font sizes of 16 pixels means that we are talking about a width of 800 pixels.
+
+#### Requirement 3
+By the way, notice how these images are coming from `images_src`, we'll come back to that in a second. Next up, check out the Volt image. Its natural width is almost 3300 pixels. That's just massive. What's the point of so many pixels when it's going to be displayed at about 800 pixels wide? Even on a 2x display, you only need 1600 pixels across.
+
+These images need to be a lot smaller. I want you to use the tools and techniques that you've been learning to reduce the resolutions and compress the images. See how low you can get the resolution and how much compression you can use while still keeping the images really crisp.
+
+To do so, you have **Grunt**, **Image Magick**, and **Image Optim** on your side. You don't have use these, but it will make you life a lot easier if you do, especially Grunt.
+
+If you've got Grunt up and running, you should be able to use the *Gruntfile* in the project directory after you run the command in the instructor notes. The command will make sure the `grunt-responsive-images` package is installed. Notice that Grunt is going to run against images in the `images_src/` directory and put them in the `images/` directory.
+
+Right now in the html all the images are referenced in the `images_src/` directory but once you've optimized them, make sure you change their directory to `images/`. There are links to lots of documentation in the instructor notes if you need help.
+
+Also, the page is coming in around 3.25 megabytes, which will take forever to load on mobile. Seriously, try loading this site using the network throttling options set to low. You may want to grab a cup of coffee while you wait.
+
+You can probably reasonably drop the total bytes from the images below to 1.5 megabytes or even further.
+
+#### Requirement 4
+In terms of optional changes, the images are looking pretty stark. They need some captions.
+
+In this solution, you'll see me add some captions using the semantic `<figure>` tag, but you can use whatever technique you'd like. See [MDN documentation on figure](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/figure).
+
+### --- Summary of Requirements
+1. Make the `<img>`s fit within their containers
+2. Make the containers a reasonable width (recommend 50em)
+3. Resize & compress images such that they remain sharp but the size of the page drops below 1.5MB. Use automation tools
+4. Optional: add captions
+5. Don't forget to test on different devices and network settings
+
+### --- Instructor Notes
+
+- Download the project files [here](http://udacity.github.io/responsive-images/downloads/RI-Project-Part-1-Start.zip).
+- Make sure to run the project through localhost
+- Make sure to run [Udacity Feedback Chrome Extension](https://chrome.google.com/webstore/detail/udacity-front-end-feedbac/melpgahbngpgnbhhccnopmlmpbmdaeoi) to get feedback
+- Open the console to see the total size of all the images
+- [Learn more about the `<figure>` tag](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/figure)
+
+### --- Build Process
+Before automating your build process with tools like **ImageMagick** or **ImageOptim**, you'll first need to [install Node.js](https://nodejs.org/en/download/).
+
+[Node.js](https://nodejs.org/en) is a JavaScript runtime built on [Chrome's V8 JavaScript engine](https://developers.google.com/v8/).
+
+It also comes with a package manager, [npm](https://www.npmjs.com/), that gives you access to thousands of code packages, like Grunt, that you can use in your projects.
+
+**Make sure  to** [install Node.js and update npm](https://docs.npmjs.com/getting-started/installing-node). Then, use the links below to finish setting up your build process.
+
+### --- ImageMagick
+
+#### Resource Links
+- [ImageMagick](http://www.imagemagick.org/)
+- [Simple ImageMagick installer for Mac](http://cactuslab.com/imagemagick/)
+- [GraphicsMagick](http://www.graphicsmagick.org/) (a fork of ImageMagick)
+
+### --- Grunt
+
+#### General Info
+- [Getting started with Grunt](http://gruntjs.com/getting-started)
+- [Grunt for People Who Think Things Like Grunt are Weird and Hard](http://24ways.org/2013/grunt-is-not-weird-and-hard/)
+- [Generate multi-resolution images with Grunt](http://addyosmani.com/blog/generate-multi-resolution-images-for-srcset-with-grunt/)
+- [Grunt plugin for generating multiple images](https://github.com/andismith/grunt-responsive-images)
+
+#### Scripting Examples
+- [convert.sh](http://udacity.github.io/responsive-images/convert.sh) (includes instructions)
+- [Gruntfile.js](http://udacity.github.io/responsive-images/Gruntfile.js) (remove line 7, `engine: 'im'`, on Windows)
+- [Imager.js](https://github.com/BBC-News/Imager.js/) - responsive image loading developed for BBC News
+
+### --- GUI Image Tools
+
+#### Resource Links for Image Processing tools
+- [ImageOptim](http://imageoptim.com/) (Mac only)
+- [Trimage](http://trimage.org/) - Similar to ImageOptim (Windows, Mac, Linux)
+- [ImageAlpha](https://github.com/pornel/ImageAlpha)
+
+<!--
+### 7.16 Project Solution
+#### Steps to create a build system on Windows 10
+I'm running Windows 10 April 2018 Update (version 1803) with Windows Subsystem for Linux (WSL) enabled.
+
+#### Enable WSL on Windows 10 & install Ubuntu 16.04
+WSL is running an instance of Ubunut 16.04 which I installed from the Microsoft Store. See [How to Install and Use the Linux Bash Shell on Windows 10](https://www.howtogeek.com/249966/how-to-install-and-use-the-linux-bash-shell-on-windows-10/)
+
+#### Update & upgrade Ubuntu packages
+I then updated my Ubuntu software resources and upgraded all outdated packages. This makes sure you're using the latest software resource lists and that all existing packages are up to date.
+
+```bash
+sudo apt update
+apt list --upgradable
+sudo apt upgrade
+```
+
+#### Configure Visual Studio Code to use Ubuntu Bash shell
+I've also updated Visual Studio Code to use my Ubunutu Bash shell by adding this line in VS Code Settings:
+
+```json
+"terminal.integrated.shell.windows": "C:\\Windows\\System32\\bash.exe"
+```
+
+#### Install latest Node.js
+Then I installed the latest version Node.js. If you simply run `apt install nodejs` you'll get an older version (4.2.1) of node & npm which won't work properly.
+
+I went to the Node.js site and followed the  [Download & install Debian & Ubuntu based Linux distributions](https://nodejs.org/en/download/package-manager/#debian-and-ubuntu-based-linux-distributions) instructions which had me do the following.
+
+```bash
+curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
+sudo apt-get install -y nodejs
+```
+
+#### Update to latest npm
+I then updated npm following instructions on the npm site: [Update npm](https://docs.npmjs.com/getting-started/installing-node#3-update-npm). Those had me do the following to update npm globally to the latest version.
+
+```bash
+npm -v
+sudo npm install npm@latest -g
+```
+
+#### Install Grunt task runner
+Next I installed Grunt; which is to say, I installed the `grunt-cli` npm package globally so it can be accessed from any directory. Instructions here [Grunt - Getting started](https://gruntjs.com/getting-started).
+
+```bash
+sudo npm install -g grunt-cli
+```
+
+#### Install GraphicsMagick & ImageMagick
+Next I installed [GraphicsMagick](http://www.graphicsmagick.org/) (which is a fork of [ImageMagick](http://www.imagemagick.org/script/index.php)) since it purports to be faster and more efficient than ImageMagick. I also installed ImageMagick for comparison.
+
+GraphicsMagick (or ImageMagick) is responsible for processing images. Grunt (a task runner) automates the conversion so you can batch process entire directories of images.
+
+Here are the installation commands.
+
+```bash
+apt list graphicsmagick
+sudo apt install graphicsmagick
+
+apt list imagemagick
+sudo apt install imagemagick
+```
+
+#### Gruntfile configuration
+Next `gruntfile.js` had to be configured. This is the file that Grunt uses to define tasks and set options related to those tasks.
 -->
-
-
 
 <!--  
 ## Lesson 8. Images with Markup
