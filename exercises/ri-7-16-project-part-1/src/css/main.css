@@ -1,0 +1,34 @@
+/*
+
+Your styles go here!
+
+Hint! You'll probably want to start by styling:
+  * <body>
+  * <article>
+  * <h1>
+  * <img>
+
+I've left some boilerplate below for you.
+
+*/
+
+body {
+  margin: 2em;
+  font: 16px/1.2 Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+article {
+  margin: 0 auto;
+  width: 50em; /* 800px/16px */
+  max-width: 100%;
+}
+
+h1 {
+  margin: 0 auto 1em auto;
+  max-width: 800px;
+}
+
+img {
+  max-width: 100%;
+}
