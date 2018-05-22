@@ -622,8 +622,7 @@ Lastly, I used the `<figure>` tag, because it includes the awesome `<figcaption>
 
 So the blog is looking a lot better overall, but it's still not perfect. At the end of the next lesson, you'll have another chance to improve the blog.
 
-<!--
-### --- My Build Solution
+### --- My Build Environment
 #### Steps to create a build system on Windows 10
 I'm running Windows 10 April 2018 Update (version 1803) with Windows Subsystem for Linux (WSL) enabled.
 
@@ -903,6 +902,7 @@ I can also see which image was served by hovering over the image element. In thi
 
 Lastly, the total size of the images served has dropped from a bloated **3.25MB** in the non-optimized version to a snappy and responsive **0.42MB** in the optimized version.
 
+<!--
 ### --- Resources & Links
 In addition to course material, I used the following resources to fully grasp the new set of **responsive image technologies** built into HTML5.
 
