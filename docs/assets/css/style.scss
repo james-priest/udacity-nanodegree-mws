@@ -75,14 +75,16 @@ section {
     width: 615px;
     padding: 30px 20px 50px;
 }
-
+section ul ul {
+    margin-bottom: 4px;
+}
 section>p, h4, h5, h6 {
     margin: 8px 40px;
     line-height: 1.2em;
 }
 hr { margin: 20px 0; }
 
-section ol, section ul { 
+section>ol, section>ul { 
     margin: 0 40px 0 30px;
 }
 section table {
