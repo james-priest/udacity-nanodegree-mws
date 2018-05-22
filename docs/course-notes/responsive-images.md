@@ -244,15 +244,10 @@ This is done simply by opening up a quiz that uses the extension and clicking th
 
 #### How to Load the Extension
 1. Install the Udacity Front End Feedback Extension from the Chrome Web Store or from Mozilla's Add-ons for Firefox (it's free).
-
 2. If you're using Google Chrome, go to the Chrome extensions menu (chrome://extensions) and give the extension permission to run against file URLs.
-
     [![click this checkbox in the chrome extensions menu that says "allow access to file urls"](../assets/images/sm_settings.jpg)](../assets/images/full-size/settings.png)
-
 3. To use the extension, open the webpage you want to edit, click on the extension icon, and check "Allow feedback on this domain":
-
     [![open the extension and click "allow feedback on this domain"](../assets/images/sm_allow-feedback.jpg)](../assets/images/full-size/allow-feedback.png)
-
 4. As edits are made, changes are reflected in the Udacity Front End Feedback dialogue box.😃
 
 ### 7.6 Quiz: calc()
@@ -759,61 +754,61 @@ Next `Gruntfile.js` had to be configured. This is the file that Grunt uses to de
 Here is a sample Gruntfile that specifies two image sizes, along with width, defined as a percentage of the original, and compression quality.
 
 ```js
-    responsive_images: {
-      dev: {
-        options: {
-          engine: 'gm',
-          sizes: [{
-            name: 'small',
-            width: '30%',
-            quality: 20
-          }, {
-            name: 'large',
-            width: '50%',
-            quality: 40
-          }]
-        },
-        files: [{
-          expand: true,
-          cwd: 'src/',
-          src: ['images/*.{gif,jpg,png}'],
-          dest: 'build/'
-        }]
-      }
+responsive_images: {
+  dev: {
+    options: {
+      engine: 'gm',
+      sizes: [{
+        name: 'small',
+        width: '30%',
+        quality: 20
+      }, {
+        name: 'large',
+        width: '50%',
+        quality: 40
+      }]
     },
+    files: [{
+      expand: true,
+      cwd: 'src/',
+      src: ['images/*.{gif,jpg,png}'],
+      dest: 'build/'
+    }]
+  }
+},
 ```
 
 I updated the Gruntfile to specify four image sizes for the `grunt-responsive-images` package to create.
 
 ```js
-    responsive_images: {
-      dev: {
-        options: {
-          engine: 'gm',
-          sizes: [{
-            width: 400,
-            quality: 50
-          }, {
-            width: 600,
-            quality: 60
-          }, {
-            width: 900,
-            quality: 40,
-            rename: false
-          }, {
-            width: 1600,
-            quality: 30,
-            suffix: '_2x'
-          }]
-        },
-        files: [{
-          expand: true,
-          cwd: 'src/',
-          src: ['images/*.{gif,jpg,png}'],
-          dest: 'build/'
-        }]
-      }
+responsive_images: {
+  dev: {
+    options: {
+      engine: 'gm',
+      sizes: [{
+        width: 400,
+        quality: 50
+      }, {
+        width: 600,
+        quality: 60
+      }, {
+        width: 900,
+        quality: 40,
+        rename: false
+      }, {
+        width: 1600,
+        quality: 30,
+        suffix: '_2x'
+      }]
     },
+    files: [{
+      expand: true,
+      cwd: 'src/',
+      src: ['images/*.{gif,jpg,png}'],
+      dest: 'build/'
+    }]
+  }
+},
 ```
 
 This takes a source file like this
@@ -834,30 +829,30 @@ file1-1600_2x.jpg   (1600x1200)   165 KB
 I then added the `responsive_images_extender` configuration which defines the selector to target for each `<img>` element. It also defines a suggested media size that the browser should use based on a set of media queries.
 
 ```js
-    responsive_images_extender: {
-      dev: {
-        options: {
-          ignore: ['.fixed'],
-          sizes: [{
-            selector: 'figure>img',
-            sizeList: [{
-              cond: 'max-width: 560px',
-              size: '400px'
-            }, {
-              cond: 'max-width: 760px',
-              size: '600px'
-            }, {
-              cond: 'min-width: 761px',
-              size: '900px'
-            }]
-          }]
-        },
-        files: [{
-          src: ['build/index.html'],
-          dest: 'build/index.html'
+responsive_images_extender: {
+  dev: {
+    options: {
+      ignore: ['.fixed'],
+      sizes: [{
+        selector: 'figure>img',
+        sizeList: [{
+          cond: 'max-width: 560px',
+          size: '400px'
+        }, {
+          cond: 'max-width: 760px',
+          size: '600px'
+        }, {
+          cond: 'min-width: 761px',
+          size: '900px'
         }]
-      }
+      }]
     },
+    files: [{
+      src: ['build/index.html'],
+      dest: 'build/index.html'
+    }]
+  }
+},
 ```
 
 The original html started as this
