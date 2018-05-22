@@ -915,23 +915,23 @@ Lastly, I configured Grunt to **automate changes to HTML** to properly provide *
 
 These are the resources I used to accomplish this.
 
-- Responsive Images (What they are and how they work)
+- Using Responsive Image Techniques (what they are and how they work)
   - [MDN Responsive Images - MDN](https://developer.mozilla.org/en-US/docs/Learn/HTML/Multimedia_and_embedding/Responsive_images)
   - [Native Responsive Images - Dev.Opera](https://dev.opera.com/articles/native-responsive-images/)
   - [The anatomy of responsive images - Jake Archibald](https://jakearchibald.com/2015/anatomy-of-responsive-images/)
-- Responsive Breakpoints (A curated approach)
+- Responsive breakpoints (how to make an informed decision)
   - [The 100% correct way to do CSS breakpoints - freeCodeCamp Medium](https://medium.freecodecamp.org/the-100-correct-way-to-do-css-breakpoints-88d6a5ba1862)<br>
     I used the breakpoints defined in this article to determine target sizes for groups of responsive images rather than using those breakpoints for responsive layout. I base my responsive layout breakpoints on the content and how that content flows.<br>
     The target sizes I settled on were (400px, 600px, 900px, and 1600px)
-- Grunt (A task runner to create automation)
+- Grunt (what it is and how to set it up)
   - [Grunt Homepage](https://gruntjs.com/)
   - [Getting Started](https://gruntjs.com/getting-started)
   - [Configuring Tasks](https://gruntjs.com/configuring-tasks)
   - [Plugins](https://gruntjs.com/plugins)
-- Image Optimization with Grunt (How-to articles)
+- Image processing with Grunt (How-to articles)
   - [Tools for image optimization - Addy Osmani](https://addyosmani.com/blog/image-optimization-tools/)
   - [Generate Multi-resolution images for srcset with Grunt - Addy Osmani](https://addyosmani.com/blog/generate-multi-resolution-images-for-srcset-with-grunt/)
-- Grunt packages for image optimization (npm installable packages)
+- Essential Grunt packages (what's required to set up this automation)
   - [grunt-responsive-images](https://www.npmjs.com/package/grunt-responsive-images) - npm
   - [grunt-responsive-images](https://github.com/andismith/grunt-responsive-images) - GitHub
   - [grunt-responsive-images-extender](https://www.npmjs.com/package/grunt-responsive-images-extender) - npm
