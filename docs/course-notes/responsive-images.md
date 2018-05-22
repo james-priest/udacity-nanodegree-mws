@@ -597,8 +597,33 @@ It also comes with a package manager, [npm](https://www.npmjs.com/), that gives 
 - [Trimage](http://trimage.org/) - Similar to ImageOptim (Windows, Mac, Linux)
 - [ImageAlpha](https://github.com/pornel/ImageAlpha)
 
-<!--
 ### 7.16 Project Solution
+First I want my images to fit so I set the `max-width` on the `<img>` tag to 100%. Now the images are actually fitting inside the view port. You can see the whole thing instead of some massive, stretched out monster.
+
+Then I set the width on the `<article>` tag to `50em`. This immediately changed the content to fit the viewport width.
+
+The blog's starting to look a lot more reasonable but the browser is still downloading images that are way too large. I need some smaller images. I could use a tool like to individually resize and compress each image, but that really isn't scalable.
+
+So, I used this grunt task to create new images that were scaled and compressed.
+
+[![ri7-39](../assets/images/sm_ri7-39.jpg)](../assets/images/full-size/ri7-39.png)
+
+I set a width of 1600 pixels for 2x displays. At a width of 50em on a 1x display an image is going to be 800 pixels across.  on a 2x display, it's going to be 1600 pixels so, I went with the large one.
+
+I thought 30% still looked good while keeping the bites to a minimum. Additionally I'm appending 'large_2x' to the end of each file for reasons that will make sense later in the course.
+
+With all that done all I have to do is change the image sources to 'images/whatever-600_large_2x' and bam. My page just got a lot smaller. After the changes, my page is down to 1.3 megabytes, which I'm feeling really good about.
+
+[![ri7-41](../assets/images/sm_ri7-41.jpg)](../assets/images/full-size/ri7-41.png)
+
+Lastly, I used the `<figure>` tag, because it includes the awesome `<figcaption>` tag. Simply fill in the caption in figcaption, and it shows up on the page.
+
+[![ri7-44](../assets/images/sm_ri7-44.jpg)](../assets/images/full-size/ri7-44.png)
+
+So the blog is looking a lot better overall, but it's still not perfect. At the end of the next lesson, you'll have another chance to improve the blog.
+
+<!--
+### --- My Build Solution
 #### Steps to create a build system on Windows 10
 I'm running Windows 10 April 2018 Update (version 1803) with Windows Subsystem for Linux (WSL) enabled.
 
@@ -661,8 +686,263 @@ apt list imagemagick
 sudo apt install imagemagick
 ```
 
+#### Install project's npm packages
+Next I installed the npm packages that were defined in the `package.json` file.
+
+```json
+{
+  "name": "responsive-images",
+  "version": "0.1.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/udacity/responsive-images.git"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.5",
+    "grunt-contrib-clean": "~0.6.0",
+    "grunt-contrib-copy": "~0.8.0",
+    "grunt-contrib-jshint": "~0.10.0",
+    "grunt-contrib-nodeunit": "~0.4.1",
+    "grunt-contrib-uglify": "~0.5.0",
+    "grunt-mkdir": "~0.1.2",
+  },
+  "dependencies": {
+    "grunt-responsive-images": "^0.1.6"
+  }
+}
+```
+
+This was done by running the following command at the project root.
+
+```bash
+npm install
+```
+
+This created a `node_modules` folder with all dependencies and dev_dependency packages.
+
+#### Install additional npm package
+The next step was to install an npm package that serves to complement the existing `grunt-responsive-images` package.
+
+`grunt-responsive-images` is responsible for compressing and creating multi-sized versions of a set of images for use with the new html5 responsive image attributes. These are the `srcset` and `sizes` attributes of the `<img>` element.
+
+The `grunt-responsive-images-extender` package will analyze a set of images referenced in HTML and turn the existing HTML code from this
+
+```html
+<img alt="A simple image" src="simple.jpg" title="A simple image">
+```
+
+into this.
+
+```html
+<img alt="A simple image" src="simple.jpg"
+     srcset="simple-small.jpg 320w,
+             simple-medium.jpg 640w,
+             simple-large.jpg 1024w,
+             simple.jpg 2000w"
+     sizes="(max-width: 320px) 320px,
+            (max-width: 640px) 640px
+            (max-width: 1024px) 1024px
+            (min-width: 1025px) 2000px"
+     title="A simple image">
+```
+
+The image sizes and breakpoints are set in the Gruntfile and are written out to the html.
+
+To install this package I issued the following command
+
+```bash
+npm install grunt-responsive-images-extender --save-dev
+```
+
 #### Gruntfile configuration
-Next `gruntfile.js` had to be configured. This is the file that Grunt uses to define tasks and set options related to those tasks.
+Next `Gruntfile.js` had to be configured. This is the file that Grunt uses to define tasks and set options related to those tasks.
+
+Here is a sample Gruntfile that specifies two image sizes, along with width, defined as a percentage of the original, and compression quality.
+
+```js
+    responsive_images: {
+      dev: {
+        options: {
+          engine: 'gm',
+          sizes: [{
+            name: 'small',
+            width: '30%',
+            quality: 20
+          }, {
+            name: 'large',
+            width: '50%',
+            quality: 40
+          }]
+        },
+        files: [{
+          expand: true,
+          cwd: 'src/',
+          src: ['images/*.{gif,jpg,png}'],
+          dest: 'build/'
+        }]
+      }
+    },
+```
+
+I updated the Gruntfile to specify four image sizes for the `grunt-responsive-images` package to create.
+
+```js
+    responsive_images: {
+      dev: {
+        options: {
+          engine: 'gm',
+          sizes: [{
+            width: 400,
+            quality: 50
+          }, {
+            width: 600,
+            quality: 60
+          }, {
+            width: 900,
+            quality: 40,
+            rename: false
+          }, {
+            width: 1600,
+            quality: 30,
+            suffix: '_2x'
+          }]
+        },
+        files: [{
+          expand: true,
+          cwd: 'src/',
+          src: ['images/*.{gif,jpg,png}'],
+          dest: 'build/'
+        }]
+      }
+    },
+```
+
+This takes a source file like this
+
+```bash
+file1.jpg           (3264x2448)   486KB
+```
+
+and creates the following.
+
+```bash
+file1-400.jpg       (400x300)     23 KB
+file1-600.jpg       (600x450)     53 KB
+file1.jpg           (900x675)     79 KB
+file1-1600_2x.jpg   (1600x1200)   165 KB
+```
+
+I then added the `responsive_images_extender` configuration which defines the selector to target for each `<img>` element. It also defines a suggested media size that the browser should use based on a set of media queries.
+
+```js
+    responsive_images_extender: {
+      dev: {
+        options: {
+          ignore: ['.fixed'],
+          sizes: [{
+            selector: 'figure>img',
+            sizeList: [{
+              cond: 'max-width: 560px',
+              size: '400px'
+            }, {
+              cond: 'max-width: 760px',
+              size: '600px'
+            }, {
+              cond: 'min-width: 761px',
+              size: '900px'
+            }]
+          }]
+        },
+        files: [{
+          src: ['build/index.html'],
+          dest: 'build/index.html'
+        }]
+      }
+    },
+```
+
+The original html started as this
+
+```html
+<img src="file1.jpg" alt="Image of file1" title="Image of file1">
+```
+
+and produced the following HTML markup.
+
+```html
+<img src="file1.jpg" 
+     srcset="file1-400.jpg 400w,
+             file1-600.jpg 600w,
+             file1.jpg 900w,
+             file1-1600_2x.jpg 1600w"
+     sizes="(max-width: 560px) 400px,
+            (max-width: 760px) 600px,
+            (min-width: 761px) 900px"
+     alt="Image of file1"
+     title="Image of file1">
+```
+
+#### Run Grunt
+The next step was to execute Grunt with the following amazingly simple terminal command.
+
+```js
+grunt
+```
+
+This kicked off the build process which uses the Gruntfile to determine what tasks to run and how to run them. This shows the output below.
+
+[![ri7-40](../assets/images/sm_ri7-40.jpg)](../assets/images/full-size/ri7-40.png)
+
+Now when I look at my updated site, I can see that all four images sizes are referenced in the markup.
+
+[![ri7-42](../assets/images/sm_ri7-42.jpg)](../assets/images/full-size/ri7-42.png)
+
+I can also see which image was served by hovering over the image element. In this case it was 'cockatoos-600.jpg' which was chosen based on `<img>` attribute settings and viewport size.
+
+[![ri7-43](../assets/images/sm_ri7-43.jpg)](../assets/images/full-size/ri7-43.png)
+
+Lastly, the total size of the images served has dropped from a bloated **3.25MB** in the non-optimized version to a snappy and responsive **0.42MB** in the optimized version.
+
+### --- Resources & Links
+In addition to course material, I used the following resources to fully grasp the new set of **responsive image technologies** built into HTML5.
+
+These include **resolution switching** through use of the HTML5 `srcset` and `sizes` attributes and **art direction** through use of the `<picture>` element.
+
+- **Resolution switching** - involves serving the same image but at a different size or resolution based on viewport and pixel density of the screen
+- **Art direction** - involves serving different images according to space allocations
+
+**Resolution switching** can vary the image size, image density, or both. In other words, a change to resolution and/or dimensions (width and height).
+
+I also needed to understand proper **use of breakpoints** across groups of devices in order to properly set size and density ranges for each image.
+
+I then learned to use **Grunt (a task runner)** to automate the task of making multiple copies of an image at different resolutions and sizes.
+
+Lastly, I configured Grunt to **automate changes to HTML** to properly provide *resolution switching* and serve the appropriate image based on the viewport & pixel density of the target device.
+
+These are the resources I used to accomplish this.
+
+- Responsive Images (What they are and how they work)
+    - [MDN Responsive Images - MDN](https://developer.mozilla.org/en-US/docs/Learn/HTML/Multimedia_and_embedding/Responsive_images)
+    - [Native Responsive Images - Dev.Opera](https://dev.opera.com/articles/native-responsive-images/)
+    - [The anatomy of responsive images - Jake Archibald](https://jakearchibald.com/2015/anatomy-of-responsive-images/)
+- Responsive Breakpoints (A curated approach)
+    - [The 100% correct way to do CSS breakpoints - freeCodeCamp Medium](https://medium.freecodecamp.org/the-100-correct-way-to-do-css-breakpoints-88d6a5ba1862)<br>
+    I used the breakpoints defined in this article to determine target sizes for groups of responsive images rather than using those breakpoints for responsive layout. I base my responsive layout breakpoints on the content and how that content flows.<br>
+    The target sizes I settled on were (400px, 600px, 900px, and 1600px)
+- Grunt (A task runner to create automation)
+    - [Grunt Homepage](https://gruntjs.com/)
+    - [Getting Started](https://gruntjs.com/getting-started)
+    - [Configuring Tasks](https://gruntjs.com/configuring-tasks)
+    - [Plugins](https://gruntjs.com/plugins)
+- Image Optimization with Grunt (How-to articles)
+    - [Tools for image optimizaion - Addy Osmani](https://addyosmani.com/blog/image-optimization-tools/)
+    - [Generate Multi-resolution images for srcset with Grunt - Addy Osmani](https://addyosmani.com/blog/generate-multi-resolution-images-for-srcset-with-grunt/)
+- Grunt packages for image optimization (npm installable packages)
+    - [grunt-responsive-images](https://www.npmjs.com/package/grunt-responsive-images) - npm
+    - [grunt-responsive-images](https://github.com/andismith/grunt-responsive-images) - GitHub
+    - [grunt-responsive-images-extender](https://www.npmjs.com/package/grunt-responsive-images-extender) - npm
+    - [grunt-responsive-images-extender (test html)](https://github.com/stephanmax/grunt-responsive-images-extender/blob/master/test/fixtures/testing.html) - GitHub
+    - [grunt-responsive-images-extender (Gruntfile.js)](https://github.com/stephanmax/grunt-responsive-images-extender/blob/master/Gruntfile.js) - GitHub
 -->
 
 <!--  
