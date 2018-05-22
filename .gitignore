@@ -407,3 +407,7 @@ typings/
 
 # next.js build output
 .next
+
+# build & dist directories
+#build/
+dist/
