@@ -11,11 +11,18 @@ Hint! You'll probably want to start by styling:
 I've left some boilerplate below for you.
 
 */
+html {
+  box-sizing: border-box;
+}
+*, *::before, *::after {
+  box-sizing: inherit;
+}
 
 body {
   margin: 2em;
   font: 16px/1.2 Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  /* overflow-y: hidden; */
 }
 
 article {
@@ -31,4 +38,13 @@ h1 {
 
 img {
   max-width: 100%;
+}
+
+@media screen and (max-width: 425px) {
+  body {
+    margin: 1em;
+  }
+  figure {
+    margin: 1em 0;
+  }
 }

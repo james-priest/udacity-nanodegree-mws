@@ -12,31 +12,58 @@ module.exports = function(grunt) {
     responsive_images: {
       dev: {
         options: {
-          // engine: 'im',
           engine: 'gm',
-          sizes: [{
-            name: 'small',
-            width: '30%',
-            // suffix: '_small',
-            quality: 20
-          }, {
-            name: 'large',
-            width: '50%',
-            // suffix: '_large',
-            // suffix: '_2x',
-            quality: 40
-          }]
+          // sizes: [{
+          //   width: 800,
+          //   quality: 50,
+          //   rename: false
+          // }, {
+          //   name: 'small',
+          //   width: '30%',
+          //   // suffix: '_small',
+          //   quality: 20
+          // }, {
+          //   name: 'large',
+          //   width: '50%',
+          //   // suffix: '_large',
+          //   // suffix: '_2x',
+          //   quality: 40
+          // }]
+          sizes: [
+            {
+              width: 400,
+              quality: 50
+              // rename: false
+            },
+            {
+              width: 600,
+              quality: 60
+            },
+            {
+              width: 900,
+              quality: 40,
+              rename: false
+            },
+            // {
+            //   width: 1200,
+            //   quality: 50,
+            // }
+            {
+              width: 1600,
+              quality: 30,
+              suffix: '_2x'
+            }
+          ]
         },
-
-        /*
-        You don't need to change this part if you don't change
-        the directory structure.
-        */
         files: [{
+          // expand: true,
+          // cwd: 'src/images/',
+          // src: ['*.{gif,jpg,png}'],
+          // dest: 'build/images/'
           expand: true,
-          src: ['*.{gif,jpg,png}'],
-          cwd: 'src/images/',
-          dest: 'build/images/'
+          cwd: 'src/',
+          src: ['images/*.{gif,jpg,png}'],
+          dest: 'build/'
         }]
       }
     },
@@ -45,6 +72,30 @@ module.exports = function(grunt) {
         options: {
           ignore: ['.fixed'],
           // baseDir: 'build'
+          sizes: [{
+            selector: 'figure>img',
+            sizeList: [
+              {
+                // cond: 'max-width: 600px',
+                // size: 'calc(100vw - (80px + 4em))'
+                cond: 'max-width: 560px',
+                // size: '400px'
+                // size: 'calc(100vw - (80px + 4em))'
+                size: '400px'
+              },
+              {
+                // cond: 'max-width: 900px',
+                cond: 'max-width: 760px',
+                // size: 'calc(100vw - (80px + 4em))'
+                // size: '720px'
+                size: '600px'
+              },
+              {
+                cond: 'min-width: 761px',
+                // size: '720px'  
+                size: '900px'
+            }]
+          }]
         },
         files: [{
           // expand: true,
@@ -61,6 +112,9 @@ module.exports = function(grunt) {
         // src: ['build/images'],
         src: ['build/'],
       },
+      index: {
+        src: ['build/index.html']
+      }
     },
 
     /* Generate the images directory if it is missing */
@@ -87,6 +141,10 @@ module.exports = function(grunt) {
           dest: 'build/'
         }]
       },
+      index: {
+        src: ['src/index.html'],
+        dest: 'build/index.html'
+      }
     },
   });
   
@@ -95,6 +153,9 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-mkdir');
-  grunt.registerTask('default', ['clean', 'mkdir', 'copy', 'responsive_images', 'responsive_images_extender']);
+
+  grunt.registerTask('images', ['clean:index', 'copy:index', 'responsive_images_extender'])
+
+  grunt.registerTask('default', ['clean:dev', 'mkdir', 'copy:dev', 'responsive_images', 'responsive_images_extender']);
 
 };
