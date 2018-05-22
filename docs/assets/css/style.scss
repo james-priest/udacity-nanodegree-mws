@@ -72,11 +72,8 @@ nav li.active a {
 a:focus { outline: none; }
 
 section { 
-    width: 615px;
+    max-width: 615px;
     padding: 30px 20px 50px;
-}
-section ul ul {
-    margin-bottom: 4px;
 }
 section>p, h4, h5, h6 {
     margin: 8px 40px;
@@ -86,6 +83,10 @@ hr { margin: 20px 0; }
 
 section>ol, section>ul { 
     margin: 0 40px 0 30px;
+}
+section ul ul {
+    margin-bottom: 4px;
+    padding: 0 0 0 20px
 }
 section table {
     margin: 0 40px;
@@ -144,5 +145,40 @@ footer {
 @media print, screen and (max-width: 720px) {
     section {
         width: auto;
+    }
+}
+
+@media print, screen and (max-width: 480px) {
+    section {
+        padding: 30px 0 50px;
+    }
+    section > p {
+        margin: 8px 20px;
+    }
+    section h1 {
+        margin-bottom: 20px;
+    }
+    section h2 {
+        margin: 20px 10px 10px;
+    }
+    section h3, h2+p>strong {
+        font-size:1.2em;
+        margin: 20px 20px 6px
+    }
+    section h4 { 
+        margin: 20px 20px 8px;
+    }
+    section>ol, section>ul { 
+        margin: 0 20px 0 0;
+    }
+    section table {
+        margin: 0 20px;
+        width: calc(100% - 40px);
+    }
+    pre {
+        margin: 0 20px;
+    }
+    blockquote {
+        margin-left: 20px;
     }
 }
