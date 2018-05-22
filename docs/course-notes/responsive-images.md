@@ -107,7 +107,7 @@ By the end of this lesson, you will be prepared with a workflow that will make i
 
 You'll be thinking about image quality and size. With images on the web, it all comes down to size, but what does that actually mean?
 
-Here's a question for you.Can you spot the differences between these three images? 
+Here's a question for you.Can you spot the differences between these three images?
 
 [![ri7-1](../assets/images/sm_ri7-1.jpg)](../assets/images/full-size/ri7-1.png)
 
@@ -190,7 +190,7 @@ Let's do something about that. If we set the max-width of the image to 100%, the
 
 Two simple things you can learn from this. For devices such as laptops and desktop monitors.
 
-1. Don't assume the window size is the same as the screen size 
+1. Don't assume the window size is the same as the screen size
 2. Don't assume the window size will always stay the same.
 
 - **Using `max-width` is a good way to respond gracefully to a change to a larger view port.**
@@ -627,7 +627,7 @@ So the blog is looking a lot better overall, but it's still not perfect. At the 
 I'm running Windows 10 April 2018 Update (version 1803) with Windows Subsystem for Linux (WSL) enabled.
 
 #### Enable WSL on Windows 10 & install Ubuntu 16.04
-WSL is running an instance of Ubunut 16.04 which I installed from the Microsoft Store. See [How to Install and Use the Linux Bash Shell on Windows 10](https://www.howtogeek.com/249966/how-to-install-and-use-the-linux-bash-shell-on-windows-10/)
+WSL is running an instance of Ubuntu 16.04 which I installed from the Microsoft Store. See [How to Install and Use the Linux Bash Shell on Windows 10](https://www.howtogeek.com/249966/how-to-install-and-use-the-linux-bash-shell-on-windows-10/)
 
 #### Update & upgrade Ubuntu packages
 I then updated my Ubuntu software resources and upgraded all outdated packages. This makes sure you're using the latest software resource lists and that all existing packages are up to date.
@@ -639,7 +639,7 @@ sudo apt upgrade
 ```
 
 #### Configure Visual Studio Code to use Ubuntu Bash shell
-I've also updated Visual Studio Code to use my Ubunutu Bash shell by adding this line in VS Code Settings:
+I've also updated Visual Studio Code to use my Ubuntu Bash shell by adding this line in VS Code Settings:
 
 ```json
 "terminal.integrated.shell.windows": "C:\\Windows\\System32\\bash.exe"
@@ -869,7 +869,7 @@ The original html started as this
 and produced the following HTML markup.
 
 ```html
-<img src="file1.jpg" 
+<img src="file1.jpg"
      srcset="file1-400.jpg 400w,
              file1-600.jpg 600w,
              file1.jpg 900w,
@@ -902,7 +902,6 @@ I can also see which image was served by hovering over the image element. In thi
 
 Lastly, the total size of the images served has dropped from a bloated **3.25MB** in the non-optimized version to a snappy and responsive **0.42MB** in the optimized version.
 
-<!--
 ### --- Resources & Links
 In addition to course material, I used the following resources to fully grasp the new set of **responsive image technologies** built into HTML5.
 
@@ -922,28 +921,27 @@ Lastly, I configured Grunt to **automate changes to HTML** to properly provide *
 These are the resources I used to accomplish this.
 
 - Responsive Images (What they are and how they work)
-    - [MDN Responsive Images - MDN](https://developer.mozilla.org/en-US/docs/Learn/HTML/Multimedia_and_embedding/Responsive_images)
-    - [Native Responsive Images - Dev.Opera](https://dev.opera.com/articles/native-responsive-images/)
-    - [The anatomy of responsive images - Jake Archibald](https://jakearchibald.com/2015/anatomy-of-responsive-images/)
+  - [MDN Responsive Images - MDN](https://developer.mozilla.org/en-US/docs/Learn/HTML/Multimedia_and_embedding/Responsive_images)
+  - [Native Responsive Images - Dev.Opera](https://dev.opera.com/articles/native-responsive-images/)
+  - [The anatomy of responsive images - Jake Archibald](https://jakearchibald.com/2015/anatomy-of-responsive-images/)
 - Responsive Breakpoints (A curated approach)
-    - [The 100% correct way to do CSS breakpoints - freeCodeCamp Medium](https://medium.freecodecamp.org/the-100-correct-way-to-do-css-breakpoints-88d6a5ba1862)<br>
+  - [The 100% correct way to do CSS breakpoints - freeCodeCamp Medium](https://medium.freecodecamp.org/the-100-correct-way-to-do-css-breakpoints-88d6a5ba1862)<br>
     I used the breakpoints defined in this article to determine target sizes for groups of responsive images rather than using those breakpoints for responsive layout. I base my responsive layout breakpoints on the content and how that content flows.<br>
     The target sizes I settled on were (400px, 600px, 900px, and 1600px)
 - Grunt (A task runner to create automation)
-    - [Grunt Homepage](https://gruntjs.com/)
-    - [Getting Started](https://gruntjs.com/getting-started)
-    - [Configuring Tasks](https://gruntjs.com/configuring-tasks)
-    - [Plugins](https://gruntjs.com/plugins)
+  - [Grunt Homepage](https://gruntjs.com/)
+  - [Getting Started](https://gruntjs.com/getting-started)
+  - [Configuring Tasks](https://gruntjs.com/configuring-tasks)
+  - [Plugins](https://gruntjs.com/plugins)
 - Image Optimization with Grunt (How-to articles)
-    - [Tools for image optimizaion - Addy Osmani](https://addyosmani.com/blog/image-optimization-tools/)
-    - [Generate Multi-resolution images for srcset with Grunt - Addy Osmani](https://addyosmani.com/blog/generate-multi-resolution-images-for-srcset-with-grunt/)
+  - [Tools for image optimization - Addy Osmani](https://addyosmani.com/blog/image-optimization-tools/)
+  - [Generate Multi-resolution images for srcset with Grunt - Addy Osmani](https://addyosmani.com/blog/generate-multi-resolution-images-for-srcset-with-grunt/)
 - Grunt packages for image optimization (npm installable packages)
-    - [grunt-responsive-images](https://www.npmjs.com/package/grunt-responsive-images) - npm
-    - [grunt-responsive-images](https://github.com/andismith/grunt-responsive-images) - GitHub
-    - [grunt-responsive-images-extender](https://www.npmjs.com/package/grunt-responsive-images-extender) - npm
-    - [grunt-responsive-images-extender (test html)](https://github.com/stephanmax/grunt-responsive-images-extender/blob/master/test/fixtures/testing.html) - GitHub
-    - [grunt-responsive-images-extender (Gruntfile.js)](https://github.com/stephanmax/grunt-responsive-images-extender/blob/master/Gruntfile.js) - GitHub
--->
+  - [grunt-responsive-images](https://www.npmjs.com/package/grunt-responsive-images) - npm
+  - [grunt-responsive-images](https://github.com/andismith/grunt-responsive-images) - GitHub
+  - [grunt-responsive-images-extender](https://www.npmjs.com/package/grunt-responsive-images-extender) - npm
+  - [grunt-responsive-images-extender (test html)](https://github.com/stephanmax/grunt-responsive-images-extender/blob/master/test/fixtures/testing.html) - GitHub
+  - [grunt-responsive-images-extender (Gruntfile.js)](https://github.com/stephanmax/grunt-responsive-images-extender/blob/master/Gruntfile.js) - GitHub
 
 <!--  
 ## Lesson 8. Images with Markup
