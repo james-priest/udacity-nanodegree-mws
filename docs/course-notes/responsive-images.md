@@ -938,7 +938,143 @@ These are the resources I used to accomplish this.
   - [grunt-responsive-images-extender (test html)](https://github.com/stephanmax/grunt-responsive-images-extender/blob/master/test/fixtures/testing.html) - GitHub
   - [grunt-responsive-images-extender (Gruntfile.js)](https://github.com/stephanmax/grunt-responsive-images-extender/blob/master/Gruntfile.js) - GitHub
 
-<!--  
-## Lesson 8. Images with Markup
+### 7.17 Lesson Summary
+Congratulations, you're on your way to a workflow that allows you to easily create websites with high quality images with as few bites as possible.
 
-## Lesson 9. Full Responsiveness -->
+In the next lesson, you'll actually approach responsive images using techniques that will allow you to avoid using images at all.
+
+You might be surprised by the number of options available for situations where images no longer seem necessary. You'll explore some image alternatives using simple mark-up techniques.
+
+## Lesson 8. Images with Markup
+### 8.1 Performance
+The reality of mobile networking means that the number of file requests can be just as significant as the size of requests.
+
+In other words, aim to **reduce the number of image requests**, not just the size of image files.
+
+We call this problem **latency**, which is the delay between request and response.
+
+Every time your browser attempts to retrieve an image from a website there are potential delays at every step of the way between your device and the website's servers and every one of those delays can vary significantly and unpredictably.
+
+Behind all that is the fundamental problem that data can't travel any faster than the speed of light. In fact, optical fiber can only achieve a bit better than half the speed of light. So, at best, London to California, return trip times for example, are around a hundred milliseconds.
+
+Performance expert, Ilya Grigorik, calls latency the new bottleneck. Indeed, it turns out that for many modern web pages, bandwidth doesn't matter as much as latency does. If you find that surprising, check out the graph below.
+
+Notice how reducing latency continues to improve page load times, whereas for bandwidth the graph flattens out:
+
+[![ri8-1](../assets/images/sm_ri8-1.jpg)](../assets/images/full-size/ri8-1.png)
+
+The bottom line is that performance is a fundamental part of a truly responsive design. In practice, that means you need to reduce the file sizes and reduce the number of file requests.
+
+One great way to reduce the number of image bytes is to compress them or reduce the number of images. In this lesson, we show you lots of ways to achieve graphical effects without image files.
+
+#### Notes
+To reduce the number of image downloads, you can also use [CSS image sprites](https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/CSS_Image_Sprites) (or [responsive sprites](http://blog.brianjohnsondesign.com/responsive-background-image-sprites-css-tutorial/)). A sprite sheet image combines lots of images, which can be displayed individually by setting the sprite sheet as the background to an element, then adjusting background position with CSS. This technique can be particularly useful for icons and other repeated graphics.
+
+Whatever techniques you use to avoid latency, be aware of the changes that are coming with HTTP/2.
+
+In a nutshell, HTTP/2 will mean that requesting multiple files will be less costly: prepare to stop using spriting, concatenating and other HTTP/1 hacks!
+
+To find out more, check out [HTTP2 for front-end web devs](https://mattwilcox.net/web-development/http2-for-front-end-web-developers.
+
+### 8.2 Text Problems
+In the old days, it was commonplace to save text as a graphic. As you can see here, that doesn't scale well visually and adds to the page weight and latency.
+
+[![ri8-2](../assets/images/sm_ri8-2.jpg)](../assets/images/full-size/ri8-2.png)
+
+Text as graphic can also cause conflicts with format choice. Now in theory you might want to save text in a PNG format because text has solid color and hard edges but in this example we've saved as a JPEG because we're using text over a photo.
+
+[![ri8-3](../assets/images/sm_ri8-3.jpg)](../assets/images/full-size/ri8-3.png)
+
+Scale that up, and you start to see artifacts. Using text as a graphic also means the text can't be found by search engines, and isn't accessible by screen readers and other assistive technologies.
+
+If the page is viewed in the text only browser Lynx, all you can see is the alt text on the image. And you can't copy text as graphic either.
+
+If you do need to incorporate text in graphics, overlay real text over the top.
+
+[![ri8-4](../assets/images/sm_ri8-4.jpg)](../assets/images/full-size/ri8-4.png)
+
+Both the photo and the text display and scale much better. You can select the text and it's really easy to add effects with CSS. I'm using the Lovely Lobster font, which is one of the many free web fonts available.
+
+File size is smaller too because we can save the photo as a nice small JPEG for the photo, rather than having to use PNG to cope with text.
+
+On the subject of text and images, one way to ensure your site is really responsive is not to have any images at all. Maybe some of the pages on your website don't need images.
+
+Many sites use beautiful topography, CSS effects, and great layout to achieve really striking graphical effects with responsive layouts and strikingly fast load times. Likewise, for sites which use images really sparingly.
+
+When you're designing a responsive site, every time you add a placeholder for an image, think about whether you really need it. Sometimes the best image is no image at all.
+
+In the past, typography on the web was extremely limited by the number and quality of fonts available. With web fonts and modern CSS implementations, that's all changed. Web fonts and CSS enable beautiful typography on the web without having to resort to using text as graphics.
+
+#### Links
+
+- [Text as image](http://udacity.github.io/responsive-images/examples/2-02/textAsImage)
+- [Text as image over photo](http://udacity.github.io/responsive-images/examples/2-02/textAsImageOverPhoto)
+- [Text using Web Font](http://udacity.github.io/responsive-images/examples/2-02/textAsText)
+- [Text as text, over photo](http://udacity.github.io/responsive-images/examples/2-02/textAsTextOverPhoto)
+
+### 8.3 CSS Techniques
+As well as adjusting type attributes, CSS can also be used for other graphical effects, in particular using CSS foreshadows is supported by all modern browsers and much better than using image hacks.
+
+Likewise for rounded corners, gradient, and animations. Do be aware, however, that there is a processing and rendering cost to using CSS shadows, rounded corners, and so on. This is especially significant on mobile.
+
+[![ri8-5](../assets/images/sm_ri8-5.jpg)](../assets/images/full-size/ri8-5.png)
+
+So, if you really want these effects, use CSS, but use them sparingly.
+
+#### Links
+
+- [CSS effects](http://udacity.github.io/responsive-images/examples/2-04/divWithCssEffects)
+- [How CSS affects load time](http://smashingmagazine.com/2013/04/03/build-fast-loading-mobile-website)
+
+### 8.4 CSS background images
+CSS also supports background images and this feature can be used to achieve a number of responsive effects.
+
+[![ri8-6](../assets/images/sm_ri8-6.jpg)](../assets/images/full-size/ri8-6.png)
+
+You can use CSS to add a background pattern to an element orther page itself. And you can combine that with gradients and other CSS effects.
+
+[![ri8-7](../assets/images/sm_ri8-7.jpg)](../assets/images/full-size/ri8-7.png)
+
+It's possible to get some incredible effects with pure CSS. Check out the examples on the website links below.
+
+[![ri8-8](../assets/images/sm_ri8-8.jpg)](../assets/images/full-size/ri8-8.png)
+
+With the `background-size: cover` property, CSS can also be used to add a background image that resizes without squashing or stretching. And again, this can be really handy for using images when you don't know the size of the viewport.
+
+[![ri8-9](../assets/images/sm_ri8-9.jpg)](../assets/images/full-size/ri8-9.png)
+
+The details in a photo can get lost when it's shrunk, so this example displays the whole image if the viewport is more than 500 pixels wide, or a smaller crop otherwise.
+
+[![ri8-10](../assets/images/sm_ri8-10.jpg)](../assets/images/full-size/ri8-10.png)
+
+I've added a CSS transition, so there's not too much of a jolt if you resize the window.
+
+You'll see that in the DevTools, the smaller koala crop is displayed when the window is small. Then, if you resize the window larger, the larger crop is downloaded and displayed.
+
+CSS background images can be used for conditional display of images depending on the viewport size, using CSS like this. In this case, the background image file is not downloaded if the viewport width is less than 500 pixels.
+
+[![ri8-11](../assets/images/sm_ri8-11.jpg)](../assets/images/full-size/ri8-11.png)
+
+Now, you'll find out more about media queries later and a much less hacky and more efficient way to accomplish alternative image loading when we look at the `srcset` attribute and the `<picture>` element in the next lesson.
+
+With background images, you can also use the CSS `image-set()` function to choose a background image depending on screen resolution. This example displays a 2x color image on a high resolution display, like my phone, and a 1x monochrome image, otherwise.
+
+[![ri8-12](../assets/images/sm_ri8-12.jpg)](../assets/images/full-size/ri8-12.png)
+
+For the devices that don't support `image-set()`, the CSS falls back to the 1x version. If you check the DevTools, you'll see that only the appropriate image is downloaded.
+
+[![ri8-13](../assets/images/sm_ri8-13.jpg)](../assets/images/full-size/ri8-13.png)
+
+You'll learn a lot more about responding to screen resolution in the next lesson.
+
+#### Links
+
+- [Div with background image](http://udacity.github.io/responsive-images/examples/2-06/divWithBackgroundImage)
+- [CSS background-size: cover](http://udacity.github.io/responsive-images/examples/2-06/backgroundSizeCover)
+- [Body with background image](http://udacity.github.io/responsive-images/examples/2-06/bodyWithBackgroundImage)
+- [Body with background image and gradient](http://udacity.github.io/responsive-images/examples/2-06/bodyWithBackgroundImageAndGradient)
+- [Body with elaborate background using only CSS](http://udacity.github.io/responsive-images/examples/2-06/bodyWithElaboratePatternPureCSS)
+- [Using CSS background images for conditional image display](http://udacity.github.io/responsive-images/examples/2-06/backgroundImageConditional)
+- [Using CSS background images for alternative images](http://udacity.github.io/responsive-images/examples/2-06/backgroundImageAlternative)
+- [image-set()](http://udacity.github.io/responsive-images/examples/2-06/imageSet)
+
