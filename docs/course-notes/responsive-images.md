@@ -1078,3 +1078,97 @@ You'll learn a lot more about responding to screen resolution in the next lesson
 - [Using CSS background images for alternative images](http://udacity.github.io/responsive-images/examples/2-06/backgroundImageAlternative)
 - [image-set()](http://udacity.github.io/responsive-images/examples/2-06/imageSet)
 
+### 8.5 Quiz: CSS background image techniques
+#### Trying out background-size
+There are two descriptions below. Which one describes `background-size: cover`? Which on describes `background-size: contain`?
+
+"The image is sized so that it is as small as possible while still completely filling its container." (Meaning it is zoomed in as much as possible)
+
+- [ ] contain
+- [x] cover
+
+"The image is sized so that it is as large as possible while still being completely visible inside its container." (Meaning zoomed out so that the whole image is visible)
+
+- [x] contain
+- [ ] cover
+
+#### cover
+[![ri8-14](../assets/images/sm_ri8-14.jpg)](../assets/images/full-size/ri8-14.png)
+
+#### contain
+[![ri8-15](../assets/images/sm_ri8-15.jpg)](../assets/images/full-size/ri8-15.png)
+
+### 8.6 Symbol characters
+Here's another way to avoid image files and to keep your site responsive.
+
+If you need to use a graphical symbol like an arrow, a star or a heart, check whether it's available as a character in a font. You might be surprised what's available.
+
+[![ri8-17](../assets/images/sm_ri8-17.jpg)](../assets/images/full-size/ri8-17.png)
+
+When symbols and icons are achieved using fonts, they have all the responsive advantages of text. They're infinitely scalable, amenable to texts CSS effects, and don't incur extra download.
+
+The graphics on this page are built without image files.
+
+[![ri8-16](../assets/images/sm_ri8-16.jpg)](../assets/images/full-size/ri8-16.png)
+
+The body has a CSS gradient and the star is just a text character with a CSS shadow applied. All responsively sized.
+
+The Unicode standard defines the universal character set. Over 100,000 characters have been defined so far. Some fonts support many thousands of these. Get to know your glyphs.
+
+#### Links
+
+- Example: [Unicode instead of an image](http://udacity.github.io/responsive-images/examples/2-08/unicodeStar/)
+- [Unicode character sets](http://unicode-table.com/en/sets/)
+- [List of Unicode characters](http://en.wikipedia.org/wiki/List_of_Unicode_characters)
+
+### 8.7 Quiz: unicode Treble Clef
+Unicode characters are just plain awesome. As you just learned, there are more than 110,000 characters. That is insane. In a moment, I want you to explore some of them, because, well, they can certainly come in handy.
+
+[![ri8-18](../assets/images/sm_ri8-18.jpg)](../assets/images/full-size/ri8-18.png)
+
+Why would you ever force the browser to download an image when there's already a Unicode character that you can get for free? To explore them yourself, I recommend checking out the drop-down menu which gives you the chance to look through all of the different categories.
+
+You can find things like emoticons. Holy cow, look at all those cute little emoticons that you get for free, which you can use on any website.
+
+It's worth pointing out that in order to use Unicode characters, you need to make sure that you set your character set to utf-8 inside your meta tag.
+
+See the instructor notes for more details on this. 
+
+For this quiz, I want you to pretend that you are making a music website. Check out the link to the [Unicode character set](http://unicode-table.com/).  Look through it and see if you can find the symbol for the treble clef. Once you've found it, try it out for yourself and see if it works. Once you're done, paste the HTML code here to continue
+
+𝄞
+𝄢
+
+#### Links
+
+- [More on meta tag charsets](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/meta)
+- [Site to determine what characters your browser can render](http://www.alanwood.net/unicode/#links)
+
+#### Solution
+To find the treble clef, I started by going to the musical symbols section. Looking through all the characters,it looks like there is a treble clef right there.
+
+[![ri8-19](../assets/images/sm_ri8-19.jpg)](../assets/images/full-size/ri8-19.png)
+
+There's its HTML-code for easy copy and pasting. I'm testing out the treble clef by pasting its HTML code here and then observing what happens on the site over here, and notice there's the treble clef. So, clearly this HTML code is working.
+
+This looks good but I wonder what would happen if I just simply pasted the treble clef itself into the html? Remember it's just a normal character. So I will copy it and I will paste it right here. Now look, I've got the treble cleft over here in the the HTML and I've got the treble clef in the site.
+
+This is nice because these two match. In fact, it's actually recommended to copy and paste the actual Unicode character into your HTML. It's easier to read and maintain. So, the correct answer is, ampersand pound sign and then the number that you see here. That's the HTML code for treble clef.
+
+<!--
+### 8.8 Icon Fonts
+Do you remember Wingdings? That weird font that was oddly popular in the 90's? Have you ever wondered why a font like that would even exist?
+
+Well, as it turns out, it's possible to build a font family made of images and icons rather than letters. Now, icon fonts provide a fantastic option for the little images and icons that often decorate websites.
+
+There's an icon font I like called Zocial. Now, this font is free and open source, so I could download it and serve it from my site. However, the font is publicly available from the font site itself so, I'll use that instead.Let's see it in action.Notice that I've added some shadow to the font icons.This file looks a bit complex so, bear with me.Here's what's going on.The icon font characters are added using the CSS before selector.I've added some formatting to that as well including CSS text shadow.Now that rule is applied to every element whose classname begins with zocial.And you can see that each of the list items has a classwith a name made up of zocial and a brand name.Now, at the top, you'll see an @import url,that points to an external CSS file.Let's look at that now, the @font-face url, at the top of this gives the sourceof the actual font files and there's some variations available there.And what you see below that are selectors based on class names likethe ones we've used, zocial-flickr, zocial-laughter and so on.For example, set the class zocial-flickr on an element andthe character F will be displayed before it.Which in the zocial font is the flickr logo.Clever, huh?Icon fonts have a number of advantages, over plain old images.They're vector graphics that can be infinitely scaled andan entire set of images can be downloaded in one font.And this makes them a great potential solution for responsive designs whereyou require minimum downloads and maximum scalability.Now, if you look at the resources required forthe weloveiconfonts site, you can see that the total wait forthat hundred of images from all the fonts on the page is less than 300k.Icon fonts have a number of advantages over plain old images.They're vectorgraphics that can be infinitely scaled.An entire set of images can be downloaded in one font.This makes them a great potential solution for responsive designs whereyou require minimum downloads and maximum scalability.The example here shows lots of different options for icon fonts.And of course the characters in icon fonts behavejust like letters in other fonts.So you can resize and color them anduse other CSS effects, just like you would with text.There are lots of tools for creating icon fonts andlots of pre-built icon fonts.Check out the links below the video.There's also a link to information about improving accessibilityby using Aria attributes
+
+#### Links
+
+- [Zocial](http://zocial.smcllns.com/)
+- [Font Awesome](http://fortawesome.github.io/Font-Awesome/)
+- [We Love Icon Fonts!](http://weloveiconfonts.com/)
+- [Icon fonts on CSS-Tricks](https://css-tricks.com/examples/IconFont/)
+- [ARIA](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA)
+
+-->
