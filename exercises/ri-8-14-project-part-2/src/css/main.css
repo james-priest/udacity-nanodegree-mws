@@ -1,0 +1,68 @@
+@import url(http://weloveiconfonts.com/api/?family=zocial);
+/* zocial */
+[class*="zocial-"]:before {
+  font-family: 'zocial', sans-serif;
+}
+
+html {
+  box-sizing: border-box;
+}
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+
+body {
+  margin: 2em;
+  font: 16px/1.2 Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  /* overflow-y: hidden; */
+}
+
+article, footer {
+  margin: 0 auto;
+  width: 50em; /* 800px/16px */
+  max-width: 100%;
+}
+
+h1 {
+  margin: 0 auto 1em auto;
+  max-width: 800px;
+}
+
+img {
+  max-width: 100%;
+}
+
+.footer ul {
+  display: flex;
+  justify-content: space-evenly;
+  list-style-type: none;
+  font-size: 2em;
+  padding: 0;
+}
+.footer li {
+  margin: 0 30px;
+}
+.footer a {
+  text-decoration: none;
+  width: 48px;
+  height: 48px;
+}
+.footer a:hover {
+  color: #999;
+}
+
+@media screen and (max-width: 425px) {
+  body {
+    margin: 1em;
+  }
+  figure, footer {
+    margin: 1em 0;
+  }
+  .footer ul {
+    font-size: 1.6em;
+  }
+  .footer li {
+    margin: 0 20px;
+  }
+}

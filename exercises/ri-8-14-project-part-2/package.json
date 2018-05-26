@@ -1,0 +1,21 @@
+{
+  "name": "responsive-images",
+  "version": "0.1.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/james-priest/udacity-nanodegree-mws.git"
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "grunt": "^1.0.2",
+    "grunt-contrib-clean": "^1.1.0",
+    "grunt-contrib-concat": "^1.0.1",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-contrib-jshint": "^1.1.0",
+    "grunt-contrib-uglify": "^3.3.0",
+    "grunt-contrib-watch": "^1.1.0",
+    "grunt-mkdir": "^1.0.0",
+    "grunt-responsive-images": "^1.10.1",
+    "grunt-responsive-images-extender": "^3.0.0"
+  }
+}

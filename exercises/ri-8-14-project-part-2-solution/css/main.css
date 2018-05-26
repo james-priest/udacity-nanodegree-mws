@@ -1,0 +1,75 @@
+[class*="zocial-"]:before {
+  color: black;
+  display: inline-block;
+  font-family: 'zocial', sans-serif;
+  text-shadow: 3px 3px 3px #aaa;
+  width: 2em;
+}
+
+a:hover [class*="zocial-"]:before {
+  color: #3d85c6;
+}
+
+div#social a {
+  margin: 0 1em 0 0;
+}
+
+div#social a:last-of-type {
+  margin: 0;
+}
+
+article {
+  margin: 0 auto;
+  max-width: 50em;
+  border-bottom: 1px solid #ddd;
+}
+
+body {
+  font-family: sans-serif;
+  margin: 2em;
+}
+
+div#social {
+  line-height: 2em;
+}
+
+figcaption {
+  color: #bb021e;
+  padding: 1em 0;
+}
+
+figure {
+  margin: 1em 0 1em 0;
+}
+
+footer {
+  margin: 0 auto;
+  width: 800px;
+}
+
+header {
+  margin: 0 auto;
+  width: 800px;
+}
+
+h1 {
+  margin: 0 auto 1em auto;
+  width: 800px;
+}
+
+img {
+  max-width: 100%;
+}
+
+svg#logo {
+  fill: #666;
+  height: 6vw;
+  margin: 0 auto 0.5em auto;
+  width: 6vw;
+}
+
+header:hover svg#logo {
+  fill: #3d85c6;
+  -webkit-filter: drop-shadow(3px 3px 3px #ddd);
+  filter: drop-shadow(3px 3px 3px #ddd);
+}
