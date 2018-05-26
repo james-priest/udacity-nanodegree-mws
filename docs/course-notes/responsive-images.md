@@ -975,7 +975,7 @@ Whatever techniques you use to avoid latency, be aware of the changes that are c
 
 In a nutshell, HTTP/2 will mean that requesting multiple files will be less costly: prepare to stop using spriting, concatenating and other HTTP/1 hacks!
 
-To find out more, check out [HTTP2 for front-end web devs](https://mattwilcox.net/web-development/http2-for-front-end-web-developers.
+To find out more, check out [HTTP2 for front-end web devs](https://mattwilcox.net/web-development/http2-for-front-end-web-developers).
 
 ### 8.2 Text Problems
 In the old days, it was commonplace to save text as a graphic. As you can see here, that doesn't scale well visually and adds to the page weight and latency.
@@ -1032,7 +1032,7 @@ CSS also supports background images and this feature can be used to achieve a nu
 
 [![ri8-6](../assets/images/sm_ri8-6.jpg)](../assets/images/full-size/ri8-6.png)
 
-You can use CSS to add a background pattern to an element orther page itself. And you can combine that with gradients and other CSS effects.
+You can use CSS to add a background pattern to an element or the page itself. And you can combine that with gradients and other CSS effects.
 
 [![ri8-7](../assets/images/sm_ri8-7.jpg)](../assets/images/full-size/ri8-7.png)
 
@@ -1133,7 +1133,7 @@ You can find things like emoticons. Holy cow, look at all those cute little emot
 
 It's worth pointing out that in order to use Unicode characters, you need to make sure that you set your character set to utf-8 inside your meta tag.
 
-See the instructor notes for more details on this. 
+See the instructor notes for more details on this.
 
 For this quiz, I want you to pretend that you are making a music website. Check out the link to the [Unicode character set](http://unicode-table.com/).  Look through it and see if you can find the symbol for the treble clef. Once you've found it, try it out for yourself and see if it works. Once you're done, paste the HTML code here to continue
 
@@ -1475,4 +1475,11 @@ Here's an option for you. Add a responsive logo. Check the instructor notes if y
 1. Replace this smiley face with a unicode smiley face
 2. Replaced the flourish with something else using markup
 3. Add some social media icons
-4. Add a responsive logo (optional)
+4. Optional: Add a responsive logo
+
+### 8.15 Lesson Summary
+In this lesson, you learned that images aren't always necessary. Which is actually kind of a funny thing to learn for a class called responsive images.
+
+Mark up alternatives like CSS and icon fonts provide performant options for design techniques normally implemented with images.
+
+So far, you've simply explored ways to deliver images more effectively but in the next lesson, you'll explore a concept called art direction, which pushes developers to match image content to different devices as well.
