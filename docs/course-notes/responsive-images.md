@@ -1477,6 +1477,10 @@ Here's an option for you. Add a responsive logo. Check the instructor notes if y
 3. Add some social media icons
 4. Optional: Add a responsive logo
 
+#### Solution
+
+[![ri8-32](../assets/images/sm_ri8-32.jpg)](../assets/images/full-size/ri8-32.png)
+
 ### 8.15 Lesson Summary
 In this lesson, you learned that images aren't always necessary. Which is actually kind of a funny thing to learn for a class called responsive images.
 
