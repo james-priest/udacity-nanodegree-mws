@@ -28,6 +28,7 @@ nav {
 // scrollbar
 ::-webkit-scrollbar {
     width: 11px;
+    height: 11px;
 }
 ::-webkit-scrollbar-track {
     background: #f1f1f1;
@@ -75,8 +76,12 @@ section {
     max-width: 615px;
     padding: 30px 20px 50px;
 }
-section>p, h4, h5, h6 {
-    margin: 8px 40px;
+section > p, h4, h5, h6 {
+    margin: 11px 40px;
+    line-height: 1.2em;
+}
+blockquote > p {
+    margin: 20px 0;
     line-height: 1.2em;
 }
 hr { margin: 20px 0; }

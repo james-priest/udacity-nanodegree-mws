@@ -12,6 +12,7 @@ description: Notes by James Priest
 
 ### Supporting Links
 - [Google's overview of Chrome DevTools](https://developers.google.com/web/tools/chrome-devtools/)
+- [Udacity Responsive Images code examples](http://udacity.github.io/responsive-images/)
 
 ## Lesson 6. Getting Up and Running
 ### 6.1 Course Introduction
@@ -1155,13 +1156,100 @@ This looks good but I wonder what would happen if I just simply pasted the trebl
 
 This is nice because these two match. In fact, it's actually recommended to copy and paste the actual Unicode character into your HTML. It's easier to read and maintain. So, the correct answer is, ampersand pound sign and then the number that you see here. That's the HTML code for treble clef.
 
-<!--
 ### 8.8 Icon Fonts
 Do you remember Wingdings? That weird font that was oddly popular in the 90's? Have you ever wondered why a font like that would even exist?
 
 Well, as it turns out, it's possible to build a font family made of images and icons rather than letters. Now, icon fonts provide a fantastic option for the little images and icons that often decorate websites.
 
-There's an icon font I like called Zocial. Now, this font is free and open source, so I could download it and serve it from my site. However, the font is publicly available from the font site itself so, I'll use that instead.Let's see it in action.Notice that I've added some shadow to the font icons.This file looks a bit complex so, bear with me.Here's what's going on.The icon font characters are added using the CSS before selector.I've added some formatting to that as well including CSS text shadow.Now that rule is applied to every element whose classname begins with zocial.And you can see that each of the list items has a classwith a name made up of zocial and a brand name.Now, at the top, you'll see an @import url,that points to an external CSS file.Let's look at that now, the @font-face url, at the top of this gives the sourceof the actual font files and there's some variations available there.And what you see below that are selectors based on class names likethe ones we've used, zocial-flickr, zocial-laughter and so on.For example, set the class zocial-flickr on an element andthe character F will be displayed before it.Which in the zocial font is the flickr logo.Clever, huh?Icon fonts have a number of advantages, over plain old images.They're vector graphics that can be infinitely scaled andan entire set of images can be downloaded in one font.And this makes them a great potential solution for responsive designs whereyou require minimum downloads and maximum scalability.Now, if you look at the resources required forthe weloveiconfonts site, you can see that the total wait forthat hundred of images from all the fonts on the page is less than 300k.Icon fonts have a number of advantages over plain old images.They're vectorgraphics that can be infinitely scaled.An entire set of images can be downloaded in one font.This makes them a great potential solution for responsive designs whereyou require minimum downloads and maximum scalability.The example here shows lots of different options for icon fonts.And of course the characters in icon fonts behavejust like letters in other fonts.So you can resize and color them anduse other CSS effects, just like you would with text.There are lots of tools for creating icon fonts andlots of pre-built icon fonts.Check out the links below the video.There's also a link to information about improving accessibilityby using Aria attributes
+There's an icon font I like called Zocial. Now, this font is free and open source, so I could download it and serve it from my site. However, the font is publicly available from the font site itself so, I'll use that instead.
+
+[![ri8-20](../assets/images/sm_ri8-20.jpg)](../assets/images/full-size/ri8-20.png)
+
+Let's see it in action.
+
+Notice that I've added some shadow to the font icons. This file looks a bit complex so, bear with me.
+
+[![ri8-21](../assets/images/sm_ri8-21.jpg)](../assets/images/full-size/ri8-21.png)
+
+Here's what's going on. The icon font characters are added using the CSS before selector. I've added some formatting to that as well including CSS text shadow.
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0,
+    minimum-scale=1.0">
+  <title>Udacity RI: icon font</title>
+  <style>
+    @import url(http://weloveiconfonts.com/api/?family=zocial);
+
+    [class*="zocial-"]:before {
+      display: inline-block;
+      font-family: 'zocial', sans-serif;
+      text-shadow: 3px 3px 3px #aaa;
+      width: 20vw;
+    }
+
+    body {
+      font-family: 'Roboto Condensed';
+      margin: 20vh 0;
+    }
+
+    li {
+      font-size: 10vw;
+      list-style: none;
+      margin: 3vw 0;
+      padding-left: 100px;
+    }
+  </style>
+</head>
+
+<body>
+  <ul>
+    <li class="zocial-twitter">Twitter</li>
+    <li class="zocial-flickr">Flickr</li>
+    <li class="zocial-lastfm">Last.fm</li>
+    <li class="zocial-reddit">Reddit</li>
+  </ul>
+</body>
+</html>
+
+```
+
+Now that rule is applied to every element whose class name begins with `zocial-`. You can see that each of the list items has a class with a name made up of 'zocial' and a brand name.
+
+Now, at the top, you'll see an `@import url(...)`, that points to an external CSS file. Let's look at that now.
+
+[![ri8-22](../assets/images/sm_ri8-22.jpg)](../assets/images/full-size/ri8-22.png)
+
+The `@font-face` url, at the top of this gives the source of the actual font files and there's some variations available there. What you see below that are selectors based on class names like the ones we've used, `.zocial-flickr`, `.zocial-laughter` and so on.
+
+For example, set the class `.zocial-flickr` on an element and the character 'F' will be displayed before it. Which in the zocial font is the flickr logo. Clever, huh?
+
+```css
+.zocial-android:before{content:"&"}
+.zocial-flickr:before{content:"F"}
+.zocial-twitter:before{content:"T"}
+```
+
+Icon fonts have a number of advantages, over plain old images. They're vector graphics that can be infinitely scaled and an entire set of images can be downloaded in one font.
+
+This makes them a great potential solution for responsive designs where you require minimum downloads and maximum scalability. Now, if you look at the resources required for the WeLoveIconFonts.com site, you can see that the total wait for that hundred of images from all the fonts on the page is less than 300k.
+
+[![ri8-23](../assets/images/sm_ri8-23.jpg)](../assets/images/full-size/ri8-23.png)
+
+Icon fonts have a number of advantages over plain old images.
+
+- They're vector graphics that can be infinitely scaled
+- An entire set of images can be downloaded in one font.
+
+This makes them a great potential solution for responsive designs where you require minimum downloads and maximum scalability.
+
+[![ri8-24](../assets/images/sm_ri8-24.jpg)](../assets/images/full-size/ri8-24.png)
+
+The example here shows lots of different options for icon fonts. Of course, the characters in icon fonts behave just like letters in other fonts.
+
+So you can resize and color them and use other CSS effects, just like you would with text. There are lots of tools for creating icon fonts and lots of pre-built icon fonts. Check out the links below. There's also a link to information about improving accessibility by using Aria attributes.
 
 #### Links
 
@@ -1171,4 +1259,220 @@ There's an icon font I like called Zocial. Now, this font is free and open sourc
 - [Icon fonts on CSS-Tricks](https://css-tricks.com/examples/IconFont/)
 - [ARIA](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA)
 
--->
+### 8.9 Inlining SVG and data URIs
+Talking about text, if you really want to reduce the number of file requests your page makes, you can inline images using code.
+
+There are two ways to do that, **SVG** and **DataURIs**.
+
+Now here's a vector graphic you may have seen before. Both versions look identical.
+
+[![ri8-25](../assets/images/sm_ri8-25.jpg)](../assets/images/full-size/ri8-25.png)
+
+Looking at the page source, you'll see that the logos are declared inline. There's an SVG and an image element with a data URI source. Inline SVG has great support on mobile and desktop browsers, and optimization tools can significantly reduce SVG size.
+
+Can u spot any difference?
+
+[![ri8-26](../assets/images/sm_ri8-26.jpg)](../assets/images/full-size/ri8-26.png)
+
+These two inline SVG logos look identical, but one is around 3 kilobytes and the other only about 2k because its been optimized.
+
+SVG is incredibly powerful. Check out this interactive version of Trajan's Column. It works on mobile too. The best thing, is you get all that responsive interactivity for less that 160 kilobytes.
+
+[![ri8-27](../assets/images/sm_ri8-27.jpg)](../assets/images/full-size/ri8-27.png)
+
+For more amazing SVG examples, check out the links below.
+
+Data URIs provide a way to include a file such as an image inline as a base64 encoded string using the following format.
+
+```html
+<img src="data:image/svg+xml;base64,[data...]">
+```
+
+The full image is around 5,000 characters!
+
+Just like SVG, Data URIs are well supported on mobile and desktop browsers. That's nearly 97% of browsers.
+
+So you can inline images in your HTML, but Data URIs and SVGs can also be inlined in CSS.
+
+```css
+div#data_uri {
+  background: url(data:image/svg+xml, ...)
+}
+```
+
+It works on desktop and on mobile. we have two identical looking images implemented as background images in CSS, one data URI and one SVG. Now the code looks a bit crazy so why would you want to do this? To reduce HTTP requests.
+
+#### Links
+
+Examples:
+- [SVG Data URI in HTML](http://udacity.github.io/responsive-images/examples/2-11/svgDataUri)
+- [SVG Data URI in CSS](http://udacity.github.io/responsive-images/examples/2-11/svgDataUriCss)
+- [SVG text on a path](http://udacity.github.io/responsive-images/examples/2-11/svgTextOnAPath)
+- [SVG optimized and unoptimized](http://udacity.github.io/responsive-images/examples/2-11/svgUnoptimisedAndOptimised)
+
+Resources:
+- [Browser support for inline SVG](http://caniuse.com/#feat=svg-html5)
+- [Browser support for Data URIs](http://caniuse.com/datauri)
+- [SVG Optimiser](http://petercollingridge.appspot.com/svg-optimiser)
+- [Trajan's Column SVG example](http://upload.wikimedia.org/wikipedia/commons/6/6c/Trajans-Column-lower-animated.svg)
+- [20 examples of SVG that will make your jaw drop](http://www.creativebloq.com/design/examples-svg-7112785)
+- [SVG animation examples](http://codepen.io/chrisgannon/)
+
+### 8.10 Quiz: Strategy Quiz 1
+At these point you've learned about a few different techniques for handling images on the web.
+
+The first set of choices involves deciding between **linking** and **inlining**. For instance you can
+
+1. **link** to files external to the html:<br>
+  `<img src="file.png" alt="picture of image">`
+2. **inline** the images and put all the data you need for an image right on the page:<br>
+  `<img src="data:image/png;base64,...">`
+
+The other choices come down to
+
+1. **raster** (which are bitmap-based images) defined as jpg  gif, or png
+2. **vector** (scalable, path-based images) defined with SVG
+
+Then of course you can skip images altogether and use font icons like Font Awesome and then use CSS techniques for styling.
+
+Font icons are really another type of vector image that's accessed by loading a font set and accessing a mapped character (usually through css).
+
+The other way of displaying a symbol is by accessing the unicode characters directly and styling as required. This used to be done by specifying the HTML character code but is now done simply by directly pasting the character into the HTML.
+
+In the end all these techniques lead to the same result on the page. The right strategy really depends on the image's place in your app as a whole.
+
+[![ri8-28](../assets/images/sm_ri8-28.jpg)](../assets/images/full-size/ri8-28.png)
+
+#### Image Options Scenario #1
+A star icon (★) needs to *reused* and *scaled* on mobile devices.
+
+Should you use a vector graphic or a raster graphic?
+- [x] vector
+- [ ] raster
+
+Should you inline the star icon or should you set its src to an external file?
+- [x] inline
+- [x] external
+
+#### Solution
+In this case, the star is a pretty simple and regular shape. So, it's safe to say a vector graphic is the way to go, especially if you want to scale it with your app.
+
+As far as inline or setting its source to an external file can actually argue for either.
+
+For inline, it's safe to say a star is a pretty simple shape. You could pretty easily create it with an SVG file and just simply inline that without adding too many bytes.
+
+If you're reusing an image, it does make sense to make it external, which means you'll be able to cache it and then not reload it every time a user visits a new page.
+
+So in this case, it really depends, and if this were a real app, you'd just test it to find out which method is faster.
+
+### 8.11 Quiz: Strategy Quiz 2
+In this scenario, you're developing a self-publishing, mobile photo-journalism site which will have single use photos.
+
+This site is designed for big events, and people will be creating unique sites where they'll post a single image alongside some description of it.
+
+Should you convert them to vector graphics or just keep the photos as .jpgs? And should you inline the images or should you set their src's to external files? Pick the best answer for these two questions.
+
+[![ri8-29](../assets/images/sm_ri8-29.jpg)](../assets/images/full-size/ri8-29.png)
+
+#### Image Options Scenario #2
+A self-publishing, mobile photo-journalism site needs single use photos.
+
+Should you use a vector graphic or a raster graphic?
+- [ ] vector
+- [x] .jpg
+
+Should you inline the star icon or should you set its src to an external file?
+- [x] inline
+- [x] external
+
+#### Solution
+First off, keep their graphics as jpegs. These are raster images so keep them saved in a raster format.
+
+For the second question, considering your users are accessing your site on mobile,  it's actually a good idea to inline these images if you can.
+
+Inlining reduces the number of requests the browser has to make and requests are one of the major contributors to laggy or unperformant websites on mobile.
+
+Requests add round trips, and round trips are one of the biggest factors for slow websites on mobile.
+
+With that being said, in the next lesson you'll see how inlining images can limit your responsive options. So, in the end an external file still might be the way to go.Either answer is correct.
+
+### 8.12 Quiz: Strategy Quiz 3
+In this scenario you're creating a corporate website for a data analytic startup called Sample Analytics, and the corporation wants its logo in the top left hand corner of every page.
+
+There's also a good chance that they'll want a larger version of their logo to show off on an SEM landing page. It's fair to say that users will be coming from either mobile or desktop.
+
+Should you use a vector graphic or a raster graphic for the logo, and should you inline the logo or set its src to an external file?
+
+[![ri8-30](../assets/images/sm_ri8-30.jpg)](../assets/images/full-size/ri8-30.png)
+
+#### Image Options Scenario #3
+A corporate website wants to reuse its logo in small and large formats.
+
+Should you use a vector graphic or a raster graphic?
+- [x] vector
+- [ ] raster
+
+Should you inline the star icon or should you set its src to an external file?
+- [ ] inline
+- [x] external
+
+#### Solution
+You should use a vector graphic and there are two reasons.
+
+One is that this logo's pretty simple. As it relies on text, it shouldn't be too hard to make as a vector graphic.
+
+Two, because you want to it in small and large formats. Vector graphics scale nicely, so small and large versions of the logo can use the same source file.
+
+For the second question it should be an external file.
+
+The reason is because it could be used on multiple pages, and if it's going to be used on multiple pages, it probably makes sense through the browser to cache it.
+
+### 8.13 Quiz: Strategy Quiz 4
+In this last scenario, you're creating a mobile web app called Vicarious Concerts for people who like to compare concert videos shot by random people in the audience.
+
+Each video takes a few seconds to load, so you decide to show a spinning record icon in place of each video while it's loading.
+
+Should you use an animated .gif or an animated SVG for this record icon? And should you inline the spinner, or should you set its src's to an external file?
+
+[![ri8-31](../assets/images/sm_ri8-31.jpg)](../assets/images/full-size/ri8-31.png)
+
+#### Image Options Scenario #4
+A video-heavy mobile web app wants a spinning record icon for loading videos.
+
+Should you use an animated .gif or animated SVG?
+- [ ] .gif
+- [x] .svg
+
+Should you inline the spinner or set its src to an external file?
+- [ ] inline
+- [x] external
+
+#### Solution
+For the first question, I said that you should us an svg. First off, vector graphics are nicer because they can be scaled infinitely unlike gifs, which are rasters.
+
+Also, .svgs are actually smaller than .gifs because you're using the same image, and just animating its rotation instead of delivering multiple images for the record at each point throughout its rotation.
+
+For the second question, it makes sense to keep it external, with multiple videos all using this same spinning record icon, it makes sense that the browser should be able to cache it and then use it on multiple pages.
+
+### 8.14 Project Part 2
+It's time to apply what you've learned about markup techniques to the blog.
+
+At this point in the project, your images are looking pretty good, but there are a few opportunities to use some markup techniques.
+
+First of, check out the random smiley face. It's a PNG. Just go ahead and replace it with Unicode. There's really no reason for this to be a PNG.
+
+And of course, what's a blog without social media links? Use Zocial to add some social media links to the bottom of the page.
+
+I'll be adding them to a footer tag, but feel free to add them however you'd like.
+
+Also notice this weird flourish here? It separates the main content from the footer below it. It's a PNG, which is obviously pretty unnecessary, so replace it with something that does make sense.
+
+In the solution, you'll see me just totally remove it and replace it with some more subtle CSS.
+
+Here's an option for you. Add a responsive logo. Check the instructor notes if you want some inspiration.
+
+#### Requirements
+1. Replace this smiley face with a unicode smiley face
+2. Replaced the flourish with something else using markup
+3. Add some social media icons
+4. Add a responsive logo (optional)
