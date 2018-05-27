@@ -1487,3 +1487,90 @@ In this lesson, you learned that images aren't always necessary. Which is actual
 Mark up alternatives like CSS and icon fonts provide performant options for design techniques normally implemented with images.
 
 So far, you've simply explored ways to deliver images more effectively but in the next lesson, you'll explore a concept called art direction, which pushes developers to match image content to different devices as well.
+
+## 9. Full Responsiveness
+### 9.1 Responding to Screen Capability & View
+You know by now that serving one single file for every context is not a good idea. Yeah, I mean, the image file you would want to serve for a large display size on a big high definition TV is totally inappropriate for a watch, for example. So how do you serve the right image for every combination of device capability and display size?
+
+In the last lesson, you learned some techniques that use CSS background images in media queries to display different images for different viewport sizes. That kind of works, but it was pretty messy and difficult to debug.
+
+To do it properly, you potentially needed to write CSS to handle umpteen different use cases. And what about the future? What if all your fancy media queries don't support some future platform?
+
+Using media queries like this is an attempt to guess at build time what image file will be best at run time. You're forcing image choice on the browser rather than giving the browser information to make the best choice possible
+
+The other problem with media queries is that they only refer to the viewport dimensions, not the actual display size of the image. What if you give your image a percentage width, say 50% of the viewport width. Media queries won't help.
+
+#### Suggestions
+Before you start implementing responsive images, consider doing an image audit of your site:
+
+- What is the production workflow for images?
+- Do you use hero images, thumbnails, icons, decorations?
+- What image formats are used on your site?
+- Should some images be inlined or delivered as SVGs?
+
+For more information, see Jason Grigsby's article [Responsive Image Audits](http://blog.cloudfour.com/responsive-images-audits).
+
+**Pro tip:** to get the maximum bang-for-your-buck when optimizing your site, focus on very large images. Pick the ten largest!
+
+In particular, resizing images in CSS or HTML can be a huge problem for big images. For example: you need a 1000x1000px image file to display in a 500x500px img element on a 2x screen. If you use a 1100x1100px image, that's 100 x 100 = 10,000 wasted pixels!
+
+### 9.2 srcset
+You may have images that work fine on a low-resolution desktop monitor but look terrible on a high DPI display.
+
+[![ri9-1](../assets/images/sm_ri9-1.jpg)](../assets/images/full-size/ri9-1.png)
+
+Not a problem, we'll just save an image with larger dimensions. That wallaby's a lot happier now.
+
+[![ri9-2](../assets/images/sm_ri9-2.jpg)](../assets/images/full-size/ri9-2.png)
+
+Trouble is, we're now serving a bigger image file to everyone, whether they need it or not and that's going to result in a terrible experience on a slow network, especially on a smaller screen with lower resolution.
+
+The problem with the plain old image `src` attribute is that it only gives one URL for one image. What if you want to provide alternative files for the same image so the browser can choose the best option for the viewport size and device capabilities?
+
+`srcset` to the rescue. Here we added a `srcset` attribute to our image element.
+
+[![ri9-3](../assets/images/sm_ri9-3.jpg)](../assets/images/full-size/ri9-3.png)
+
+The syntax here simply means that the browser should choose the high resolution of wallaby_2x.jpg for a higher DPI display, or the lower resolution of wallaby_1x.jpg otherwise.
+
+The 1x, 2x syntax is called a **Pixel Density Descriptor**. If we check from DevTools using emulation mode for a 1x device, you'll see that only the 1x image has been loaded. By the way, I've added a 1x descriptor after the 1x image source, but that's the default.
+
+Different screens have different pixel densities, more or less dots of color per square inch (e.g. the physical pixels). The more dots per inch, the higher resolution the display and the greater the pixel density.
+
+Standard laptop and desktop monitors are regarded as being 1x displays, whereas devices such has high spec laptops and phones can be 2x or more. Everyday, there are more and more new screens with different pixel densities.
+
+You can check this from the dev tools console, by looking at the device pixel ratio for your display.
+
+[![ri9-4](../assets/images/sm_ri9-4.jpg)](../assets/images/full-size/ri9-4.png)
+
+Here, the device pixel ratio is 2.0 for an iPhone6 in device emulation mode. You can find out more about pixel density, by following the link below.
+
+What if the browser doesn't support the `srcset` attribute? That's not a problem, the `srcset` attribute is ignored, and the image is loaded in the usual way using the `src`attribute.
+
+Source set can also be used with width units. For a browser, there's a catch-22 when it comes to choosing which image to download.
+
+The browser needs to know the dimensions of each image, but it can't know that without downloading each image to check. Until the mighty W unit.
+
+The W unit tells the browser the width of each image. Thereby enabling the browser to choose the right image to retrieve **depending on the screen pixel density and the viewport size**.
+
+[![ri9-5](../assets/images/sm_ri9-5.jpg)](../assets/images/full-size/ri9-5.png)
+
+Think about it. If you have a browser window sized at 500 pixels wide on a 2x display, an image 1000 pixels wide, that's 2 times 500 would be adequate for any display size in that window.
+
+The point is that we're enabling the browser to make the right choice of image since at runtime, the browser knows the screen size and pixel density, but not the image size.
+
+Later, you'll see how to work with image display sizes that are less then the full width of the viewport. 
+
+Now, you might be wondering, why width and not height? Well, width covers most use cases.But there has been some discussion of introducing an H unit. For the responsive obsessives among you, follow the link below.
+
+#### Links
+Examples:
+- [srcset with w values](http://udacity.github.io/responsive-images/examples/3-03/srcsetWValues)
+- [srcset with w values, 50vw](http://udacity.github.io/responsive-images/examples/3-03/srcsetWValues50vw)
+
+References:
+- [A fun article on srcset](http://ericportis.com/posts/2014/srcset-sizes/) (Warning: A little bit of NSFW language)
+- [Device pixel density list](http://pixensity.com/list/phone)
+- [More information about working with pixel density](http://www.html5rocks.com/en/mobile/high-dpi/)
+- [Working with h units](https://github.com/ResponsiveImagesCG/picture-element/issues/86)
+- [Wikipedia wallabies](https://en.wikipedia.org/wiki/Wallaby)
