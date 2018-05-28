@@ -1490,7 +1490,9 @@ So far, you've simply explored ways to deliver images more effectively but in th
 
 ## 9. Full Responsiveness
 ### 9.1 Responding to Screen Capability & View
-You know by now that serving one single file for every context is not a good idea. Yeah, I mean, the image file you would want to serve for a large display size on a big high definition TV is totally inappropriate for a watch, for example. So how do you serve the right image for every combination of device capability and display size?
+You know by now that serving one single file for every context is not a good idea. The image file you would want to serve for a large display size on a big high definition TV is totally inappropriate for a watch, for example. So how do you serve the right image for every combination of device capability and display size?
+
+[![ri9-6](../assets/images/sm_ri9-6.jpg)](../assets/images/full-size/ri9-6.png)
 
 In the last lesson, you learned some techniques that use CSS background images in media queries to display different images for different viewport sizes. That kind of works, but it was pretty messy and difficult to debug.
 
@@ -1527,11 +1529,19 @@ Trouble is, we're now serving a bigger image file to everyone, whether they need
 
 The problem with the plain old image `src` attribute is that it only gives one URL for one image. What if you want to provide alternative files for the same image so the browser can choose the best option for the viewport size and device capabilities?
 
+#### Pixel Density Descriptor
 `srcset` to the rescue. Here we added a `srcset` attribute to our image element.
 
 [![ri9-3](../assets/images/sm_ri9-3.jpg)](../assets/images/full-size/ri9-3.png)
 
 The syntax here simply means that the browser should choose the high resolution of wallaby_2x.jpg for a higher DPI display, or the lower resolution of wallaby_1x.jpg otherwise.
+
+```html
+<img src="wallaby_1x.jpg"
+  srcset="wallaby_1x.jpg 1x,
+          wallaby_2x.jpg 2x"
+  alt="Wallaby">
+```
 
 The 1x, 2x syntax is called a **Pixel Density Descriptor**. If we check from DevTools using emulation mode for a 1x device, you'll see that only the 1x image has been loaded. By the way, I've added a 1x descriptor after the 1x image source, but that's the default.
 
@@ -1547,30 +1557,269 @@ Here, the device pixel ratio is 2.0 for an iPhone6 in device emulation mode. You
 
 What if the browser doesn't support the `srcset` attribute? That's not a problem, the `srcset` attribute is ignored, and the image is loaded in the usual way using the `src`attribute.
 
-Source set can also be used with width units. For a browser, there's a catch-22 when it comes to choosing which image to download.
+##### Pixel Density Examples
+- [large wallaby image](http://udacity.github.io/responsive-images/examples/3-03/singleWallaby/)
+- [srcset with x values](http://udacity.github.io/responsive-images/examples/3-03/srcsetXValues/)
 
-The browser needs to know the dimensions of each image, but it can't know that without downloading each image to check. Until the mighty W unit.
+#### Width Units
+`srcset` can also be used with width units. For a browser, there's a catch-22 when it comes to choosing which image to download.
 
-The W unit tells the browser the width of each image. Thereby enabling the browser to choose the right image to retrieve **depending on the screen pixel density and the viewport size**.
+The browser needs to know the dimensions of each image, but it can't know that without downloading each image to check. **Until the mighty 'w' unit!**
+
+The 'w' unit tells the browser the width of each image. Thereby enabling the browser to choose the right image to retrieve **depending on the screen pixel density and the viewport size**.
+
+```html
+<img src="small.jpg"
+  srcset="small.jpg 500w,
+          medium.jpg 1000w,
+          large.jpg 1500w"
+  alt="Wallaby" >
+```
+
+What this means is, if you have a browser window sized at 500 pixels wide on a 2x display, an image 1000 pixels wide (2 times 500), would be adequate for any display size in that window.
 
 [![ri9-5](../assets/images/sm_ri9-5.jpg)](../assets/images/full-size/ri9-5.png)
 
-Think about it. If you have a browser window sized at 500 pixels wide on a 2x display, an image 1000 pixels wide, that's 2 times 500 would be adequate for any display size in that window.
-
-The point is that we're enabling the browser to make the right choice of image since at runtime, the browser knows the screen size and pixel density, but not the image size.
+What we're doing is enabling the browser to make the right choice of image since at runtime, the browser knows the screen size and pixel density, but not the image size. Here we're telling the browser what the image size is.
 
 Later, you'll see how to work with image display sizes that are less then the full width of the viewport. 
 
-Now, you might be wondering, why width and not height? Well, width covers most use cases.But there has been some discussion of introducing an H unit. For the responsive obsessives among you, follow the link below.
+Now, you might be wondering, why width and not height? Well, width covers most use cases but there has been some discussion of introducing an `h` unit.
 
-#### Links
-Examples:
+For the responsive obsessives among you, check out the links below.
+
+##### Width Unit Examples
 - [srcset with w values](http://udacity.github.io/responsive-images/examples/3-03/srcsetWValues)
 - [srcset with w values, 50vw](http://udacity.github.io/responsive-images/examples/3-03/srcsetWValues50vw)
 
-References:
+#### Reference
 - [A fun article on srcset](http://ericportis.com/posts/2014/srcset-sizes/) (Warning: A little bit of NSFW language)
 - [Device pixel density list](http://pixensity.com/list/phone)
 - [More information about working with pixel density](http://www.html5rocks.com/en/mobile/high-dpi/)
 - [Working with h units](https://github.com/ResponsiveImagesCG/picture-element/issues/86)
-- [Wikipedia wallabies](https://en.wikipedia.org/wiki/Wallaby)
+
+### 9.3 Sizes Attribute
+The 'w' unit tells the browser the dimensions of an image file so it can make a sensible choice about which image to retrieve. But what if the image isn't displayed at 100% width of the viewport?
+
+Well, the browser parses the HTML and starts image pre-loading before the CSS is parsed. At that point, it knows nothing about image display sizes. Here's where the sizes attribute comes into play.
+
+[![ri9-7](../assets/images/sm_ri9-7.jpg)](../assets/images/full-size/ri9-7.png)
+
+The `sizes` attribute tells the browser the sizes at which an image will be displayed. So while parsing the HTML, the browser can work out which image file to request.
+
+```html
+<img src="small.jpg"
+  srcset="small.jpg 500w,
+          medium.jpg 1000w,
+          large.jpg 1500w"
+  sizes="50vw"
+  alt="Wallaby">
+```
+
+In theory, the browser could get this data from CSS, but CSS parsing comes later. Adding the `sizes` values to HTML ensures the browser can fetch images as soon as possible: the right image for the right image display size and device capabilities.
+
+Just to be clear, the `sizes` attribute **does not actually resize your image, you still need to do that in CSS**.
+
+Okay, remember our `srcset` example for 'w' units? Well let's resize our wallaby. Now she's 50% of viewport width. Let's take a look at the network request for that.
+
+[![ri9-8](../assets/images/sm_ri9-8.jpg)](../assets/images/full-size/ri9-8.png)
+
+You'll see that even at the smaller window size, the browser is still getting the **medium** image, which is larger than you need.
+
+So let's work it out. The window is 400 pixels wide, so the image will be displayed at half that width, 200 pixels wide. We're on a 2x display so we need an image at least 400 pixels wide to look okay.
+
+[![ri9-9](../assets/images/sm_ri9-9.jpg)](../assets/images/full-size/ri9-9.png)
+
+Now our small image, which is 500 pixels wide, should be fine, got that?
+
+Okay, so at the time the browser fetches the image, it doesn't know anything about the display size of the image. **So, it defaults to assuming the image will be the full width of the viewport.**
+
+Once we add the `sizes` attribute set to `50vw`, reload, and see what happens.
+
+<!-- [![ri9-10](../assets/images/sm_ri9-10.jpg)](../assets/images/full-size/ri9-10.png) -->
+
+[![ri9-11](../assets/images/sm_ri9-11.jpg)](../assets/images/full-size/ri9-11.png)
+
+The **small** image is downloaded. The `sizes` attribute here is telling the browser, this wallaby will always be displayed at 50% viewport width, and, given the available files, please choose appropriately.
+
+What if you want different image display sizes at different viewport sizes?
+
+Well, the sizes attribute really comes into its own with media queries. That wallaby was getting a bit too big, so let's put a limit on the width.
+
+```html
+<img src="small.jpg"
+  srcset="small.jpg 500w,
+          medium.jpg 1000w,
+          large.jpg 1500w"
+  sizes="(max-width: 250px) 100vw,
+         50vw"
+  alt="Wallaby">
+```
+
+Now, in this example, we've set our wallaby to display at 100% viewport width, at viewport widths of 250 pixels and less and 50% viewport width above that.
+
+[![ri9-12](../assets/images/sm_ri9-12.jpg)](../assets/images/full-size/ri9-12.png)
+
+Notice how the `sizes` attribute corresponds to the CSS.
+
+**Just to reiterate, the sizes attribute tells the browser at HTML parse time, what the image display width will be. It doesn't actually affect the display size of the image.**
+
+By the way, I've added a CSS transition, so the size change isn't too jarring just because I felt like it.
+
+You can get the actual source chosen for an image using the image's `currentSrc` property.
+
+[![ri9-13](../assets/images/sm_ri9-13.jpg)](../assets/images/full-size/ri9-13.png)
+
+Make the window bigger and ta-da,you can see that the image has a different source.
+
+### 9.4 Quiz: srcset Quiz
+#### srcset and sizes Quiz
+I want to recap what you just learned about the image attributes `srcset` and `sizes`. This is a chance for you to take a closer look at the syntax of each attribute before trying them out on a real page in the next two quizzes.
+
+In this quiz, you'll experiment with `srcset`, and in the next you'll add `sizes` to give the browser even more information.
+
+#### Syntax
+There are two flavors of `srcset`, one using `x` to differentiate between device pixel ratios (DPR), and the other using `w` to describe the image's width.
+
+#### Reacting to Device Pixel Ratio
+
+```html
+<img src="image_2x.jpg"
+  srcset="image_2x.jpg 2x,
+          image_1x.jpg 1x"
+  alt="a cool image">
+```
+
+Set `srcset` equal to a comma separated string of `filename multiplier` pairs, where each `multiplier` must be an integer followed by an `x`.
+
+For example, `1x` represents 1x displays and `2x` represents displays with twice the pixel density, like Apple's Retina displays.
+
+The browser will download the image that best corresponds to its DPR (Device Pixel Ratio).
+
+Also, note that there's a `src` attribute as a fallback.
+
+#### Reacting to Image Width
+
+```html
+<img src="image_200.jpg"
+  srcset="image_200.jpg 200w,
+          image_100.jpg 100w"
+  alt="a cool image">
+```
+
+Set `srcset` equal to a comma separated string of `filename widthDescriptor` pairs, where each `widthDescriptor` is measured in pixels and must be an integer followed by a 'w'.
+
+Here, the `widthDescriptor` gives the natural width of each image file, which enables the browser to choose the most appropriate image to request, depending on viewport size and DPR. **(Without the `widthDescriptor`, the browser cannot know the width of an image without downloading it!)**
+
+Also, note that there's a `src` attribute as a fallback.
+
+##### Question #1 srcset using DPI
+Den Haag's skyline looks like it's ready for a retina display. Help the browser determine the right image to download using srcset. It should download Den_Haag_2x.jpg if it is a 2x display and Den_Haag_1x.jpg if it is a 1x display.
+
+[![ri9-14](../assets/images/sm_ri9-14.jpg)](../assets/images/full-size/ri9-14.png)
+
+```html
+<img class="dpi" src="images/Den_Haag_2x.jpg" alt="Den Haag Skyline">
+```
+
+##### Solution #1
+
+```html
+<img class="dpi" src="images/Den_Haag_2x.jpg" alt="Den Haag Skyline"
+  srcset="images/Den_Haag_2x.jpg 2x,
+          images/Den_Haag_1x.jpg 1x">
+```
+
+##### Question #2 srcset Using Image Width
+Australia looks like it's ready for tablet and desktop, but it's probably too wide for mobile. Fix that with srcset. Tell the browser that Australia_1280w.jpg is 1280px wide and Australia_640w.jpg is 640px wide so that the browser can choose the best one to download.
+
+[![ri9-15](../assets/images/sm_ri9-15.jpg)](../assets/images/full-size/ri9-15.png)
+
+```html
+<img class="w" src="images/Australia_1280w.jpg" alt="Australia from Space">
+```
+
+##### Solution #2
+
+```html
+<img class="w" src="images/Australia_1280w.jpg" alt="Australia from Space"
+  srcset="images/Australia_1280w.jpg 1280w,
+          images/Australia_640w.jpg 640w">
+```
+
+#### Exercises
+
+- [Here's the site before the srcset additions](http://udacity.github.io/responsive-images/examples/srcsetAndSizes/index-quiz1.html)
+- [Here's the site after the srcset additions](http://udacity.github.io/responsive-images/examples/srcsetAndSizes/index-quiz1-solution.html)
+
+#### Resources
+
+- [High DPI Images for Variable Pixel Densities](http://html5rocks.com/en/mobile/high-dpi) explains Device Pixel Ratio in detail: device-pixels-per-CSS-pixel is not quite the whole story!
+
+### 9.5 Quiz: srcset and sizes
+#### Image Width with sizes
+What if the image won't be displayed at the full viewport width? Then you need something more than `srcset`, which by itself, assumes the image will be the full viewport width.
+
+Add a `sizes` attribute to the image with a media query and a 'vw' value.
+
+`srcset` and `sizes` together tell the browser the natural width of the image, and how wide the image will be displayed relative to viewport width.
+
+Knowing the display width of the image and the widths of the image files available to it, the browser has the information it needs to download the image with the right resolution that is as small as possible. Also, it can make this choice early in the page load while the HTML is still being parsed.
+
+#### srcset with sizes Syntax
+Here's an example:
+
+```html
+<img  src="images/great_pic_800.jpg"
+      sizes="(max-width: 400px) 100vw, (min-width: 401px) 50vw"
+      srcset="images/great_pic_400.jpg 400w, images/great_pic_800.jpg 800w"
+      alt="great picture">
+```
+
+`sizes` consists of comma separated `mediaQuery width` pairs. `sizes` tells the browser early in the load process that the image will be displayed at some `width` when the `mediaQuery` is hit.
+
+In fact, if `sizes` is missing, the browser defaults `sizes` to `100vw`, meaning that it expects the image will display at the full viewport width.
+
+`sizes` gives the browser one more piece of information to ensure that it downloads the right image file based on the eventual display width of the image. **Just to be clear, it does not actually resize the image - that's what CSS does.**
+
+In this example, the browser knows that the image will be full viewport width if the browser's viewport is 400px wide or less, and half viewport width if greater than 400px. It knows that it has two image options - one with a natural width of 400px and the other 800px.
+
+##### Question #1 sizes and srcset
+That coffee looks delicious. You know what's even more delicious? Responsive images based on media queries :) Help the browser determine the right image to download using srcset to specify images with different natural resolutions and sizes to tell the browser how wide the image will be on the page using media queries.
+
+[![ri9-16](../assets/images/sm_ri9-16.jpg)](../assets/images/full-size/ri9-16.png)
+
+For this quiz, I want you to tell the browser that it has the option of using Coffee_1280w.jpg and Coffee_640w.jpg, which have widths of 1280px and 640px respectively. Tell the browser that the image will display at 50vw if the page is 960px wide or smaller, otherwise the image displays at 100vw.
+
+```html
+<img class="w" src="images/Coffee_1280w.jpg"
+  alt="Coffee by Amy March from Turkey">
+```
+
+##### Solution #1
+
+```html
+<img class="w" src="images/Coffee_1280w.jpg"
+  alt="Coffee by Amy March from Turkey"
+  srcset="images/Coffee_1280w.jpg 1280w,
+          images/Coffee_640w.jpg 640w"
+  sizes="(max-width: 960px) 50vw,
+         100vw">
+```
+
+#### Exercises
+
+- [Here's the size before srcset and sizes additions](http://udacity.github.io/responsive-images/examples/srcsetAndSizes/index-quiz2.html)
+- [Here's the site after the srcset and sizes addtions](http://udacity.github.io/responsive-images/examples/srcsetAndSizes/index-quiz2-solution.html)
+
+#### Explanation of how 'w' units work
+
+> The selection logic is not defined in the spec (on purpose) so that every browser can apply their own selection logic, and be able to optimize the selected resources over time, in order to achieve the best quality/byte-size tradeoff for their users.
+>
+> Blink, the rendering engine used by Chrome, uses selection logic based on a geometric mean of adjacent (sorted by density) resource candidates.
+>
+> If the DPR is a value between the densities of two adjacent candidates, the browser calculates the candidates' geometric mean. If DPR is higher than the geo mean, the candidate with the larger density value "wins". Otherwise, it's the smaller one.
+>
+> For your example, the geo mean of 500w and 1000w is 707, which explains why only above that value, the larger resource gets picked. Make sure you have installed the Udacity Feedback Chrome Extension!
+>
+> -- [Yoav Weiss](https://blog.yoav.ws/) Google Developer (responsive images implementation on Chrome)
