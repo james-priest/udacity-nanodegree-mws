@@ -1947,7 +1947,6 @@ Lots of other `<picture>` use cases, examples and code snippets are available he
 
 Find out more about responsive images from the [Responsive Images Community Group](http://responsiveimages.org/.
 
-<!--
 ### 9.8 Accessibility
 The web is visual but not all people surfing the web have the ability to see images. For the visually impaired, screen readers are essential to make sense of the web. This is Lynx.
 
@@ -2027,5 +2026,3 @@ So once you've used the `<picture>` tag with srcset to deliver images based on d
 1. Use `<picture>` with `srcset` to deliver images based on browser width and display density.
 2. Add `alt` attributes to images with meaning
 3. Optional: try a new font and style the text better!
-
--->
