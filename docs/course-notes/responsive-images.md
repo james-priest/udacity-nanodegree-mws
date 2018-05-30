@@ -1582,7 +1582,7 @@ What this means is, if you have a browser window sized at 500 pixels wide on a 2
 
 What we're doing is enabling the browser to make the right choice of image since at runtime, the browser knows the screen size and pixel density, but not the image size. Here we're telling the browser what the image size is.
 
-Later, you'll see how to work with image display sizes that are less then the full width of the viewport. 
+Later, you'll see how to work with image display sizes that are less then the full width of the viewport.
 
 Now, you might be wondering, why width and not height? Well, width covers most use cases but there has been some discussion of introducing an `h` unit.
 
@@ -1671,6 +1671,11 @@ You can get the actual source chosen for an image using the image's `currentSrc`
 [![ri9-13](../assets/images/sm_ri9-13.jpg)](../assets/images/full-size/ri9-13.png)
 
 Make the window bigger and ta-da,you can see that the image has a different source.
+
+##### Sizes Examples
+- [Sizes attribute with x values](http://udacity.github.io/responsive-images/examples/3-03/sizesXValues)
+- [Sizes attribute with w values](http://udacity.github.io/responsive-images/examples/3-03/sizesWValues)
+- [Sizes attribute with media query](http://udacity.github.io/responsive-images/examples/3-03/sizesMediaQuery)
 
 ### 9.4 Quiz: srcset Quiz
 #### srcset and sizes Quiz
@@ -1823,3 +1828,204 @@ For this quiz, I want you to tell the browser that it has the option of using Co
 > For your example, the geo mean of 500w and 1000w is 707, which explains why only above that value, the larger resource gets picked. Make sure you have installed the Udacity Feedback Chrome Extension!
 >
 > -- [Yoav Weiss](https://blog.yoav.ws/) Google Developer (responsive images implementation on Chrome)
+
+### 9.6 The Picture Element
+So let's dive in. Here are our kittens again.
+
+[![ri9-17](../assets/images/sm_ri9-17.jpg)](../assets/images/full-size/ri9-17.png)
+
+Here's what a picture element looks like.
+
+```html
+<picture>
+    <source srcset="kittens.webp" type="image/webp">
+    <source srcset="kittens.jpg" type="image/jpeg">
+    <img src="kittens.jpg" alt="Two grey tabby kittens">
+</picture>
+```
+
+You'll notice that this picture element contains two `<source>` elements. You might have seen those used for video or audio elements. Source elements do what you'd expect. They provide optional file sources. If the browser can use the first source it will. Otherwise, it keeps looking down the list.
+
+The `<picture>` element is a great way to provide alternative sources for image files. So the browser can choose depending on device capabilities.
+
+We've used the `<source>` element here to specify webp for browsers that support the webp format with a JPEG fallback.
+
+This is a great way to make use of the high performance webp format on platforms that support it, while providing an alternative for platforms that don't. You can find out more about webp from the article linked to below.
+
+By the way, that webp file is massive, looks like I should have saved it with lossy compression.
+
+Talking about fallbacks again, what about browsers that don't support the picture element? Well, that's easy. We just include a plain old image element.
+
+In fact, the image element is non optional, because that's the element that actually displays the image. The picture element scaffolding, so to speak, simply tells the image what source to choose.
+
+In fact, we can rewrite the example because the browser defaults to the image element if it can't use any of the sources.
+
+```html
+<picture>
+  <source srcset="kittens.webp" type="image/webp">
+  <img src="kittens.jpg" alt="Two grey tabby kittens">
+</picture>
+```
+
+Earlier on you learned about art direction. One of the core problems you have when serving images to a variety of screen sizes and display sizes is that although some images scale quite nicely from large to small, other images don't work so well. They may have too much detail to work well on a small screen or be too wide to work on a viewport with a portrait orientation.
+
+#### Example
+
+- [Picture element: alternative image formats](http://udacity.github.io/responsive-images/examples/3-06/pictureAlternativeFormats)
+
+#### Resources
+- [More information about WebP](More information about WebP)
+
+### 9.7 The Full Monty
+In the responsive world, choosing images to suit the viewing context, called **art direction**, can be accomplished pretty easily with the picture element to enable display of a crop of an image or even a different image depending on image display size.
+
+[![ri9-21](../assets/images/sm_ri9-21.jpg)](../assets/images/full-size/ri9-21.png)
+
+Now in this example, we're using media queries to specify the source. Full sized kitten for a large view port.
+
+[![ri9-18](../assets/images/sm_ri9-18.jpg)](../assets/images/full-size/ri9-18.png)
+
+Medium kitten for a medium viewport.
+
+[![ri9-19](../assets/images/sm_ri9-19.jpg)](../assets/images/full-size/ri9-19.png)
+
+Small kitten for a small view port. Cute.
+
+[![ri9-20](../assets/images/sm_ri9-20.jpg)](../assets/images/full-size/ri9-20.png)
+
+This is doing art direction. Choosing a different image with just a few lines of HTML.
+
+```html
+<picture>
+    <source media="(min-width: 650px)" srcset="kitten-large.png">
+    <source media="(min-width: 465px)" srcset="kitten-medium.png">
+    <img src="kitten-small.png" alt="Cute kitten">
+</picture>
+```
+
+Okay, hold onto your hat, here's the full monty.
+
+[![ri9-22](../assets/images/sm_ri9-22.jpg)](../assets/images/full-size/ri9-22.png)
+
+We've combined media queries and `srcset` to specify images for smaller and larger viewports with different images for different pixel densities.
+
+```html
+<picture>
+  <source media="(min-width: 1000px)"
+    srcset="kookaburra_large_1x.jpg 1x,
+            kookaburra_large_2x.jpg 2x">
+  <source media="(min-width: 500px)"
+    srcset="kookaburra_medium_1x.jpg 1x,
+            kookaburra_medium_2x.jpg 2x">
+  <img src="kookaburra_small.jpg"
+    alt="The kookaburra: a terrestrial tree kingfisher native to Australia">
+</picture>
+```
+
+You can find out more about picture fill from the link belows.
+
+#### Examples
+- [Picture element: art direction](http://udacity.github.io/responsive-images/examples/3-08/pictureArtDirection)
+- [Picture element: with srcset and media queries](http://udacity.github.io/responsive-images/examples/3-08/pictureFullMonty)
+
+#### Resources
+The cat illustrations are from Pearl Chen's HTML5 Rocks article
+
+- [Build-in Browser Support for Responsive IMages](https://www.html5rocks.com/en/tutorials/responsive/picture-element/)
+
+That article covers how to incorporate all of the following
+
+- `<picture>` element
+- `<source>` element
+- `srcset` attribute
+- media queries with `media` attribute
+- pixel density descriptors
+
+[Element Queries](https://github.com/ResponsiveImagesCG/cq-demos) will work like Media Queries, but with reference to the size of an element's parent container rather than viewport size. Browser implementation is in progress.
+
+Lots of other `<picture>` use cases, examples and code snippets are available here.
+
+Find out more about responsive images from the [Responsive Images Community Group](http://responsiveimages.org/.
+
+<!--
+### 9.8 Accessibility
+The web is visual but not all people surfing the web have the ability to see images. For the visually impaired, screen readers are essential to make sense of the web. This is Lynx.
+
+[![ri9-23](../assets/images/sm_ri9-23.jpg)](../assets/images/full-size/ri9-23.png)
+
+It's an all text browser and this is what Reddit looks like on Lynx.
+
+Without images, this is all a user has to decipher your website and they usually won't even be reading it. They'll be hearing it through a screen reader like ChromeVox.
+
+The good news is that you can still make images meaningful by using `alt` attributes responsibly.
+
+Here, let me show you what I mean.
+
+
+I've enabled ChromeVox, which is a screen reader that will be reading this page to you. Here, let's see what it has to say.
+
+#### Screen Reader
+> "The internet thanks you for being responsible with your alt tags. To replicate the experience of being visually impaired, I'm giving you some information using images that don't make any sense on their own, or at all, really."
+> [![ri9-24](../assets/images/sm_ri9-24.jpg)](../assets/images/full-size/ri9-24.png)
+> "Don't leave your visually impaired visitors out in the cold. Here are some tips about alt tags.
+> Alt tags should be descriptive for important images, like this body surfer because body surfing is important, I guess."
+> [![ri9-25](../assets/images/sm_ri9-25.jpg)](../assets/images/full-size/ri9-25.png)
+> "Alt tags should be empty for images that are just decorations, like this boiler image. Do you get the joke? It's a boiler to represent boilerplate code, which is sometimes empty of content."
+> [![ri9-26](../assets/images/sm_ri9-26.jpg)](../assets/images/full-size/ri9-26.png)
+>"Alt tags should be set on every image just like this pig is set on being so darn cute."
+> [![ri9-27](../assets/images/sm_ri9-27.jpg)](../assets/images/full-size/ri9-27.png)
+
+So there you have it. Check the instructor notes if you want to see the tips that ChromeVox just read to you. To get ChromeVox, it's just a Chrome extension, so it's really easy to install.
+
+#### Links
+- [Here's Lynx](http://invisible-island.net/lynx/)
+- [Here's ChromeVox](http://www.chromevox.com/)
+- [Here's the site Cam uses](http://udacity.github.io/responsive-images/examples/3-04/forARIA/index.html)
+
+#### General advice about alt attributes
+- `alt` attributes should be descriptive for important images, like this body surfer. Because body surfing is important, I guess.
+- `alt` attributes should be empty for images that are just decorations, like this boiler image. Do you get the joke? It's a boiler to represent boiler plate code, which is sometimes empty of content.
+- `alt` attributes should be set on every image, just like this pig is set on being so darn cute.
+
+### 9.9 Quiz: Accessibility Promise
+For this quiz, I want you to experience the web without images. Install Lynx and ChromeVox. You can find some links in the instructor notes.
+
+Once you do, visit an image heavy website. Ask yourself, what is it like experiencing the web without images, and try listening to a site with ChromeVox.
+
+If all you had was ChromeVox, could you figure out what the images were trying to tell you? Making your website accessible to everybody is incredibly important, because not only does it make you a good person,it means that more people can experience your website.
+
+So, when you complete this lesson, it means that you are promising to use all attributes responsibly.
+
+### 9.10 Project Part 3
+All ready, it is time for the third and final opportunity to make this blog look awesome.
+
+As you set up in the first iteration of the blog, the images right now are basically just big enough so they look good on large high DPI displays. The good news is that you're guaranteed to deliver high quality images to everyone but the bad news is that these images are probably too big for most devices.
+
+There's also the added issue of artwork. In that, when the viewport is small, users are seeing a wide image, and they may miss some of the most important elements.
+
+For instance here on a phone with a wide image of the horses, they just look like dots. You can't really make out any detail.
+
+[![ri9-28](../assets/images/sm_ri9-28.jpg)](../assets/images/full-size/ri9-28.png)
+
+Enter the `<picture>` element. For this part of the project, I want you to use the `<picture>` element to deliver different images based on viewport widths.
+
+For some images, like the horses, I want you to display a different crop of the image based on browser width. So if the window gets small, crop it in so we can actually see the horses.
+
+It usually makes sense to show tighter and tighter crops of an image as the browser gets smaller.
+
+Remember, you can use the `srcset` attribute to change which image is displayed based on device pixel ratio. Take advantage of this.
+
+In this solution, you'll see me set breakpoints at **500** and **750** pixels for my `<picture>`  elements. I'll also set up images for **1x** and **2x** displays when the browser is larger than 750 pixels.
+
+Just like the first time you worked on the project, I'm giving you a boilerplate gruntfile to help you get started. Once you're delivering fully responsive images with `<picture>` elements, make sure to add some descriptive alt tags if the images need them.
+
+As an optional challenge, you can make this blog look a little bit nicer. In the solution, you'll see me use the `<section>` tag to separate pieces of content. I'll add a new font from Google Fonts as well, and there might be a few other aesthetic changes to the text.
+
+So once you've used the `<picture>` tag with srcset to deliver images based on different browser widths and display densities, and you've added `alt` attributes to all of your images, a code will appear on the screen. Type that code in here to continue. But hey, don't forget, this is your baby and this is an art. So try a new font and maybe style the text just a little.
+
+#### Requirements
+1. Use `<picture>` with `srcset` to deliver images based on browser width and display density.
+2. Add `alt` attributes to images with meaning
+3. Optional: try a new font and style the text better!
+
+-->
