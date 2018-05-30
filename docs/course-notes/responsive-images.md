@@ -2026,3 +2026,44 @@ So once you've used the `<picture>` tag with srcset to deliver images based on d
 1. Use `<picture>` with `srcset` to deliver images based on browser width and display density.
 2. Add `alt` attributes to images with meaning
 3. Optional: try a new font and style the text better!
+
+#### Solution
+I started by creating new crops of the images. Some of the images were fine, but for most of them, I went with different crops for different browser widths.
+
+For instance, with the horses on medium sized displays, I zoomed in just a little bit and then on small displays, I zoomed in quite a bit. Now, you can actually see the horses.
+
+Back in the HTML,your picture element has two types of children, source and image. Source is optional but image is not. The image here acts like a fallback, meaning, that if none of the sources get hit, the images will be displayed.
+
+Also for browsers that don't support picture, the image will be displayed by default. For each image, I set two sources alongside the image, the first source has a media query of min width 750 pixels, and the second has a media query of 500 pixels.
+
+```html
+<figure>
+  <picture>
+    <source media="(min-width: 750px)"
+      srcset="images/horses-1600_large_2x.jpg 2x,
+              images/horses-800_large_1x.jpg" />
+    <source media="(min-width: 500px)" srcset="images/horses_medium.jpg" />
+    <img src="images/horses_small.jpg" alt="Horses in Hawaii">
+  </picture>
+  <figcaption>Horses in Hawaii</figcaption>
+</figure>
+```
+
+This means that for any browser with a viewport greater than 750 pixels, the images in the first source stack will be shown. If the browser has a viewport width greater than 500 pixels, but not greater than 750, This second source tag will tbe shown. Then, for any others, the last image tag will be shown. Which means that, basically, any browser smaller than 500 pixels will be seeing this image.
+
+For the first source, I decided to take advantage of the `srcset` attribute. `srcset` allows you to change which image is displayed, based on a device pixel ratio. So for a 2x display, I am showing a 2x image which is at 1600 pixels wide, but for 1x displays I am just showing a 1x image. 1x is default, it doesn't need to come at the end. 
+
+With the picture element set up like so the browser is being told to decide which image to download based on its width and its device pixel ratio. This is really awesome because you know that the browser is only going to download the image that meets its needs perfectly.
+
+I made sure to set all of my `alt` attributes. The only image that didn't get an alt attribute is the SVG logo at the top because it doesn't really mean anything here.
+
+#### Solution
+
+[![ri9-29](../assets/images/sm_ri9-29.jpg)](../assets/images/full-size/ri9-29.png)
+
+### 9.11. Course Conclusion
+In this course, you learned that your options for images go well beyond a simple image tag. In fact, you can use the browser's properties to not only change the source of the image to ease, you know, bandwidth requirements, but you can also change the content of the image using the picture element.
+
+You learn that images aren't always necessary. There are markup alternatives like icon fonts and CSS styles that give you low bandwidth options for images.
+
+Most importantly, you learned that images are an integral part of your development workflow for modern sites. Images constitute an enormous percentage of page load, and screen sizes and form factors vary so widely. Responsive design requires preparing your images for any device. Now, you can develop images for all of these devices.
