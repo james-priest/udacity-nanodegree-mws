@@ -2,7 +2,7 @@
 title: Responsive Images
 description: Notes by James Priest
 ---
-<!-- markdownlint-disable MD022 MD032 -->
+<!-- markdownlint-disable MD022 MD024 MD032 -->
 <!-- # Mobile Web Specialist Nanodegree -->
 # Responsive Images
 
@@ -1815,7 +1815,7 @@ For this quiz, I want you to tell the browser that it has the option of using Co
 #### Exercises
 
 - [Here's the size before srcset and sizes additions](http://udacity.github.io/responsive-images/examples/srcsetAndSizes/index-quiz2.html)
-- [Here's the site after the srcset and sizes addtions](http://udacity.github.io/responsive-images/examples/srcsetAndSizes/index-quiz2-solution.html)
+- [Here's the site after the srcset and sizes additions](http://udacity.github.io/responsive-images/examples/srcsetAndSizes/index-quiz2-solution.html)
 
 #### Explanation of how 'w' units work
 
@@ -1945,7 +1945,7 @@ That article covers how to incorporate all of the following
 
 Lots of other `<picture>` use cases, examples and code snippets are available here.
 
-Find out more about responsive images from the [Responsive Images Community Group](http://responsiveimages.org/.
+Find out more about responsive images from the [Responsive Images Community Group](http://responsiveimages.org/).
 
 ### 9.8 Accessibility
 The web is visual but not all people surfing the web have the ability to see images. For the visually impaired, screen readers are essential to make sense of the web. This is Lynx.
@@ -1959,7 +1959,6 @@ Without images, this is all a user has to decipher your website and they usually
 The good news is that you can still make images meaningful by using `alt` attributes responsibly.
 
 Here, let me show you what I mean.
-
 
 I've enabled ChromeVox, which is a screen reader that will be reading this page to you. Here, let's see what it has to say.
 
@@ -2051,7 +2050,7 @@ Also for browsers that don't support picture, the image will be displayed by def
 
 This means that for any browser with a viewport greater than 750 pixels, the images in the first source stack will be shown. If the browser has a viewport width greater than 500 pixels, but not greater than 750, This second source tag will tbe shown. Then, for any others, the last image tag will be shown. Which means that, basically, any browser smaller than 500 pixels will be seeing this image.
 
-For the first source, I decided to take advantage of the `srcset` attribute. `srcset` allows you to change which image is displayed, based on a device pixel ratio. So for a 2x display, I am showing a 2x image which is at 1600 pixels wide, but for 1x displays I am just showing a 1x image. 1x is default, it doesn't need to come at the end. 
+For the first source, I decided to take advantage of the `srcset` attribute. `srcset` allows you to change which image is displayed, based on a device pixel ratio. So for a 2x display, I am showing a 2x image which is at 1600 pixels wide, but for 1x displays I am just showing a 1x image. 1x is default, it doesn't need to come at the end.
 
 With the picture element set up like so the browser is being told to decide which image to download based on its width and its device pixel ratio. This is really awesome because you know that the browser is only going to download the image that meets its needs perfectly.
 
