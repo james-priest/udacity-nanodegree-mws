@@ -9,7 +9,7 @@ Website: [https://james-priest.github.io/udacity-nanodegree-mws/](https://james-
 ## Course Notes
 - [Responsive Web Design Fundamentals](docs/course-notes/responsive-web-design-fundamentals.md)
 - [Responsive Images](docs/course-notes/responsive-images.md)
-- Web Accessibility
+- [Web Accessibility](docs/course-notes/web-accessibility.md)
 
 ## Course Projects
 

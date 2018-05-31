@@ -11,7 +11,7 @@ This site contains notes and project submissions for Udacity's Mobile Web Specia
 ### Part 1 - Accessible & Responsive Web Apps
 - [Responsive Web Design Fundamentals](course-notes/responsive-web-design-fundamentals.html) (Lessons 1-5)
 - [Responsive Images](course-notes/responsive-images.html) (Lessons 6-9)
-- Web Accessibility (Lessons 10-15)
+- [Web Accessibility](course-notes/web-accessibility.html) (Lessons 10-15)
 - Offline Web Applications (Lesson 16 & 17)
 
 ### Part 2 - Dynamic & Offline Capable Web Apps
@@ -30,7 +30,7 @@ This site contains notes and project submissions for Udacity's Mobile Web Specia
 ### Part 1 - Accessible & Responsive Web Apps
 - [Responsive Web Design Fundamentals](course-notes/responsive-web-design-fundamentals.html) (Lessons 1-5)
 - [Responsive Images](course-notes/responsive-images.html) (Lessons 6-9)
-- Web Accessibility (Lessons 10-15)
+- [Web Accessibility](course-notes/web-accessibility.html) (Lessons 10-15)
 - Offline Web Applications (Lesson 16 & 17)
 
 - Restaurant Reviews App - Stage 1
