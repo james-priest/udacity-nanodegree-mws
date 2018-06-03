@@ -42,7 +42,7 @@ module.exports = function (grunt) {
     watch: {
       dev: {
         // files: ['<%= responsive_images.files'],
-        files: ['src/images/*.{jpg,png'],
+        files: ['src/images/*.{jpg,png}'],
         tasks: ['responsive_images']
       }
     }
