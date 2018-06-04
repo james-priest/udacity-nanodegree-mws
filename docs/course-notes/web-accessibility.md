@@ -16,7 +16,6 @@ description: Notes by James Priest
 - [ChromeVox Lite Screen Reader](http://udacity.github.io/ud891/lesson1-overview/06-experiencing-screen-reader/) - Sample in-page screen reader by Google
 - [Web Accessibility GitHub repo](https://github.com/udacity/ud891) - Udacity's GitHub repo for this course
 
-
 ## Lesson 10. Accessibility Overview
 ### 10.1 Intro to Accessibility
 Alice Boxhall a software engineer on the Google Chrome accessibility team and Rob Dodson, a developer advocate for Chrome help you understand how you can make your websites accessible and usable for everyone.
@@ -325,3 +324,124 @@ We're going to organize this around three main topics
 Now each of those topics could probably fill a whole course by themselves. So we're not going to be able to cover every single aspect of creating accessible websites. However, we're going to give you enough information to get started and point you at some good places to learn more about each topic.
 
 I'm sure you're all eager to get started so let's begin with a look at how and why you need to think about focus in your web application.
+
+## Lesson 11. Focus
+### 11.1 Intro to Focus
+In this lesson I'll be talking about focus and how you can manage it in your application.
+
+[![wa10-16](../assets/images/wa10-16-small.jpg)](../assets/images/wa10-16.jpg)
+
+Now in a nutshell, focus refers to the control on the computer screen that receives input from the keyboard and from the clipboard when you paste.
+
+You're probably familiar with focus for text fields. In order to type in a text field you first have to go over with your mouse and click on it. Well that act of clicking on the text field, that's actually what focuses it. You may also know that if you then press the [tab] key it will then move focus to the next text field or available control.
+
+Now some users drive the computer entirely with the keyboard or some other type of discrete input device. For those users, focus is absolutely critical. It's their primary means of reaching everything on the screen. And so for that reason the Web AIM checklist states in section 2.1.1, that all page functionality should be available using the keyboard, unless it's something you couldn't normally do with a keyboard like freehand drawing or something like that.
+
+[![wa10-17](../assets/images/wa10-17-small.jpg)](../assets/images/wa10-17.jpg)
+
+So this is a great place to start learning about accessibility because obviously we all know how to use a keyboard. It's very easy to relate to and test, and it benefits virtually all of our users.
+
+There's users out there with motor impairments which could be caused by anything from paralysis or even just a broken arm. Those folks may be relying on a keyboard or switch device to navigate your page, so a good focus strategy is going to be absolutely critical for them.
+
+For the power users out there, those folks who know every keyboard shortcut on their machine and hate having to use the mouse, well, for them, being able to navigate, for instance, a form on your site, is just going to make them more productive.
+
+So well-implemented focus strategy means everyone using your application will have a better experience. And as we'll see in the next few lessons, the work that we do today on focus is actually an important primer for supporting assistive technology users.
+
+#### WebAIM checklist item
+
+- 2.1.1: [http://webaim.org/standards/wcag/checklist#sc2.1.1](http://webaim.org/standards/wcag/checklist#sc2.1.1)
+
+### 11.2 What is Focus
+As you learned in the previous lesson, focus determines where keyboard events go in the page.
+
+[![wa10-18](../assets/images/wa10-18-small.jpg)](../assets/images/wa10-18.jpg)
+
+To give you an example, if I go over and focus this text input field using my mouse and then begin typing, the input receives the keyboard events and displays the characters as I've typed them.
+
+[![wa10-19](../assets/images/wa10-19-small.jpg)](../assets/images/wa10-19.jpg)
+
+The currently focused item is often indicated by a focus ring, where the actual styling of that ring depends on the browser and any additional styling that the page author may have applied.
+
+As a user,you can control which element is currently focused using your keyboard. Pressing the Tab key will move focus forward through the document.
+
+[![wa10-20](../assets/images/wa10-20-small.jpg)](../assets/images/wa10-20.jpg)
+
+Shift+Tab moves focus backwards.
+
+[![wa10-21](../assets/images/wa10-21-small.jpg)](../assets/images/wa10-21.jpg)
+
+And you can use the arrow keys to move focus around within a component.
+
+[![wa10-22](../assets/images/wa10-22-small.jpg)](../assets/images/wa10-22.jpg)
+
+On MacOS X, this works a little differently. While Chrome will always let you navigate with Tab, you'll need to press Option+Tab in order to change focus in other browsers like Safari.
+
+If you like, you can change this by going to your System Preferences, going to the Keyboard section, clicking on the Shortcuts tab and then changing this radio group to say All controls.
+
+To give you an example of focus in the real world, here I am on Wikipedia, and as I press the Tab key, the browser is going to navigate through all of the focusable elements on the page. 
+
+[![wa10-23](../assets/images/wa10-23-small.jpg)](../assets/images/wa10-23.jpg)
+
+Eventually I'll reach a stopping point and hit Shift+Tab and now I'm moving backwards through the page. This ordering is called, creatively enough, the tab order.
+
+[![wa10-24](../assets/images/wa10-24-small.jpg)](../assets/images/wa10-24.jpg)
+
+Making sure your application has a logical tab order is an important step, which we're going to cover later on in this course.
+
+Now built-in interactive HTML elements like input, button, and select are all implicitly focusable. Meaning that they're automatically inserted in the tab order and that they also have built-in keyboard event handling.
+
+[![wa10-25](../assets/images/wa10-25-small.jpg)](../assets/images/wa10-25.jpg)
+
+But not all elements are focusable.
+
+[![wa10-26](../assets/images/wa10-26-small.jpg)](../assets/images/wa10-26.jpg)
+
+This header, the paragraph below it, and this image are not focusable, and they're not implicitly inserted in the tab order. That's by design.There's generally no need to focus something ifa user can't interact with it or provide it some sort of input.
+
+#### Notes
+Move focus around the page using your keyboard:
+
+- `TAB` will move focus forward
+- `SHIFT - TAB` will move focus backwards
+- `Arrow keys` can be used to navigate inside of a component
+
+[https://www.w3.org/TR/html5/editing.html#focus-management](https://www.w3.org/TR/html5/editing.html#focus-management)
+
+### 11.3 Quiz: Experience Focus
+Let's try out some of the focus techniques discussed in the previous lesson. I'd like you to search for a ticket on Udacity's new Australian airline website using your keyboard.
+
+[![wa10-27](../assets/images/wa10-27-small.jpg)](../assets/images/wa10-27.jpg)
+
+We've disabled the mouse on this page, so you can't cheat. I'd like for you to search for a ticket that is a round trip to Melbourne leaving on 10/12/2017 returning on 10/23/2017, is a window seat, and you do not want to receive any promotional offers.
+
+#### Quiz
+Try out our [flight booking form](http://udacity.github.io/ud891/lesson2-focus/01-basic-form/) using only your keyboard. You'll need to search for a ticket that matches the following criteria:
+
+The ticket should...
+
+- Be a round trip
+- to Melbourne
+- leaving on 10/12/2017
+- returning on 10/23/2017
+- window seat
+- and you DO NOT want to receive promotional offers 😀
+
+If you've filled out the form correctly then pressing the Search button should give you a notification that you've passed.
+
+#### Remember
+
+- `TAB` will move focus forward to the next element
+- `SHIFT - TAB` will move focus backwards to the previous element
+- `Arrow Keys` can be used to move focus within an element
+
+<!--
+### 11.4 DOM Order Matters
+So working with native elements is great for focus behavior, because they're automatically inserted into the tab order based on their position in the DOM.
+
+To give you an example I've written a little bit of HTML here.
+
+[![wa10-28](../assets/images/wa10-28-small.jpg)](../assets/images/wa10-28.jpg)
+
+I've got three button elements andthen you can see the output over here on the right.So there's three button elements rendering inside of my browser.Now because the tab order corresponds to the DOM order, when I go andpress the tab key you'll see that the first button elementgets the focus indicator around it.And as I keep pressing tab, you'll see the next item in the DOM order getsfocused and tab again, now the last item in the DOM order is focused.Now it's important note that using something like CSS,it's possible to have things appear in one order on screen, butactually exist in a different order over in the DOM.To give you an example of that, what I've done now is I've justadded this inline style to my first button element andI'm telling it that I want to float to the right.Now what this is going to do is it's going to visually change the ordering ofthese buttons here such that our first DOM element is now appearinglast on screen visually.So even though the visual order has changed, the DOM order remains the same.Let's see how that effects tabbing.When I press the tab key, the first DOM element is still focused, butnow visually it's the last element in this group which is kind of weird.If I press tab again, now we see that the second DOM element,which is the first visual element becomes focused.And pressing tab again, I've got this middle element now being focused,even though that's the last DOM item.So the moral of the story is, be careful when you're using something like CSS tovisually change the position of your elements on screen.This can cause the tab order to jump around seemingly at random andfor users relying on a keyboard this can be extremely confusing.For this reason the WebAIM checklist specifically states in section 1.3.2that the reading and navigation order as determined by code ordershould be logical and intuitive in your application.I have just sort of a general rule of thumb.I like to tab through my page every sooften just to make sure I haven't accidentally messed up the tab order.It's a good habit to adopt andit's one that doesn't really require a ton of effort on my part.
+
+-->
