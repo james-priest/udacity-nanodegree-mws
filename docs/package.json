@@ -1,0 +1,28 @@
+{
+  "name": "udacity-nanodegree-mws",
+  "version": "0.1.0",
+  "description": "Notes on Udacity Mobile Web Specialist Nanodegree",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/james-priest/udacity-nanodegree-mws.git"
+  },
+  "author": "James Priest",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/james-priest/udacity-nanodegree-mws/issues"
+  },
+  "homepage": "https://github.com/james-priest/udacity-nanodegree-mws#readme",
+  "devDependencies": {
+    "grunt": "^1.0.2",
+    "grunt-contrib-clean": "^1.1.0",
+    "grunt-contrib-watch": "^1.1.0",
+    "grunt-responsive-images": "^1.10.1"
+  }
+}
