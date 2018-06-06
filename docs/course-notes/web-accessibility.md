@@ -434,7 +434,6 @@ If you've filled out the form correctly then pressing the Search button should g
 - `SHIFT - TAB` will move focus backwards to the previous element
 - `Arrow Keys` can be used to move focus within an element
 
-<!--
 ### 11.4 DOM Order Matters
 So working with native elements is great for focus behavior, because they're automatically inserted into the tab order based on their position in the DOM.
 
@@ -442,6 +441,584 @@ To give you an example I've written a little bit of HTML here.
 
 [![wa10-28](../assets/images/wa10-28-small.jpg)](../assets/images/wa10-28.jpg)
 
-I've got three button elements andthen you can see the output over here on the right.So there's three button elements rendering inside of my browser.Now because the tab order corresponds to the DOM order, when I go andpress the tab key you'll see that the first button elementgets the focus indicator around it.And as I keep pressing tab, you'll see the next item in the DOM order getsfocused and tab again, now the last item in the DOM order is focused.Now it's important note that using something like CSS,it's possible to have things appear in one order on screen, butactually exist in a different order over in the DOM.To give you an example of that, what I've done now is I've justadded this inline style to my first button element andI'm telling it that I want to float to the right.Now what this is going to do is it's going to visually change the ordering ofthese buttons here such that our first DOM element is now appearinglast on screen visually.So even though the visual order has changed, the DOM order remains the same.Let's see how that effects tabbing.When I press the tab key, the first DOM element is still focused, butnow visually it's the last element in this group which is kind of weird.If I press tab again, now we see that the second DOM element,which is the first visual element becomes focused.And pressing tab again, I've got this middle element now being focused,even though that's the last DOM item.So the moral of the story is, be careful when you're using something like CSS tovisually change the position of your elements on screen.This can cause the tab order to jump around seemingly at random andfor users relying on a keyboard this can be extremely confusing.For this reason the WebAIM checklist specifically states in section 1.3.2that the reading and navigation order as determined by code ordershould be logical and intuitive in your application.I have just sort of a general rule of thumb.I like to tab through my page every sooften just to make sure I haven't accidentally messed up the tab order.It's a good habit to adopt andit's one that doesn't really require a ton of effort on my part.
+I've got three button elements and then you can see the output over here on the right. So there's three button elements rendering inside of my browser.
 
--->
+Now because the tab order corresponds to the DOM order, when I go and press the tab key you'll see that the first button element gets the focus indicator around it.
+
+[![wa10-29](../assets/images/wa10-29-small.jpg)](../assets/images/wa10-29.jpg)
+
+And as I keep pressing tab, you'll see the next item in the DOM order gets focused and tab again, now the last item in the DOM order is focused.
+
+[![wa10-30](../assets/images/wa10-30-small.jpg)](../assets/images/wa10-30.jpg)
+
+Now it's important note that using something like CSS, it's possible to have things appear in one order on screen, but actually exist in a different order over in the DOM.
+
+To give you an example of that, what I've done now is I've just added this inline style to my first button element and I'm telling it that I want to float to the right. 
+
+Now what this is going to do is it's going to visually change the ordering of these buttons here such that our first DOM element is now appearing last on screen visually. So even though the visual order has changed, the DOM order remains the same.
+
+[![wa10-31](../assets/images/wa10-31-small.jpg)](../assets/images/wa10-31.jpg)
+
+Let's see how that effects tabbing. When I press the tab key, the first DOM element is still focused, but now visually it's the last element in this group which is kind of weird.
+
+[![wa10-32](../assets/images/wa10-32-small.jpg)](../assets/images/wa10-32.jpg)
+
+If I press tab again, now we see that the second DOM element, which is the first visual element becomes focused.
+
+[![wa10-33](../assets/images/wa10-33-small.jpg)](../assets/images/wa10-33.jpg)
+
+And pressing tab again, I've got this middle element now being focused, even though that's the last DOM item.
+
+[![wa10-34](../assets/images/wa10-34-small.jpg)](../assets/images/wa10-34.jpg)
+
+So the moral of the story is, be careful when you're using something like CSS to visually change the position of your elements on screen. This can cause the tab order to jump around seemingly at random and for users relying on a keyboard this can be extremely confusing.
+
+For this reason the WebAIM checklist specifically states in section 1.3.2 that the reading and navigation order as determined by code order should be logical and intuitive in your application.
+
+[![wa10-35](../assets/images/wa10-35-small.jpg)](../assets/images/wa10-35.jpg)
+
+I have just sort of a general rule of thumb. I like to tab through my page every so often just to make sure I haven't accidentally messed up the tab order. It's a good habit to adopt and it's one that doesn't really require a ton of effort on my part.
+
+### 11.5 Quiz: Fixing DOM Order
+Here's a page with a busted tab order.
+
+[![wa10-36](../assets/images/wa10-36-small.jpg)](../assets/images/wa10-36.jpg)
+
+Go ahead try to navigate this page using the keyboard only you'll find you skip around a lot. It would be much easier if we navigated in this order.
+
+1. Navigation links
+2. Search
+3. Content links
+4. Footer.
+
+[![wa10-37](../assets/images/wa10-37-small.jpg)](../assets/images/wa10-37.jpg)
+
+Using a text editor, see if you can fix the order of the elements in the DOM, so that the tab order makes sense.
+
+#### Quiz
+This exercise can be found in the folder `lesson2-focus/02-dom-order` within this [course's GitHub Repository](https://github.com/udacity/ud891).
+
+Tabbing around the page should reveal a mixed up tab order. Read through the `index.html` and see if there are any places where elements may be in the wrong order. If something looks out of place see if you can fix it so the tab order works as expected. If you get stuck you can refer to the `solution` directory.
+
+- [View the page](https://rawgit.com/udacity/ud891/gh-pages/lesson2-focus/02-dom-order/index.html)
+
+#### Solution
+Looking at the markup for the page, I can see that the search link is actually higher in the DOM order than the other links. It's using a pull-right class to float over to one side.
+
+The easiest thing to do is to just move the search button below the other elements. That will give the same visual presentation but now the tab order makes sense.
+
+I also noticed that the newsletter is jumping ahead of the other elements on the page because it's absolutely positioned to appear at the bottom of the page. Just like the search link, I'll move the newsletter down to the bottom of the document just after the main element.
+
+Now is also a good time to improve our semantics a little bit. Instead of just using a div for this element, I can replace it with a footer tag. Doing so can benefit screen readers who rely on these kind of landmarked elements to navigate the page. It's also a little more concise than div class equals footer.
+
+I'll talk more about semantics and navigation in a future lesson.
+
+### 11.6 Using Tabindex
+Because native elements are automatically inserted in the tab order, they can be very convenient to use. But there are instances when you'll want to modify the tab order.
+
+[![wa10-38](../assets/images/wa10-38-small.jpg)](../assets/images/wa10-38.jpg)
+
+Like if you're building a component without a native analog, like this dropdown up here,
+
+[![wa10-39](../assets/images/wa10-39-small.jpg)](../assets/images/wa10-39.jpg)
+
+or if you need to have something off screen that should only be focusable when it appears, like perhaps a modal window.
+
+[![wa10-40](../assets/images/wa10-40-small.jpg)](../assets/images/wa10-40.jpg)
+
+For these cases, you can use the tabindex attribute. 
+
+[![wa10-41](../assets/images/wa10-41-small.jpg)](../assets/images/wa10-41.jpg)
+
+Tabindex can be applied to any HTML element, and it takes a range of numeric values.
+
+```html
+<div tabindex="0">Focus Me!</div>
+```
+
+A tabindex of -1 means that the element will not be in the tab order, but it can be programmatically focused via JavaScript, by calling the element's `focus` method.
+
+[![wa10-42](../assets/images/wa10-42-small.jpg)](../assets/images/wa10-42.jpg)
+
+This can be especially useful for off screen content which appears on screen in response to a user event. When the new content is displayed, you may wish to call its focus method which will then direct future keyboard events to it.
+
+[![wa10-43](../assets/images/wa10-43-small.jpg)](../assets/images/wa10-43.jpg)
+
+A tabindex of 0 will add the element to the natural tab order, plus, that element will also be focusable by calling its focus method.
+
+For example, here I've got a fancy button that I've created out of just a div.
+
+[![wa10-44](../assets/images/wa10-44-small.jpg)](../assets/images/wa10-44.jpg)
+
+Now, without a tabindex attribute, if I press the Tab key, this element will not receive focus.
+
+By adding a tabindex of zero, now when I press the Tab key, this element gets focused, and future keyboard events get directed to it.
+
+[![wa10-45](../assets/images/wa10-45-small.jpg)](../assets/images/wa10-45.jpg)
+
+A tabindex of greater than zero, for instance something like tab index of 5 will jump the element to the front of the tab order regardless of where it is in the DOM.
+
+If there are multiple elements with a tabindex greater than zero, the order will start from the lowest value that is greater than zero and then work its way up.
+
+[![wa10-46](../assets/images/wa10-46-small.jpg)](../assets/images/wa10-46.jpg)
+
+In general, using a tabindex greater than zero is discouraged and considered a bit of an anti-pattern.
+
+If you get in the habit of using it, you can quickly end up with a very jumbled tab order, and it can make things especially confusing for screen reader users who navigate the DOM in a linear fashion.
+
+Ideally, if you need to put something earlier in the tab order, the best bet is to move it up in the DOM.
+
+### 11.7 Deciding whats in focus
+It's tempting, especially when you're starting to look at screen reader accessibility, to add tabindex to seemingly important elements like headers, for instance, in order to help out the user.
+
+That's actually counterproductive. Normally, you only want to add focus behavior to interactive controls like buttons, tabs, drop downs, or anything that the user might provide input to.
+
+If you're worried about visually impaired users missing out on your content, don't be. We're going to show in the next few lessons how screen reader users explore non interactive content.
+
+So when you're adding a tabindex attribute, stop and ask yourself, is this something the user is going to interact with? If the answer is no, you almost certainly want to leave it alone with the exception of a few caveats which will cover in just a moment.
+
+### 11.8 Quiz: Which Elements should have focus
+Rob just told us that we should typically only add tabindex attributes to interactive elements and not our site content.
+
+With that in mind, given the following page, check the box for any element which should be focusable. This could be an element that is natively focused or one that you might add a tab index to.
+
+[![wa10-47](../assets/images/wa10-47-small.jpg)](../assets/images/wa10-47.jpg)
+
+#### Solution
+The following elements should have focus.
+
+- Header links,
+- Search fields,
+- Form input fields
+- Submit button
+- Large Call to Action button
+- Footer links.
+
+[![wa10-48](../assets/images/wa10-48-small.jpg)](../assets/images/wa10-48.jpg)
+
+I'm not going to add tabindex to any headings or the paragraphs of text. Even if that content seems super important, it's not something the user can interact with, so there's no reason to make it focusable.
+
+Similarly, even if the big image is really awesome, there is no reason to make it focusable. Screen reader users will still be able to understand the content of the image, so long as we provide proper Alt tag support,which Alice will touch on in just a few lessons.
+
+### 11.9 Managing Focus
+I mentioned previously that you shouldn't add tab index to site content as a general rule, but there is one exception and that's when you're manipulating the page in response to a user action.
+
+A scenario might be that a user goes and clicks on one of these menu items and the page then does an animated scroll, down to that particular section.
+
+[![wa10-49](../assets/images/wa10-49-small.jpg)](../assets/images/wa10-49.jpg)
+
+Or, if you are building a single page web app, clicking on one of the navigation links changes the content of the page without doing a full page refresh.
+
+In either of these situations, you'll want to
+
+- pick an appropriate header
+- give the tabindex a negative one so it doesn't appear in the natural tab order
+- call its focus method after the user has taken their action.
+
+This process is known as Managing Focus, and it's an extremely important technique that keeps the user's interactive context in sync with the visual representation of the site.
+
+[![wa10-52](../assets/images/wa10-52-small.jpg)](../assets/images/wa10-52.jpg)
+
+Let's go through that single page app scenario I just discussed and I'll highlight what happens when we don't manage focus. And then demonstrate how the experience can be improved when we do manage focus.
+
+#### Before
+So here we are back at our site. I'm going to go click on the "What is Vegemite link?" link and when I do that I'm going to want to start clicking around some of the anchors in the main page content.
+
+[![wa10-53](../assets/images/wa10-53-small.jpg)](../assets/images/wa10-53.jpg)
+
+So using my keyboard, I'll navigate over there. I'll press enter and now I'd like to click the link in the body content, but in order to get there I'm going to have to tab back through my navigation.
+
+Now, there's only a few navigation items here so it's not the biggest deal in the whole world. But you can imagine on a complex site with a lot of navigation, that it could be a lot of work to get through all of that.
+
+Furthermore, as a screen reader user, I might not even know that the page content has loaded in and changed yet. I may just be sort of sitting around waiting for something to happen after I've clicked that link.
+
+Let's see if we can improve upon this a little bit.
+
+#### After
+So what I'm going to do is, take the heading and I'm going to give it a tabindex of -1.
+
+If you recall, that means the element won't be in the tab order, but I can programmatically focus it using JavaScript.
+
+[![wa10-50](../assets/images/wa10-50-small.jpg)](../assets/images/wa10-50.jpg)
+
+Now, I can
+- listen for my anchor clicks
+- I can tell the page content to update
+- I can call the focus method of that header.
+
+Once I've done that, the user will then be moved down in here, inside of our main page content, and then can then quickly `Tab`, or `Shift+Tab` to whatever they want.
+
+[![wa10-51](../assets/images/wa10-51-small.jpg)](../assets/images/wa10-51.jpg)
+
+Now you might notice that as we do this, the header itself gets a large focus ring placed around it. I'm going to talk more about styling focus in a future lesson.
+
+### 11.10 Quiz: Manage Focus Yourself
+Here's a classic single page web app where clicking a navigation item will change the page content.
+
+[![wa10-54](../assets/images/wa10-54-small.jpg)](../assets/images/wa10-54.jpg)
+
+Using your JavaScript skills make it so each heading is properly focused when the user clicks a navigation link.
+
+#### Solution
+Inside each section of the page, I'm going to find an appropriate header like these h2s, and give it a tab index of negative 1.
+
+[![wa10-55](../assets/images/wa10-55-small.jpg)](../assets/images/wa10-55.jpg)
+
+Next, I'll open the router code in main.js. 
+
+[![wa10-56](../assets/images/wa10-56-small.jpg)](../assets/images/wa10-56.jpg)
+
+When the page changes, I'll look for a new header by calling newPage.querySelector h2 and its focus method. To prevent this code from running the first time the user visits the site, I'll add a little guard variable called isFirstPage and set that to false after the first page runs.
+
+```js
+var isFirstPage = true;
+
+page('/:slug', function(context) {
+  // This will match any value after the first / in the url. For example, if
+  // the url was /foo, the value of slug would be "foo".
+  var slug = context.params.slug;
+
+  // Remove is-active class from previous menu item and section
+  var oldMenuItem = document.querySelector('#menu .is-active');
+  var oldPage = document.querySelector('main .is-active');
+  oldMenuItem.classList.remove('is-active');
+  oldPage.classList.remove('is-active');
+
+  // Add is-active class to new menu item and section using the URL slug
+  var newMenuItem = document.querySelector('#menu [data-page='+slug+']');
+  var newPage = document.querySelector('main [data-page='+slug+']');
+  newMenuItem.classList.add('is-active');
+  newPage.classList.add('is-active');
+
+  // if first visit then don't set focus to h2 element
+  if (isFirstPage) {
+    isFirstPage = false;
+    return;
+  }
+  // set focus to h2 in the new page
+  newPage.querySelector('h2').focus();
+});
+```
+
+From then on, anytime we switch to a new page, our header focus code will run.
+
+### 11.11 Skip Links
+Since we're on the subject of focus management, let me show you another really useful technique.
+
+On most websites the main content is usually not the first thing in the DOM, instead we often begin with navigation, sublists, side bars, hamburger menus, and other bits of page scaffolding.
+
+[![wa10-57](../assets/images/wa10-57-small.jpg)](../assets/images/wa10-57.jpg)
+
+This means that keyboard and screen reader users must first navigate through all of this content before they can get at the actual heart of the page. For users with motor impairments this is especially frustrating.
+
+A user who's unable to move their arms might be navigating the page with a switch device, which they activate by tapping their head. This user is going to have to tap over and over again to get through all of these elements before they can get to our content, and that's not cool.
+
+Thankfully, there's an easy to implement solution to this problem. Let's create a hidden link that allows keyboard and switch device users the ability to jump straight to our page content. These links are often referred to as skip links.
+
+[![wa10-58](../assets/images/wa10-58-small.jpg)](../assets/images/wa10-57.jpg)
+
+Let me show you an example.
+
+Here we are on the Funion news site. I have some navigation at the top which normally the keyboard user would have to tab through. Instead, when I press tab, the first thing I'm presented with is a little option up here in the top of the corner, which is asking if I'd like to skip down to the main content.
+
+[![wa10-59](../assets/images/wa10-59-small.jpg)](../assets/images/wa10-59.jpg)
+
+Pressing Enter will then move focus down to the main content area, bypassing all of our navigation.
+
+Implementing a skip link is actually really easy. I'll start by creating a named anchor. So the href of this anchor refers to the ID of another element that I'll have on the page. I'm also going to give this element a class of skip-link so I can refer to it in CSS later.
+
+```html
+<a href="#maincontent" class="skip-link">Skip to main content</a>
+
+<nav>
+  ...
+</nav>
+
+<main id="maincontent">
+  ...
+</main>
+```
+
+I want the skip link to appear early in the DOM, so I'm going to put it before my navigation. To connect my skip-link to my main content, I'll give my main element an ID of maincontent, which matches the href value so the anchor and the main section are now connected.
+
+In newer versions of Chrome and Firefox just doing this right here will allow you to move focus down to the main element when the skip-link is pressed. But for older browsers which don't move focus when named anchors are clicked, I'm also going to want to add a tabindex -1.
+
+```html
+<main id="maincontent" tabindex="-1">
+  ...
+</main>
+```
+
+Over in my CSS, I'll make sure that the skip-link has an absolute position, so it can appear in the top left corner of the screen. But I'm going to make it initially positioned off screen by setting the top value to -40 pixels.
+
+Then I can use the focus pseudo class to move the element back on screen. We'll talk more about the focus pseudo class in a later lesson, but the short explanation is that this pseudo class matches anytime the corresponding element gains focus.
+
+```css
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: #bf1722;
+  color: white;
+  padding: 8px;
+  z-index: 100;
+}
+.skip-link:focus {
+  top: 0;
+}
+```
+
+With these simple techniques, we've removed the road blocks from the path of our keyboard users and greatly improve their experience.
+
+You can [read more about skip links in this article](http://webaim.org/techniques/skipnav/) on the Web AIM site.
+
+Google article on focus management: [https://developers.google.com/web/updates/2016/03/focus-start-point?hl=en](https://developers.google.com/web/updates/2016/03/focus-start-point?hl=en)
+
+### 11.12 Focus in Complex Components
+Managing focus when you navigate on the page is really important. But sometimes you'll need to manage focus at the component level as well, especially if you're building a complex custom widget.
+
+To show you what I mean, take a look at this native select tag and notice how I can focus it and once there, I can use the arrow keys to expose additional functionality, like selecting different options.
+
+[![wa10-60](../assets/images/wa10-60-small.jpg)](../assets/images/wa10-60.jpg)
+
+If you were building a custom select element yourself or something similar like a drop-down, you would need to expose these same kinds of behaviors so that your users who rely primarily on the keyboard could still interact with your control.
+
+Now knowing which keyboard behaviors to implement can be a bit of a guessing game but, thankfully there's a really helpful guide which you can refer to.
+
+The ARIA design pattern stock, lists various kinds of components as well as the sorts of keyboard interactions that they support.
+
+[![wa10-61](../assets/images/wa10-61-small.jpg)](../assets/images/wa10-61.jpg)
+
+Now, Alice is going to cover ARIA in more detail in the following sections, but for now, let's use this guide to help us add keyboard support to a new component which we're going to build.
+
+### Resources
+The ARIA Authoring Practices doc (or "ARIA Design Patterns doc") is a great resource for figuring out what kind of keyboard support your complex components should implement.
+
+There are currently two versions:
+
+- [WAI-ARIA Authoring Practices 1.0](https://www.w3.org/TR/wai-aria-practices/)
+- [WAI-ARIA Authoring Practices 1.1](https://www.w3.org/TR/wai-aria-practices-1.1/) (Newer working draft)
+
+I personally prefer the 1.1 version because the layout is a bit easier to navigate and it includes a few fixes currently missing from the 1.0 version.
+
+### 11.13 Keyboard Design Patterns
+Here's a custom component I've been working on which closely resembles a radio group.
+
+[![wa10-62](../assets/images/wa10-62-small.jpg)](../assets/images/wa10-62.jpg)
+
+To determine what kind of keyboard support it needs, I'll check the Aria Design Patterns guide and I then jump down to Section 11 which lists all of the various components and their patterns.
+
+[![wa10-63](../assets/images/wa10-63-small.jpg)](../assets/images/wa10-63.jpg)
+
+Once we're down here, I'll look for a component that sort of matches the one that I'm building. In this case I can see that there's a radio button. So I'll click on that and based on the recommendations there are a number of keyboard handlers that I know I now need to implement.
+
+[![wa10-64](../assets/images/wa10-64-small.jpg)](../assets/images/wa10-64.jpg)
+
+Using this guide I'm going to implement the Down Arrow slash Right Arrow support in my element. Now when the user presses the down arrow we know that our radio group should move focus to the next radio button, it should select that button, and if focus is on the last item, then focus will wrap around to the first item.
+
+To do this, we're going to use a technique called roving focus. Roving focus works by setting tab index to -1 for all of the children and then zero on the currently active item. 
+
+[![wa10-65](../assets/images/wa10-65-small.jpg)](../assets/images/wa10-65.jpg)
+
+Our component then uses a keyboard event listener to determine which key the user has pressed. At which point we set tabindex on the next item to zero, we set tabindex of the previously focused item to negative one.
+
+We call the focus method of this new soon to be focused item, this now moves our focus ring. And lastly I'm going to just move this checked attribute down to this element using setAttribute. In this case I'm using the CSS in my element based on that checked attribute to style the state of the radio button.
+
+[![wa10-66](../assets/images/wa10-66-small.jpg)](../assets/images/wa10-66.jpg)
+
+Now when I reach the bottom of this list and this last radio is focused and the user presses the down arrow, then we're going to wrap back around.
+
+[![wa10-67](../assets/images/wa10-67-small.jpg)](../assets/images/wa10-67.jpg)
+
+So we'll set tab index to zero on this top item. We'll move checked over there or call focus and we'll set tab index to negative one on the previously focused item.
+
+[![wa10-65](../assets/images/wa10-65-small.jpg)](../assets/images/wa10-65.jpg)
+
+For building complex components running focus is a really invaluable technique. So in the next lesson, you're going to take a crack at implementing it yourself using the same example.
+
+#### Resources
+Take a look at the ARIA Authoring Best Practices guide to read more about the Radio pattern. I've linked to both versions so you can choose whichever one you prefer. Both patterns are nearly identical but do note that the 1.0 version is called "Radio Button" and the 1.1 version is called "Radio Group".
+
+- [ARIA Authoring Best Practices 1.0 (Radio Button)](https://www.w3.org/TR/wai-aria-practices/#radiobutton)
+- [ARIA Authoring Best Practices 1.1 (Radio Group)](https://www.w3.org/TR/wai-aria-practices-1.1/#radiobutton)
+
+[https://www.w3.org/TR/wai-aria-practices/#aria_ex](https://www.w3.org/TR/wai-aria-practices/#aria_ex)
+
+### 11.14 Quiz: Adding Keyboard Event Listeners
+You can find the files for this example in the `lesson2-focus/05-radio-group` directory within this [course's GitHub Repository](https://github.com/udacity/ud891).
+
+Using the ARIA Authoring Best Practices doc (either [version 1.0](https://www.w3.org/TR/wai-aria-practices/) or [version 1.1](https://www.w3.org/TR/wai-aria-practices-1.1/)) find the radio pattern and implement support for the `Down Arrow and Right Arrow` pattern using the "roving focus" technique. I should point out that you'll also sometimes see this referred to as "roving tabindex."
+
+**Note:** The 1.0 version of the doc refers to this as a "Radio Button" whereas the 1.1 version of the doc refers to this as a "Radio Group".
+
+You'll want to work in the `radiogroup.js` file to implement your keyboarding support.
+
+#### Solution
+
+##### HTML
+```html
+  <body>
+    <div class="demo">
+
+      <h3>Drink Options</h3>
+
+      <ul id="group1" class="radiogroup">
+        <li tabindex="0" class="radio" checked>Water</li>
+        <li tabindex="-1" class="radio">Tea</li>
+        <li tabindex="-1" class="radio">Coffee</li>
+        <li tabindex="-1" class="radio">Cola</li>
+        <li tabindex="-1" class="radio">Ginger Ale</li>
+      </ul>
+
+    </div>
+  </body>
+```
+
+##### JS
+```js
+(function() {
+  'use strict';
+
+  // Define values for keycodes
+  var VK_ENTER      = 13;
+  var VK_SPACE      = 32;
+  var VK_LEFT       = 37;
+  var VK_UP         = 38;
+  var VK_RIGHT      = 39;
+  var VK_DOWN       = 40;
+
+  // Helper function to convert NodeLists to Arrays
+  function slice(nodes) {
+    return Array.prototype.slice.call(nodes);
+  }
+
+  function RadioGroup(id) {
+    this.el = document.querySelector(id);
+    this.buttons = slice(this.el.querySelectorAll('.radio'));
+    this.focusedIdx = 0;
+    this.focusedButton = this.buttons[this.focusedIdx];
+
+    this.el.addEventListener('keydown', this.handleKeyDown.bind(this));
+  }
+
+  RadioGroup.prototype.handleKeyDown = function(e) {
+    switch (e.keyCode) {
+
+      case VK_UP:
+      case VK_LEFT: {
+
+        e.preventDefault();
+
+        // This seems like a good place to do some stuff :)
+        if (this.focusedIdx === 0) {
+          this.focusedIdx = this.buttons.length - 1;
+        } else {
+          this.focusedIdx--;
+        }
+        break;
+
+      }
+
+      case VK_DOWN:
+      case VK_RIGHT: {
+
+        e.preventDefault();
+
+        // This seems like a good place to do some stuff :)
+        if (this.focusedIdx === this.buttons.length -1) {
+          this.focusedIdx = 0;
+        } else {
+          this.focusedIdx++;
+        }
+
+        break;
+      }
+    }
+
+    this.changeFocus(this.focusedIdx); // <-- Hmm, interesting...
+  };
+
+  RadioGroup.prototype.changeFocus = function(idx) {
+    // Set the old button to tabindex -1
+    this.focusedButton.tabIndex = -1;
+    this.focusedButton.removeAttribute('checked');
+
+    // Set the new button to tabindex 0 and focus it
+    this.focusedButton = this.buttons[idx];
+    this.focusedButton.tabIndex = 0;
+    this.focusedButton.focus();
+    this.focusedButton.setAttribute('checked', 'checked');
+  };
+
+  var group1 = new RadioGroup('#group1');
+
+}());
+```
+
+### 11.15 Offscreen Content
+Remember our previous lesson about making sure elements appear in the DOM in a way that makes sense for the tab order? Well, what do you do when you have content which isn't on screen yet, but still needs to be in the DOM?
+
+[![wa10-68](../assets/images/wa10-68-small.jpg)](../assets/images/wa10-68.jpg)
+
+A good example of this is a responsive drawer panel. Now this is a really common UI pattern and it can present an interesting challenge for accessibility.
+
+[![wa10-69](../assets/images/wa10-69-small.jpg)](../assets/images/wa10-69.jpg)
+
+To illustrate this, here is the desktop version of that same site and I want you to notice what happens as I press the tab key. Focus will start off up here in the corner.
+
+[![wa10-70](../assets/images/wa10-70-small.jpg)](../assets/images/wa10-70.jpg)
+
+It will then move to the search input, then to the button in the upper right corner, and then it's just going to disappear.
+
+After pressing the tab key many more times, focus finally appears back on a link within the  body of the page.
+So, what happened there? Why did it disappear?
+
+That whole time that focus was off screen. It was actually hiding inside of this drawer panel going through and focusing all of these individual links.
+
+[![wa10-71](../assets/images/wa10-71-small.jpg)](../assets/images/wa10-71.jpg)
+
+Well this isn't really a great situation to be in, and when you're building an application you might occasionally find that as you're tabbing around focus seems to suddenly just disappear.
+
+To figure out what's going on, you may need to do a bit of detective work. If you're tabbing around and you notice focus suddenly disappears, you can go into your console and log the `document.activeElement`.
+
+[![wa10-72](../assets/images/wa10-72-small.jpg)](../assets/images/wa10-72.jpg)
+
+Active element gives you a reference to the currently focused item,which in this case looks like some kind of fancy button. So you can go and look for our fancy button here in our source code and make sure that it's not focusable.
+
+Another option to do our detective work is to use the chrome accessibility DevTools extension. The DevTools extension adds a number of useful features, including an inspector which will show you the accessibility properties of an element, as well as a set of accessibility audits.
+
+You can find these by opening the DevTools and going to the Audits section.
+
+[![wa10-73](../assets/images/wa10-73-small.jpg)](../assets/images/wa10-73.jpg)
+
+I've unchecked everything except for the Accessibility audit itself and I'm going to run it against the present state of my page. When I do this, you'll see that it produces a number of errors, including items that are focusable, but either invisible or obscured by another element.
+
+[![wa10-74](../assets/images/wa10-74-small.jpg)](../assets/images/wa10-74.jpg)
+
+And looking at that list, we can see our fancy button and all of the other anchor tags inside of that off screen menu.
+
+To fix the drawer menu, one option would be to set it to either `display: none` or `visibility: hidden` using CSS whenever it's off screen.
+
+This will prevent focus from being able to move into that element and focusing any of the child links inside of it. And then when the element comes back on screen, or just before it's about to animate on screen, we can set it back to `display:block` or set the visibility back to visible.
+
+Now in the next section, we'll have you do some sleuthing of your own using these tools to find some off screen content and then to fix it.
+
+#### Resources
+To find your missing focus you can type the following into your console:
+
+`document.activeElement`
+
+[Read more about Document.activeElement on MDN](https://developer.mozilla.org/en-US/docs/Web/API/Document/activeElement)
+
+Another tool you can use is the [Chrome Accessibility Developer Tools Extension](https://chrome.google.com/webstore/detail/accessibility-developer-t/fpkknkljclfencbdbgkenhalefipecmb?hl=en). This extension will not only add an `Accessibility Properties` panel to your Elements inspector, but it also adds an `Accessibility` option to the audits panel. Using this option you can quickly find accessibility issues in your page which you might have otherwise missed.
+
+### 11.16 Quiz: Implementing Offscreen Content
+The files for this exercise can be found in the `lesson2-focus/04-offscreen-content` directory within this [course's GitHub Repository](https://github.com/udacity/ud891).
+
+Using either the [Accessibility Developer Tools extension](https://chrome.google.com/webstore/detail/accessibility-developer-t/fpkknkljclfencbdbgkenhalefipecmb?hl=en) or `document.activeElement` see if you can track down the element that's stealing focus and fix the page.
+
+#### Solution
+I used `document.activeElement` to find the offending (offscreen) button element.  The button's container was then set to `display: none`.
+
+<!-- 
+### 17. Modals and Keyboard Traps -->
