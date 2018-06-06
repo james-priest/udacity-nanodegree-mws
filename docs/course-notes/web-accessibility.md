@@ -1020,5 +1020,62 @@ Using either the [Accessibility Developer Tools extension](https://chrome.google
 #### Solution
 I used `document.activeElement` to find the offending (offscreen) button element.  The button's container was then set to `display: none`.
 
-<!-- 
-### 17. Modals and Keyboard Traps -->
+### 11.17. Keyboard Traps & Modals
+We can sometimes run into trouble when building a widget if the widget functionality creates a keyboard trap. Let me show you an example. 
+
+Here I've got an autocomplete widget. I can press the Tab key to focus it. I can start typing, which will give me a list of city names. I can press the down key to focus one and then can press Tab again to complete the selection.
+
+[![wa10-75](../assets/images/wa10-75-small.jpg)](../assets/images/wa10-75.jpg)
+
+Now, the next thing I want to do is move to this next field by pressing Tab. So I'll hit Tab once more and the focus does not change. What's happening is this autocomplete thinks I'm still trying to finish my complete action. So no matter how many times I press Tab I'm just sort of stuck here.
+
+This is what's known as a keyboard trap. It can be very frustrating for users. In fact, Section 2.1.2 of the WebAIM checklist specifically calls this out. Stating, the keyboard focus should never be locked or trapped at any one particular page element.
+
+[![wa10-76](../assets/images/wa10-76-small.jpg)](../assets/images/wa10-76.jpg)
+
+The user should be able to navigate to and from all page elements using just their keyboard. But strange as it may seem, there are times when this behavior is actually desirable.
+
+Take for instance, the modal window.
+
+[![wa10-77](../assets/images/wa10-77-small.jpg)](../assets/images/wa10-77.jpg)
+
+Now, normally when a modal window is displaying on screen, we don't want the user to be able to access any of the content behind it. Oftentimes developers will add an overlay to cover the page, but that doesn't stop keyboard focus from accidentally traveling outside of the model.
+
+Here, I'll tab through this dialog. So I'll press the Tab key, which will focus the Decline button.
+
+[![wa10-78](../assets/images/wa10-78-small.jpg)](../assets/images/wa10-78.jpg)
+
+I'll tab again, which focuses the Accept button. And I tab one more time. No, it looks like our focus has now moved behind the modal window.
+
+[![wa10-79](../assets/images/wa10-79-small.jpg)](../assets/images/wa10-79.jpg)
+
+Now in instances like this what we want is a temporary keyboard trap to ensure that we track focus within the modal wall it's displaying. And then that we can restore it to the previously focused item once the model is closed.
+
+This can be a tricky technique to implement, and while there are proposed ideas on how to make it easier for developers, for instance, like this dialogue element here, they don't currently have widespread browser support. Meaning, we're going to have to roll up our sleeves and implement this ourselves.
+
+[![wa10-80](../assets/images/wa10-80-small.jpg)](../assets/images/wa10-80.jpg)
+
+So here's an example of what I'm going to try to build. I've got a little open modal button in the top corner and when I focus it and hit Enter, I get a modal dialog.
+
+[![wa10-81](../assets/images/wa10-81-small.jpg)](../assets/images/wa10-81.jpg)
+
+I can tab through it, and the focus is trapped. I can hit the button and it closes the model dialog. I can hit Escape or click the background, and it'll close it and restore focus to that button.
+
+- The app can be view here: [Modal Keyboard Trap](https://rawgit.com/udacity/ud891/gh-pages/lesson2-focus/07-modals-and-keyboard-traps/solution/index.html)
+- The code can be viewed here: [GitHub source for Modal Keyboard Trap](https://github.com/udacity/ud891/tree/gh-pages/lesson2-focus/07-modals-and-keyboard-traps/solution)
+
+Now I realize this is a ton of code. I sort of think of the accessible model window as one of the boss battles in accessibility. So, what I want you to do in the next lesson is use some of this code to implement a modal window yourself. And that way you'll have a deeper understanding of how all of this works.
+
+#### Resources
+WebAIM checklist items:
+
+- 2.1.2: [http://webaim.org/standards/wcag/checklist#sc2.1.2](http://webaim.org/standards/wcag/checklist#sc2.1.2)
+
+[`<dialog>` on MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dialog)
+
+### 11.18. Lesson Summary
+Using the skills we've covered in this lesson you should now be well equipped to implement a solid focused strategy in your application.
+
+The next step is to take all these various interactive controls that we've been working with and start to infuse them with some meaning.
+
+For instance, when a screen reader lands on your custom radio buttons, how is it going to tell the user that these are in fact radio buttons and not just a bunch of divs. For that, we're going to need to learn about semantics and I'm going to turn it over to Alice to tell you all about it
