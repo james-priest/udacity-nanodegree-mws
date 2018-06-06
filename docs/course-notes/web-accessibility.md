@@ -791,7 +791,7 @@ The ARIA design pattern stock, lists various kinds of components as well as the 
 
 Now, Alice is going to cover ARIA in more detail in the following sections, but for now, let's use this guide to help us add keyboard support to a new component which we're going to build.
 
-### Resources
+#### Resources
 The ARIA Authoring Practices doc (or "ARIA Design Patterns doc") is a great resource for figuring out what kind of keyboard support your complex components should implement.
 
 There are currently two versions:
