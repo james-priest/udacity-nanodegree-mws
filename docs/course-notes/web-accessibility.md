@@ -1078,4 +1078,100 @@ Using the skills we've covered in this lesson you should now be well equipped to
 
 The next step is to take all these various interactive controls that we've been working with and start to infuse them with some meaning.
 
-For instance, when a screen reader lands on your custom radio buttons, how is it going to tell the user that these are in fact radio buttons and not just a bunch of divs. For that, we're going to need to learn about semantics and I'm going to turn it over to Alice to tell you all about it
+For instance, when a screen reader lands on your custom radio buttons, how is it going to tell the user that these are in fact radio buttons and not just a bunch of divs. For that, we're going to need to learn about semantics and I'm going to turn it over to Alice to tell you all about it.
+
+## Lesson 12. Semantics
+### 12.1 Semantics Introduction
+We just saw how we can make things accessible to anyone who can't use a mouse or pointing device. Whether that's because it's any type of physical impairment or a technology issue or simply personal preference.
+
+[![wa12-1](../assets/images/wa12-1-small.jpg)](../assets/images/wa12-1.jpg)
+
+You would have seen that, while it definitely requires some care and thought, it's not a huge amount more work if you plan it from the beginning. Once that work is done, you're already a long way down the path to a fully accessible site.
+
+Already, you've made your site usable by more people than if you hadn't addressed keyboard usability, and given your site a more polished completed feel.
+
+In this lesson, we're going to build on that work and get you thinking about other accessibility factors like how do we build our websites to support users like Victor who can't see the screen at all.
+
+We'll start with some background on assistive technology, the general term for things like screen readers. These are tools that are designed to help users whose impairments can prevent them from accessing information technology at all.
+
+Next up, we'll take a look at the general user experience concepts. We'll build on this to take a deeper dive into the experience of users of assistive technology.
+
+Then finally we'll move in to how we can use HTML effectively to create a good experience for these users and we'll see that actually does overlap quite a lot with the way we address focus.
+
+First, let's talk a bit about assistive technology.
+
+### 12.2 Assistive Technology
+Assistive technology is an umbrella term for a broad range of devices, software, and tools that help any person with a disability complete a task.
+
+[![wa12-2](../assets/images/wa12-2-small.jpg)](../assets/images/wa12-2.jpg)
+
+In the broader sense this include something as low tech as a crutch to help someone walk or magnifying glass to assist reading, or as high tech as a robotic prosthesis or image recognition software running on a smartphone.
+
+It can include something as general as browser zoom or as specific as a custom-designed game controller. It can be a separate physical device like a braille display, or be implemented completely in software like voice control. It can be built into an operating system like some screen readers or it can be an add-on like a Chrome extension.
+
+Assistive technology in particular is pretty blurry. After all, all technologies being built to assist people with some task or another, and things often move in and out of the assistive technology category.
+
+For example, one of the earliest commercial speech synthesis products was a talking calculator for the blind, and now we see speech synthesis popping up all over the place, from driving directions to virtual assistance.
+
+On the other hand, technology which is general purpose often finds an assistive use. For example, people may use their smartphone's camera zoom to get a better look at something small in the real world.
+
+In the context of web development we're still talking about a diverse range of technologies that we want to support. People may interact with your website using a screen reader or braille display with a screen magnifier, via voice control, using a switch device, or some other form of assistive technology which adapts the page to create a more specific interface that they can use.
+
+[![wa12-3](../assets/images/wa12-3-small.jpg)](../assets/images/wa12-3.jpg)
+
+For all of these technologies, ensuring that our website support assistive technology uses is going to come down to programmatically expressed semantics. But before we can explain exactly what programmatically expressed semantics refers to, we need to talk a little bit about affordances.
+
+### 12.3 Affordances
+When we use any manmade tool or device, we typically look to its form and design to give us an idea of what it does and how it works.
+
+A classic example is a kettle.
+
+[![wa12-4](../assets/images/wa12-4-small.jpg)](../assets/images/wa12-4.jpg)
+
+I can look at this kettle and recognize that the handle side is the one I'm meant to grab, even if I've never seen one before, because I've seen the same basic shape on things like coffee mugs, pots, pitchers, and various other things.
+
+It serves a practical purpose. It's shaped so I can comfortably get my hand around it, and it's insulated. But also, the fact that I've seen many similar handles before gives me a visual clue here. After all, I could probably pick the kettle up by the spout if I really wanted, although I'd probably end up burning myself, and it'd be pretty tricky to pour water out of it.
+
+When it comes to graphical user interfaces, affordances still represent the actions we can take, but now they're more metaphorical since there's no physical object to interact with.
+
+Some classic examples of technology affordances are buttons, you will be hard pressed to find any software UI without at least one button on it, and sliders from scroll bars to playback controls to price limits.
+
+Something I like to think about is how real world objects get translated into purely visual metaphors to create those affordance cues for graphical user interfaces. For example, you can clearly see a button on a keyboard reflected in a button element and a checkbox on a ballot paper in a checkbox element.
+
+While some graphical UI influences may not be immediately obvious to new users, for example,someone new to computers might need to experiment to learn to use scroll bars. People generally learn the visual cues quickly with little or no training.
+
+Well designed affordances enable people to do something with as little training as possible.
+
+### 12.4 Quiz: Affordances
+The next quiz is all about thinking about what we know about the graphical UI affordances provided by HTML. Let's take a look at some of the most common affordances we see on webpages.
+
+All of the form elements we use on that flight-booking site have some familiar semantics which give us cues as to how we use them.
+
+In this exercise all you need to do is match up a screenshot of the UI element with the semantic meaning on the right.
+
+#### Solution
+
+[![wa12-5](../assets/images/wa12-5-small.jpg)](../assets/images/wa12-5.jpg)
+
+This date field means I should enter the US date.A check box is a yes or no option.Here, I see I can enter one line of text.Radio buttons mean I can choose one option.And this button here let's me know it will perform an action.
+
+### 12.5 Semantics & Assistive Technology
+So that's a little background out of the way. Now you can probably see where I'm heading with all this. Someone who can't see the screen, can't access the visual information in the interface. And someone who is using voice control relies on the voice control software being able to interact with the web page.
+
+So we need to make sure that information is expressed in a way which is flexible enough to be accessed programmatically by assistive technology, which can then create an alternative user interface to suit its users needs.
+
+We refer to this as expressing the semantics of an element. The Web AIM checklist explicitly calls this outing guideline 4.1.2, saying "Name, Role, Value: markup is used in a way that facilitates accessibility."
+
+[![wa12-6](../assets/images/wa12-6-small.jpg)](../assets/images/wa12-6.jpg)
+
+Okay, that's kind of terse. The Web Content Accessibility Guidelines go into a bit more detail. "For all user interface components, the name and role can be programmatically determined; states, properties, and values that can be set by the user can be programmatically set."
+
+[![wa12-7](../assets/images/wa12-7-small.jpg)](../assets/images/wa12-7.jpg)
+
+So what are name role and value, and how can we make sure that they can be programmatically determined and set? To answer that, we're going to start off by trying things out from the point of view of someone using assistive technology.
+
+Just before we jump into that I want to quickly mention that in this course we will be working mostly with screen readers, but a lot of the work we do to support screen readers also benefits users who use other assistive technologies. Things like voice control and switch control use the same programmatically expressed semantics.
+
+In the introduction we had a first look at using a screen reader. Now were going to try using one without any access to the web pages visible interface.
+
+<!-- ### 12.6 -->
