@@ -1174,4 +1174,294 @@ Just before we jump into that I want to quickly mention that in this course we w
 
 In the introduction we had a first look at using a screen reader. Now were going to try using one without any access to the web pages visible interface.
 
-<!-- ### 12.6 -->
+### 12.6 Quiz: Screenreader 1
+Now let's book a flight using a screen reader. We've modified the flight reservation page, so that you can't see what you're doing anymore. You'll have to use the screen reader.
+
+[![wa12-8](../assets/images/wa12-8-small.jpg)](../assets/images/wa12-8.jpg)
+
+You might want to refer back to the earlier exercise if you get stuck. Use the provided form to book a one way ticket to Melbourne with a window seat.
+
+Try out the [flight booking form](http://udacity.github.io/ud891/lesson3-semantics-built-in/02-chromevox-lite/, then come back here once you've successfully filled it out.
+
+### 12.7 Role, Name, Value
+A screen reader actually largely creates the user interface for the user based on the programmatically expressed semantics.
+
+Instead of a visual UI, the screen reader provides an auditory interface.
+
+You probably noticed in the previous exercise that the screen reader told you some information about each element.
+
+[![wa12-9](../assets/images/wa12-9-small.jpg)](../assets/images/wa12-9.jpg)
+
+Roughly speaking, we can expect some subset of the following information to be expressed.
+
+- What type of element it is? We call this an elements **role** (green). Sometimes a screen reader might simply state the element's role, other times it might play an easily recognizable sound to avoid constant repetition. Sometimes it might do both.
+- The screen reader will announce an elements **name** (blue), if it has one.
+- It will announce what its **value** (purple) is, if it has one.
+- It will also announce any information it has about an element's **state** (gold).
+
+So broadly speaking, if we've done things right, we can expect to hear information about an element's **role**, **name(label)**, **state**, and **value**.
+
+[![wa12-10](../assets/images/wa12-10-small.jpg)](../assets/images/wa12-10.jpg)
+
+### 12.8 Quiz: Screenreader 2
+This time we have a different form which we've hidden from view again. Let's use the screen reader to find the first form field, and then we want to find out its **role** and its **label**.
+
+[![wa12-8](../assets/images/wa12-8-small.jpg)](../assets/images/wa12-8.jpg)
+
+Visit the [mystery form](http://udacity.github.io/ud891/lesson3-semantics-built-in/03-experience-screen-reader/) and use ChromeVox Lite or another screen reader to find the first form field. What role and name does it have?
+
+#### Solution
+Identify the role and label of the first form field:
+
+If I press the Tab key, it takes me straight to the first form field. It announces:
+
+>"Your email address, edit text."  
+
+So its Role is, "edit text", and its Label is, "your email address".
+
+- **Role:** Edit text
+- **Label:** Your email address
+
+### 12.9 The Accessibility Tree
+Okay, this might sound a bit strange but imagine you're building a user interface for screen reading users only.
+
+So you don't need to create any visual UI at all. Just provide enough information for the screen reader to use. How would you express the form interface we used in the previous exercise?
+
+[![wa12-9](../assets/images/wa12-9-small.jpg)](../assets/images/wa12-9.jpg)
+
+Well, what you'd be creating is kind of an API describing the page structure. That sounds kind of like the DOM API, but we can get away with **less information and fewer nodes** because a lot of that information is useful only for visual presentation.
+
+Something like this.
+
+[![wa12-11](../assets/images/wa12-11-small.jpg)](../assets/images/wa12-11.jpg)
+
+This enables a screen reader user to jump in between high level sections and then get enough information about each form element's affordances to know how to fill them in.
+
+Remember, for a screen reader user, the screen reader provides the affordances based on the role alone without caring about the visual style.
+
+This is more or less what the browser actually does present to the screen reader. What happens is that the browser takes the DOM tree and modifies it to turn it into a form which is useful to assistive technology.
+
+We refer to this modified tree as the accessibility tree.
+
+In my mind, the accessibility tree conceptually looks a bit like an HTML page from the 90s. You may have seen web pages that look like this. You can picture the mark up, I'm sure. A few carefully chosen images, a lot of links, a text box and a button.
+
+[![wa12-12](../assets/images/wa12-12-small.jpg)](../assets/images/wa12-12.jpg)
+
+Visually scanning down the page in this case gives you an experience pretty similar to what a screen reader user would get.
+
+### 12.10 Quiz: DOM & A11y tree matching
+Which of these accessibility structures matches the DOM structure on the left?
+
+[![wa12-13](../assets/images/wa12-13-small.jpg)](../assets/images/wa12-13.jpg)
+
+### 12.11 Semantics in Native HTML
+So you have the DOM tree and we know the browser transforms this into the accessibility tree.
+
+It can do this because much of the DOM has **implicit semantic meaning**. That is, the DOM is using standard native HTML elements that are automatically recognized by browsers and work predictably on a variety of platforms.
+
+Accessibility for native HTML elements such as the standard link or button, is handled automatically as well.
+
+We can take advantage of that built in accessibility by writing HTML which expresses the semantics of our page directly.
+
+### 12.12 Quiz: Writing Semantic HTML
+In this example, we have a single element on the page that looks like a button, but if we take a look at the HTML source, we can see it's not actually a button. If we try to use it with the screen reader, we'd run into problems.
+
+[![wa12-14](../assets/images/wa12-14-small.jpg)](../assets/images/wa12-14.jpg)
+
+Rewrite this code so it's more semantic in nature, and if you get it correct, you'll find a secret word up at the top.
+
+This exercise can be found in the folder `lesson3-semantics-built-in/05-writing-semantic-html` within this [course's GitHub Repository](https://github.com/udacity/ud891), or you can access the [live version](http://udacity.github.io/ud891/lesson3-semantics-built-in/05-writing-semantic-html/).
+
+#### Solution
+When we don't use a button element the screen reader has no way of knowing what it's landed on. Plus we'd have to do all the extra work we talked about in the previous lesson to make it usable to keyboard only users.
+
+Right now I can only use this button with a mouse.
+
+We can easily fix this by using a regular button element, instead of a div. This also has the added benefit of taking care of keyboard interactions for us.
+
+Once we've fixed the button we now have our secret word.
+
+### 12.13 Writing Semantic HTML: Name Game
+Earlier we saw that screen readers will announce an element's **role**, **name**, **state** and **value**, not necessarily in that order.
+
+[![wa12-15](../assets/images/wa12-15-small.jpg)](../assets/images/wa12-15.jpg)
+
+By using the right semantic element, we've got **role**, **state** and **value** covered, but we also need to make sure that we're making element's **name** discoverable.
+
+[![wa12-16](../assets/images/wa12-16-small.jpg)](../assets/images/wa12-16.jpg)
+
+This is actually the very first item on web aims checklist: "Provide text alternatives for any non-text content."
+
+[![wa12-17](../assets/images/wa12-17-small.jpg)](../assets/images/wa12-17.jpg)
+
+At this point, I'm going to take a quick tangent on technology. We're in the unfortunate position of having all of these terms, each of which is overloaded in its own particular way in HTML, which are also used in various contexts to refer to the same central concept we're talking about in this lesson.
+
+Since the way the term **label** is used in HTML is closest to what we mean here, for the rest of this course, I'm going to refer to label interchangeably to refer to this concept. But please keep in mind that in the context of **role**, **name**, **value**, and **state**, the name means the same thing.
+
+[![wa12-18](../assets/images/wa12-18-small.jpg)](../assets/images/wa12-18.jpg)
+
+With that out of the way, let's talk a bit about labels. Broadly, there are two types of labels: visible labels, which are used by all users to associate meaning with an element, and text alternatives which are only used when there's no need for visual labels.
+
+[![wa12-19](../assets/images/wa12-19-small.jpg)](../assets/images/wa12-19.jpg)
+
+So, here we've got an image that is self-explanatory to anyone who can see the image, and by its very nature, a text alternative is usually not visible on the page.
+
+So in this case, we can see this image of bees swarming. An assistive technology user would simply have access to this bee swarming label.
+
+The checklist provides a list of recommendations for how to create visible and non-visible labels.
+
+[![wa12-20](../assets/images/wa12-20-small.jpg)](../assets/images/wa12-20.jpg)
+
+The easiest is the third item: "Form buttons have a descriptive value."
+
+A button typically has some text content, and that acts as the button's text alternative. Since this text is visible to both sided users and technology, we're lucky, because we don't need to do any more work to create a good experience for our assistive technology users.
+
+[![wa12-21](../assets/images/wa12-21-small.jpg)](../assets/images/wa12-21.jpg)
+
+So that's an easy one to check off.
+
+Next we need to check that, "Form inputs have associated text labels" (item four).
+
+When we create a form input like a check box and just put some text next to it, we get a visual label, but we didn't actually create a programmatically accessible label for the element we're trying to label.
+
+[![wa12-22](../assets/images/wa12-22-small.jpg)](../assets/images/wa12-22.jpg)
+
+Also, we don't get the nice behavior where we can click on the label to toggle the check box.
+
+We can fix this by using a label element. We can either wrap the input element like this...
+
+[![wa12-23](../assets/images/wa12-23-small.jpg)](../assets/images/wa12-23.jpg)
+
+or we can use the `for` attribute on the label. If we do that we need to make sure to give the input element an ID and use the same ID as the value of the for attribute.
+
+[![wa12-24](../assets/images/wa12-24-small.jpg)](../assets/images/wa12-24.jpg)
+
+That creates an association between the label element and the input element, whichever of these two methods we use, we will get an accessible label for the check box, and we'll be able to toggle the checkbox by clicking the label.
+
+#### Resources
+WebAIM Guideline 1.1: [http://webaim.org/standards/wcag/checklist#g1.1](http://webaim.org/standards/wcag/checklist#g1.1)
+
+The [MDN page on `<label>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/label) demonstrates the two options for associating a `<label>` with the thing it's labelling.
+
+The W3C spec has a[ list of what types of elements work with a `<label>` tag](https://www.w3.org/TR/html5/forms.html#category-label).
+
+### 12.14 Quiz: Labeling Input Elements
+This form is mostly marked up well but we have one form element which doesn't have a label correctly associated with it.
+
+By going through with the screen reader find the element and fix that issue.
+
+[![wa12-25](../assets/images/wa12-25-small.jpg)](../assets/images/wa12-25.jpg)
+
+This exercise is `flight-booking.html` and can be found in the folder `lesson3-semantics-built-in/16-labelling-input-elements/` within this [course's GitHub Repository](https://github.com/udacity/ud891), or you can access the [live version](http://udacity.github.io/ud891/lesson3-semantics-built-in/16-labelling-input-elements/flight-booking.html).
+
+#### Solution
+First, we'll identify unlabled contents by using the screen reader.
+
+> TAB
+> "Checkbox checked."
+
+The "promotional offers" checkbox isn't labeled.
+
+There are two ways to associate a label with the form element. Either of these methods will cause the label text to become a click target for the checkbox, which is also super helpful for pointer based users.
+
+We could wrap the input element in a label element, or we could use the `for` attribute of the label to associate it with the ID of the input.
+
+> TAB
+> "Receive promotional offers, checkbox checked."
+
+Once the checkbox has been labeled correctly we can see that it has a **role** of "checkbox", its **state** is "checked" and it has a **label** of "receive promotional offers".
+
+### 12.15 Text Alternatives
+Let's have a look at text alternative for images. We can use the `alt` attribute to provide a text alternative for images, however, we need to think about what role an image plays in the page to work out what type of text alternative it should have.
+
+Let's have another look at this newspaper page from the previous lesson. I've got VoiceOver running and I'm going to use the mouse pointer Moves VoiceOver Cursor option to let me quickly inspect things for VoiceOver.
+
+Now, you probably don't want this on all of the time but it can be good for quickly testing things.
+
+All right.So here, we have a picture of a cat illustrating that article on cats.
+
+[![wa12-26](../assets/images/wa12-26-small.jpg)](../assets/images/wa12-26.jpg)
+
+VoiceOver announces this as.
+
+> "HTML content. slash one six zero two zero...(/160204193356-01-cat-500.jpg)"
+
+Okay, so that was pretty sub optimal.
+
+I can pull up DevTools on the image and add an `alt` attribute which says, "a cat staring menacingly off into space."
+
+All right, so now I can try VoiceOver again
+
+> "HTML content, a cat staring menacingly off into space."
+
+And now you have a nice succinct description of the image.
+
+A couple comments on the `alt` attribute. Alt allows you to specify a simple string to be used whenever an image is not available, whether the image fails to load or you're a web crawling bot or a screen.
+
+Alt differs from any other type of caption, including a title, in that it will only be used if the image isn’t available. Caption or title typically provides extra context for the image, rather than an alternative to the image.
+
+Writing useful alt text is a bit of an art. In order for a string to be a usable text alternative it needs to convey the same thing as the image in the given context.
+
+To give a more complex example, we have that logo image in the masthead link. That link is going to take us back to the homepage so it might be tempting to write home here.
+
+[![wa12-27](../assets/images/wa12-27-small.jpg)](../assets/images/wa12-27.jpg)
+
+That's not a functional alternative to the image. It's actually going to create a more confusing experience, because then we might get the idea that it's an image of some kind of home.
+
+Instead, we can describe this image pretty accurately simply as "The Funion".
+
+You may or may not want to explicitly call out that it's a logo, but given it's an image, that's more or less implied anyway.
+
+An easy way to check whether alt text is sensible, is to imagine all your images are broken.
+
+Can you still understand the page content?
+
+Now there's one image I left in here that I'd like to take a closer look at. You have this magnifying glass logo, inside the search link.
+
+[![wa12-28](../assets/images/wa12-28-small.jpg)](../assets/images/wa12-28.jpg)
+
+If I checked it out with the VoiceOver, 
+
+> "Magnifying glass"
+ 
+
+I can hear that we've hopefully added an alt text of magnifying glass, but if I inspect the link as a whole.
+
+> "Magnifying glass search link."
+
+We can hear that it is actually redundant.
+
+"Magnifying glass search" doesn't convey anything that search doesn't. But we know that if we leave the alt text out, we'll probably hear the image filename which we already saw as a potentially horrible experience.
+
+So in this case, I'm going to to use an empty alt text (`alt=""`), and we'll see what that does.
+
+The empty alt text actually removed the image from the accessibility tree altogether, so the image is now completely skipped by the screen reader. In this case it's actually what we want, because the image was redundant.
+
+### 12.16 Quiz: Labeling images with alt text
+On this shopping site we have several product images, logos, and icons. Provide some alternate text where necessary, and a blank alt attribute otherwise.
+
+#### Solution
+[![wa12-29](../assets/images/wa12-29-small.jpg)](../assets/images/wa12-29.jpg)
+
+All images should have an alt attribute.
+
+Important images should have descriptive alt text that just describes what the image is. Decorative images should have blank alt text. The screen reader will skip that element completely.
+
+You want to include blank text because if you don't the screen reader may try to read the filename and if the file name's weird, it'll sound weird. So let's go through each of these.
+
+The site logo, just gets and all text of the site name. The fact that it's an image makes the fact that it's a logo obvious and even if it's a link to the homepage, that information is implicit for sighted users. So there's no need to spell it out for assistive technology users.
+
+The shopping cart and the top right hand corner, is significant so it needs a useful alt text
+
+But the shopping cart in the "Add to Cart" button is purely decoration. So that can have an alt text to avoid repetition.
+
+The main image is significant so we can give that a descriptive alt text.
+
+Finally the thumbnail images on the links to other dishes are also decorative since the link text provides the exact same information we would have put in the alt text.
+
+### 12.17 Lesson Conclusion
+We've had a bit of a look at semantics, how they're used by screen readers, and how we can structure HTML to express those semantics.
+
+Later on, we'll explain what to do when HTML doesn't have the semantics we need.
+
+But first, let's take a quick look at some less obvious semantics and the way assisted technology users can use them to find their way around web pages.
