@@ -1174,7 +1174,7 @@ Just before we jump into that I want to quickly mention that in this course we w
 
 In the introduction we had a first look at using a screen reader. Now were going to try using one without any access to the web pages visible interface.
 
-### 12.6 Quiz: Screenreader 1
+### 12.6 Quiz: Screen reader 1
 Now let's book a flight using a screen reader. We've modified the flight reservation page, so that you can't see what you're doing anymore. You'll have to use the screen reader.
 
 [![wa12-8](../assets/images/wa12-8-small.jpg)](../assets/images/wa12-8.jpg)
@@ -1203,7 +1203,7 @@ So broadly speaking, if we've done things right, we can expect to hear informati
 
 [![wa12-10](../assets/images/wa12-10-small.jpg)](../assets/images/wa12-10.jpg)
 
-### 12.8 Quiz: Screenreader 2
+### 12.8 Quiz: Screen reader 2
 This time we have a different form which we've hidden from view again. Let's use the screen reader to find the first form field, and then we want to find out its **role** and its **label**.
 
 [![wa12-8](../assets/images/wa12-8-small.jpg)](../assets/images/wa12-8.jpg)
@@ -1465,3 +1465,208 @@ We've had a bit of a look at semantics, how they're used by screen readers, and 
 Later on, we'll explain what to do when HTML doesn't have the semantics we need.
 
 But first, let's take a quick look at some less obvious semantics and the way assisted technology users can use them to find their way around web pages.
+
+## Lesson 13. Navigation
+### 13.1 Navigation Intro
+
+[![wa13-1](../assets/images/wa13-1-small.jpg)](../assets/images/wa13-1.jpg)
+
+**Alice:** "Thanks so much for giving us that extra insight into how you use websites Victor. If you could have our students take away just two things from this lesson what would they be?"
+
+**Victor:** "First of all make sure to use meaningful headings and link text as well as good pay structure."
+
+**Victor:** "Secondly, as a general rule, you shouldn't try to control the experience a screen reader user will have. They will use the information available to them because the tool they're using to find that information on the web page. Things such as trying to control or fine tune exactly what a screen reader says, or make an elements focusable which shouldn't be, generally lead to more confusion and worse experience for users.
+
+**Alice:** "That's really helpful advice thank you."
+
+**Alice:** "Now in our next lesson, we're going to take a look at what we can do if HTML doesn't have the precise semantic we need or if, for some reason or other, the HTML element we'd usually use isn't a good fit for some other reason."
+
+### 13.2 Screen reader nav
+This lesson discusses using VoiceOver on OS X. It's a screen reader ap that's built into the OS. It assists in reading content off the screen. He discusses using it specifically in the context of the browser and the web.
+
+[![wa13-2](../assets/images/wa13-2-small.jpg)](../assets/images/wa13-2.jpg)
+
+Once the service is turned on, Victor adjusts some default settings include speech rate and Web Page Summary. This setting is responsible for providing a summary of a web page when it loads.
+
+[![wa13-3](../assets/images/wa13-3-small.jpg)](../assets/images/wa13-3.jpg)
+
+At this point he switches back to Chrome to begin his browsing session.
+
+One thing to note is that all navigation is being done with the keyboard using the VoiceOver audio as the feedback mechanism rather than the visual cues on the screen that a sighted user would use.
+
+Once Victor opens the page he says,
+
+"You notice how VoiceOver spoke the page summary? It told me how many headings, links, form fields, and tables are on that page. That's the summary setting we just turned on."
+
+[![wa13-4](../assets/images/wa13-4-small.jpg)](../assets/images/wa13-4.jpg)
+
+"Every time I start browsing a new web page or even the pages that I already know about I start looking for headings to make it easier for me to navigate through the page."
+
+"VoiceOver has a tool called Web Rotor which allows me to see the number of headings, browse through them, and choose the ones that I actually would like to navigate to."
+
+[![wa13-5](../assets/images/wa13-5-small.jpg)](../assets/images/wa13-5.jpg)
+
+"One thing to notice here is that the order in which I see headings with VoiceOver is different from the order you see them on the web page. In other words, my order is more logical and the order you see on the page is more visually arranged. This is the decision that Wikipedia authors have made. Another thing to notice here is that VoiceOver speaks the heading level number every time I arrow to a particular heading."
+
+"From here on I can begin exploring the page right underneath the heading"
+
+"This is a quick way to navigate through a web page. If I would like to move with built in shortcut keys directly through the content as opposed to going through the Web Rotor options, I can do that too."
+
+"So this is how I navigate the web page using headings. There are other tricks I use, however I'll talk about them later."
+
+"It's important to remember, that once you made the functionality of your web page accessible and usable for users of assistive technology, Headings is probably one of the most important features that you can build into your web pages, to make them more usable, for screen reader users specifically."
+
+#### Resources
+[WebAIM's article on Using VoiceOver to evaluate Web Accessibility](http://webaim.org/articles/voiceover/) has a full introduction to VoiceOver from the point of view of evaluating accessibility, including most keyboard commands available.
+
+If you don't have a Mac device, [NonVisual Desktop Access (NVDA)](http://www.nvaccess.org/) is a free, open source screen reader available for Windows. [WebAIM's introduction to NVDA](http://webaim.org/articles/nvda/) covers the basics of using NVDA to check accessibility.
+
+If you only use Linux, [Orca](https://help.gnome.org/users/orca/stable/) is available in the Gnome desktop manager, although this screen reader is much more rarely used and suffers from poor support by web browsers.
+
+### 13.3 Quiz: Headings Nav
+Many screen reader users rely on headings to navigate within a page and find content.
+
+I'd like you to use ChromeVox Lite and find a level 3 heading in this [demo page](http://udacity.github.io/ud891/lesson4-semantics-navigating/03-navigating-by-headings/index.html).
+
+[![wa13-6](../assets/images/wa13-6-small.jpg)](../assets/images/wa13-6.jpg)
+
+### 13.4 Using Headings
+Let's look at how we can use HTML headings effectively to recreate the experience we saw in Victor's video.
+
+[![wa13-5](../assets/images/wa13-5-small.jpg)](../assets/images/wa13-5.jpg)
+
+First I'd like to reiterate Rob's point that DOM order matters, which is also item 1.3.2 on the webbing checklist.
+
+[![wa13-7](../assets/images/wa13-7-small.jpg)](../assets/images/wa13-7.jpg)
+
+Rob showed how it matters for focus order, but it also matters for the order read by the screen reader.
+
+In Victor's demo, you might have noticed how the heading list followed the DOM order and not the visual order of the page. That is actually true for screen readers in general.
+
+Since the screen reader, like any assistive technology, is interacting with the accessibility tree,which is based directly on the DOM tree, the order a screen reader is going to perceive will be directly based on the DOM order.
+
+[![wa13-8](../assets/images/wa13-8-small.jpg)](../assets/images/wa13-8.jpg)
+
+Think of the page as perceived by desktop screen reader uses as almost losing its second dimension. It's all serialized into a single stream of content.
+
+I can use a little snippet of JavaScript to list out the headings in the console.
+
+```js
+for (var i = 0, headings = $$('h1,h2,h3,h4,h5,h6');
+     i < headings.length; i++) {
+   console.log(headings[i].textContent.trim() + " " +  
+               headings[i].tagName,
+               headings[i]);
+}
+```
+
+We have one H1 in this list, telling us the page's main topic. This is also echoed in the page's title in the header. So when switching tabs or windows, users know what page they're on.
+
+[![wa13-9](../assets/images/wa13-9-small.jpg)](../assets/images/wa13-9.jpg)
+
+Then we have a series of H2s which include both page structure things like contents, as well as article sections.
+
+Between some of those H2's, we also have H3's indicating subsections. Some of these are in the article contents, but some are also in the surrounding page contents. Within the navigation menu there are things like personal tools and languages.
+
+This page only goes down to H3, but we do have built in heading tags going all the way down to H6 for very complex or long documents.
+
+Using headings to lay out page structure like this is mentioned in several web aim checklist items.
+
+2.4.10 states individual sections of content are designated using headings where appropriate.
+
+[![wa13-10](../assets/images/wa13-10-small.jpg)](../assets/images/wa13-10.jpg)
+
+1.3.1 mentions semantic markup is used to designate headings age one.
+
+[![wa13-11](../assets/images/wa13-11-small.jpg)](../assets/images/wa13-11.jpg)
+
+2.4.1 mentions heading structure as a sufficient technique for bypassing blocks of content.
+
+[![wa13-12](../assets/images/wa13-12-small.jpg)](../assets/images/wa13-12.jpg)
+
+And 2.4.6 discusses some details for writing useful headings.
+
+[![wa13-13](../assets/images/wa13-13-small.jpg)](../assets/images/wa13-13.jpg)
+
+If you are really watching closely, you might have noticed that not all of these headings are visible on the screen.
+
+Wikipedia is using a technique where they place some headings off screen to make them visible only to screen reader uses and other assistive technology.
+
+[![wa13-14](../assets/images/wa13-14-small.jpg)](../assets/images/wa14-14.jpg)
+
+For complex applications, this can be a good way to accommodate headings when the visual design doesn't require or even have room for a visible heading. However, it's important not to go overboard with this technique. Remember that assistive technology users may well be able to see the screen. So going too far down the path of creating screen reader only content, can actually create a worse user experience for some users. Besides which, it can create a maintenance headache when it comes to things like internationalization.
+
+#### Resources
+WebAIM checklist items:
+
+- 1.3.2: [http://webaim.org/standards/wcag/checklist#sc1.3.2](http://webaim.org/standards/wcag/checklist#sc1.3.2)
+- 2.4.10: [http://webaim.org/standards/wcag/checklist#sc2.4.10](http://webaim.org/standards/wcag/checklist#sc2.4.10)
+- 1.3.1: [http://webaim.org/standards/wcag/checklist#sc1.3.1](http://webaim.org/standards/wcag/checklist#sc1.3.1)
+- 2.4.1: [http://webaim.org/standards/wcag/checklist#sc2.4.1](http://webaim.org/standards/wcag/checklist#sc2.4.1)
+- 2.4.6: [http://webaim.org/standards/wcag/checklist#sc2.4.6](http://webaim.org/standards/wcag/checklist#sc2.4.6)
+
+### 13.5 Quiz: Headings
+We just saw how Wikipedia uses headings to create a usable page structure. Now it's your turn. Go back and look at this site and match each of these headers with the heading number.
+
+Use DevTools on the live page to check what the level of each heading is.
+
+#### Solution
+[![wa13-15](../assets/images/wa13-15-small.jpg)](../assets/images/wa14-15.jpg)
+
+Up at the top, we clearly have the top level heading, The Funion. That's an h1.
+
+Next, we have In the News. This is quite small, but actually if you look at it in dev tools, you'll see that it's an h2.
+
+It's important that you don't fall into the trap of using these heading tags just to achieve a particular look on the page. Sometimes we see people using heading tags where they want some large text for something like a pull quote, and it can create quite a confusing experience.
+
+Or in a case like this, they might think that because it's smaller that it should be a lower heading level. But actually, since it's operating as a section title, it should definitely be a level two heading on this page.
+
+Next we have the headline about cats. That's an h3 on this page, because it's inside the In the News section.
+
+Last, we have an offscreen heading of H2 for the top story.
+
+### 13.6 Other Nav Options
+So we just heard a little bit about how to use headings to improve the experience for screen reader users.
+
+Pages with good **headings** are so much easier to use but there are other things I use to navigate web pages. VoiceOver and other screen readers, for example, allow me to navigate by **links**, by **form controls**, and **landmarks**.
+
+### 13.7 Other Nav Examples
+#### Links
+So I remember seeing on the web page a link called Cricket, so I am going to start and actually find this link. 
+
+I open the Web Rotor. You notice I'm on Headings, so I'm going to left arrow to Links.
+
+[![wa13-16](../assets/images/wa13-16-small.jpg)](../assets/images/wa14-16.jpg)
+
+I begin typing cricket. ("9 items, link, link, cricket"). Here it is, I'm going to press Enter, and the focus will go straight to the cricket link. ("Link, cricket, cricket"). Now I'm going to activate this link by pressing Ctrl+Opt+Space bar. This is a VoiceOver shortcut key. ("Press link, cricket, cricket, with cricket, Wikipedia, the free encyclopedia page has 1,079 links, 52 headings, 4 form controls, 12 tables, 14 landmarks").
+
+Here VoiceOver just pronounced the page summary. It told me how many **headings**, **links**, **tables**, and **form fields** on the page there are, which is a lot, there's like 1,000 links or something like that but we're not interested in links anymore, what we're going to do next is look at the form fields.
+
+#### Form Fields
+So I'm going to open web Rotor again. ("Headings menu, Links menu") And arrow right until I reach Form Controls. ("Form Controls menu") From here, I want to search for a form field with a label of search because I'm going to be searching for something, ("13 items, 2, 1 item").
+
+[![wa13-17](../assets/images/wa13-17-small.jpg)](../assets/images/wa14-17.jpg)
+
+Here it is. ("Search insertion at beginning of text, search, edit text."). I will press Enter key to jump to that field. ("Search insertion at beginning of text, search, edit text.Search access key available, F").
+
+You've noticed Screen Reader told me the label of this field, but it also told me that there is an access key, or in other words, the shortcut key that I can press to quickly jump to this search field from anywhere on the web page.
+
+If you're interested in how access keys work, please look into instructor's notes for more information.
+
+So what I'll do here, I'll type the word Udacity. ("Udacity, Wikipedia, the free encyclopedia page has 346 links, 16 headings, 4 form controls, 2 tables, 13 landmarks")
+
+[![wa13-18](../assets/images/wa13-18-small.jpg)](../assets/images/wa14-18.jpg)
+
+Notice how Screen Reader pronounced the word Udacity as Uda city. This is a pretty common occurrence because the speech synthesizer is trying to take its best guess at how to pronounce certain words, and of course, it makes mistakes.
+
+However, Screen Reader users are pretty resilient to these kinds of situations because we often tend to look at different web pages, and words aren't always spelled the way we expect them to be.
+
+To make a long story short, it suffices to know that Screen Readers do provide a lot of shortcut keys, and one of those shortcut keys is a way to spell a specific word or even a sentence, letter by letter.
+
+So for example, if I did want to know how the word Udacity is spelled, I could simply jump to the place on the web page where the word occurs. ("Heading level, heading level 2, contents, heading level 2, 4 items, history, heading level 2, form control, 1 item, headings menu, 1 item, heading level 1, Udacity, heading level 1, Udacity") And then I can press Ctrl+Opt+W to have voice over spell this word out for me. ("Udacity, uniform, delta, Udacity, U-D-A-C-I-T-Y").
+
+[![wa13-19](../assets/images/wa13-19-small.jpg)](../assets/images/wa14-19.jpg)
+
+So using the alternative spelling is just going to teach me to spell things wrong. So please refrain from using these methods in the name in order to force the screen reader to pronounce the word correctly. It will improve the experience of Screen Reader users.
+
+<!-- ### 13.8 Link Text -->
