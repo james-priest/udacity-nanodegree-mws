@@ -1592,7 +1592,7 @@ If you are really watching closely, you might have noticed that not all of these
 
 Wikipedia is using a technique where they place some headings off screen to make them visible only to screen reader uses and other assistive technology.
 
-[![wa13-14](../assets/images/wa13-14-small.jpg)](../assets/images/wa14-14.jpg)
+[![wa13-14](../assets/images/wa13-14-small.jpg)](../assets/images/wa13-14.jpg)
 
 For complex applications, this can be a good way to accommodate headings when the visual design doesn't require or even have room for a visible heading. However, it's important not to go overboard with this technique. Remember that assistive technology users may well be able to see the screen. So going too far down the path of creating screen reader only content, can actually create a worse user experience for some users. Besides which, it can create a maintenance headache when it comes to things like internationalization.
 
@@ -1636,7 +1636,7 @@ So I remember seeing on the web page a link called Cricket, so I am going to sta
 
 I open the Web Rotor. You notice I'm on Headings, so I'm going to left arrow to Links.
 
-[![wa13-16](../assets/images/wa13-16-small.jpg)](../assets/images/wa14-16.jpg)
+[![wa13-16](../assets/images/wa13-16-small.jpg)](../assets/images/wa13-16.jpg)
 
 I begin typing cricket. ("9 items, link, link, cricket"). Here it is, I'm going to press Enter, and the focus will go straight to the cricket link. ("Link, cricket, cricket"). Now I'm going to activate this link by pressing Ctrl+Opt+Space bar. This is a VoiceOver shortcut key. ("Press link, cricket, cricket, with cricket, Wikipedia, the free encyclopedia page has 1,079 links, 52 headings, 4 form controls, 12 tables, 14 landmarks").
 
@@ -1645,7 +1645,7 @@ Here VoiceOver just pronounced the page summary. It told me how many **headings*
 #### Form Fields
 So I'm going to open web Rotor again. ("Headings menu, Links menu") And arrow right until I reach Form Controls. ("Form Controls menu") From here, I want to search for a form field with a label of search because I'm going to be searching for something, ("13 items, 2, 1 item").
 
-[![wa13-17](../assets/images/wa13-17-small.jpg)](../assets/images/wa14-17.jpg)
+[![wa13-17](../assets/images/wa13-17-small.jpg)](../assets/images/wa13-17.jpg)
 
 Here it is. ("Search insertion at beginning of text, search, edit text."). I will press Enter key to jump to that field. ("Search insertion at beginning of text, search, edit text.Search access key available, F").
 
@@ -1655,7 +1655,7 @@ If you're interested in how access keys work, please look into instructor's note
 
 So what I'll do here, I'll type the word Udacity. ("Udacity, Wikipedia, the free encyclopedia page has 346 links, 16 headings, 4 form controls, 2 tables, 13 landmarks")
 
-[![wa13-18](../assets/images/wa13-18-small.jpg)](../assets/images/wa14-18.jpg)
+[![wa13-18](../assets/images/wa13-18-small.jpg)](../assets/images/wa13-18.jpg)
 
 Notice how Screen Reader pronounced the word Udacity as Uda city. This is a pretty common occurrence because the speech synthesizer is trying to take its best guess at how to pronounce certain words, and of course, it makes mistakes.
 
@@ -1665,8 +1665,186 @@ To make a long story short, it suffices to know that Screen Readers do provide a
 
 So for example, if I did want to know how the word Udacity is spelled, I could simply jump to the place on the web page where the word occurs. ("Heading level, heading level 2, contents, heading level 2, 4 items, history, heading level 2, form control, 1 item, headings menu, 1 item, heading level 1, Udacity, heading level 1, Udacity") And then I can press Ctrl+Opt+W to have voice over spell this word out for me. ("Udacity, uniform, delta, Udacity, U-D-A-C-I-T-Y").
 
-[![wa13-19](../assets/images/wa13-19-small.jpg)](../assets/images/wa14-19.jpg)
+[![wa13-19](../assets/images/wa13-19-small.jpg)](../assets/images/wa13-19.jpg)
 
 So using the alternative spelling is just going to teach me to spell things wrong. So please refrain from using these methods in the name in order to force the screen reader to pronounce the word correctly. It will improve the experience of Screen Reader users.
 
-<!-- ### 13.8 Link Text -->
+### 13.8 Link Text
+Victor showed us how he can pull up a list of links on a page using VoiceOver, and even search through them.
+
+[![wa13-16](../assets/images/wa13-16-small.jpg)](../assets/images/wa13-16.jpg)
+
+This feature is obviously most useful if, firstly, the screen reader can find the links, and secondly, if the actual text of the links is meaningful.
+
+There are three common patterns that we see which can cause the screen reader to miss links in the page.
+
+One is using a span, with some link styling, or an anchor tag without an href attribute.
+
+[![wa13-20](../assets/images/wa13-20-small.jpg)](../assets/images/wa13-20.jpg)
+
+This is popular for single page applications when you have something which is effectively an internal link. which does some javascript-based navigation within the app. Also when you want something which performs an action, but looks like a link.
+
+For anything which behaves like a link, including within a single page application, you should absolutely use an anchor tag with an href attribute, no exceptions.
+
+[![wa13-21](../assets/images/wa13-21-small.jpg)](../assets/images/wa13-21.jpg)
+
+You can read more about how to make those links work nicely with smooth single page app navigation in the instruction notes. For now let's focus on what it means for accessibility.
+
+Not only will this make the link show up in the links list, but it will mean it automatically works with the keyboard, and that you can do things like copy or bookmark the link location.
+
+[![wa13-22](../assets/images/wa13-22-small.jpg)](../assets/images/wa13-22.jpg)
+
+The second pattern is the opposite problem, something which is implemented using a link but is really more like a button.
+
+[![wa13-23](../assets/images/wa13-23-small.jpg)](../assets/images/wa13-23.jpg)
+
+You can often recognize this by the href attribute being something nonsensical. For this case, we'll just replace that anchor tag with a button tag and style it appropriately.
+
+[![wa13-24](../assets/images/wa13-24-small.jpg)](../assets/images/wa13-24.jpg)
+
+In the next class, we'll learn another technique for making elements appear to have a different role to assistive technology.
+
+The third example is where we have an image used as link content. For example, sometimes you might have a piece of text which needs a very specific style like a logo and which is implemented as an image.
+
+[![wa13-25](../assets/images/wa13-25-small.jpg)](../assets/images/wa13-25.jpg)
+
+To the average sighted user this works fine, because they can still understand what the link is for. However for an assistive technology this makes the link unusable.
+
+We can fix that by using our usual alt text technique to make sure the link is expressed directly to the assistive technology layout. Just make sure the image has alt text.
+
+[![wa13-26](../assets/images/wa13-26-small.jpg)](../assets/images/wa13-26.jpg)
+
+So, that takes care of making sure the screen reader can find the links. But we also need to make sure that once the link makes it into the links list, that it's also useful. We do that by making sure its text is descriptive.The checklist has a stronger and weaker a version of this point. The stronger one, item 2.4.9 states that the purpose of each link should be able to be determined from the link text alone.
+
+[![wa13-27](../assets/images/wa13-27-small.jpg)](../assets/images/wa13-27.jpg)
+
+The Wikipedia example that Victor showed had a lot of really useful link text examples. Because of the way a Wiki format encourages creating links, which use the page's title as their text.
+
+[![wa13-16](../assets/images/wa13-16-small.jpg)](../assets/images/wa13-16.jpg)
+
+In general, link text should give any user enough information to decide whether they want to click it.
+
+One common example of uninformative link text we see a lot these days is, "Learn more".
+
+[![wa13-28](../assets/images/wa13-28-small.jpg)](../assets/images/wa13-28.jpg)
+
+Usually this leads to a longer article about the subject of the preceding sentence or paragraph.
+
+[![wa13-29](../assets/images/wa13-29-small.jpg)](../assets/images/wa13-29.jpg)
+
+So one way we can make it more useful for everyone is to rewrite the text to say it something like, "Learn more about responsive layouts" in this case, or even making "Responsive layouts" the paragraph heading, the link.
+
+This also means that, if I'm visually skimming the page for links, I don't need to backtrack through the rest of the paragraph to see what the link might be about.
+
+#### Resources
+
+- WebAIM checklist item 2.4.9: [http://webaim.org/standards/wcag/checklist#sc2.4.9](http://webaim.org/standards/wcag/checklist#sc2.4.9)
+
+### 13.9 Quiz: Link Text
+Okay, now that we know a bit more about links, let's diagnose some issues with the links on this page.
+
+[![wa13-30](../assets/images/wa13-30-small.jpg)](../assets/images/wa13-30.jpg)
+
+Have a look at the live page, then come back here and check all of the links which have issues that you need to fix.
+
+#### Solution
+Okay, let's have a look at these links.
+
+[![wa13-31](../assets/images/wa13-31-small.jpg)](../assets/images/wa13-31.jpg)
+
+The first link is the logo in the header ("Bondi Brunch"). This is okay because it uses an `alt` attribute on the image element.
+
+```html
+<a class="logo" href="/">
+  <img alt="Bondi Brunch" src="logo.png" height="79px" width="432px">
+</a>
+```
+
+The menu items are a problem though. Those aren't actual links. Rather, they're spans styled to look like links ad should be fixed.
+
+```html
+<div class="tabs">
+  <span class="tab"><span class="tab-link" id="menus">Menus</span></span>
+  <span class="tab">
+    <span class="tab-link" id="opening">Opening hours</span></span>
+  <span class="tab">
+    <span class="tab-link" id="location">Location</span></span>
+  <span class="tab"><span class="tab-link" id="photos">Photos</span></span>
+</div>
+```
+
+The "click here" link is obviously a problem. It doesn't tell me anything about what's going to happen if I were to click it. It should be modified so that the link text is "order dinner".
+
+All of the "Add to order" links look a bit suspicious. Add to order is an action but they're at least styled to look like links. If I were to pull up the dev tools, I'll see that they're actually implemented as buttons. So those are fine.
+
+```html
+<ul class="menu">
+  <li>Bircher muesli... <button>Add to order</button></li>
+  <li>Toasted banana... <button>Add to order</button></li>
+  <li>Toasted sourdough... <button>Add to order</button></li>
+</ul>
+```
+
+### 13.10 Landmarks
+In Victor's screen cast, we also saw him navigating by landmark.
+
+[![wa13-32](../assets/images/wa13-32-small.jpg)](../assets/images/wa13-32.jpg)
+
+HTML5 introduced some new elements which help us to find the semantics of a region of the page rather than of a single interactive element.
+
+These are
+
+- `<main>` - this represents the main content of a page. Typically there should only be one main element, since otherwise it raises the question of which one is really the main, main.
+- `<header>` - this is either a page banner like it is here, or else a grouping element for any introductory content at the start of any type of section.
+- `<footer>` - similarly a footer may be either a page footer as it is here and contain information about the page or site. Or maybe a footer to a particular section of a page with extra information about that section.
+- `<nav>` - this represents a section of a page that links to other pages like the top navbar or to parts within the page like a table of contents.
+- `<article>` - this is for self-contained sections of content like a blog entry, news article or forum post. A handy test for an article is whether its content would make sense in another context such as cross-posting a blog post to several different blogs.
+- `<section>` - this is a completely generic section of a document or application. Since it doesn't really give much of a clue as to what its content might be, we typically include a heading inside as well.
+- `<aside>` - an aside represents any content which is tangentially related to the content around it. In the context of article like this one this might be a little pullout or sidebar. Or in the context of a page it might be a page sidebar containing some extra navigation or information about the page. An aside will often be rendered as a side bar. But for example, in a responsive layout,you might fill in a side below the main content for small view port sizes.
+
+[![wa13-33](../assets/images/wa13-33-small.jpg)](../assets/images/wa13-33.jpg)
+
+There's a very good chance that your start sheet already contains classes like header, navigation and so on.
+
+For example, you've got a header a section which has a particular color theme and a bottom border to delineate it from the rest of your site. And you might want links in your navigation section to look different from links in the rest of the site.
+
+Using semantic elements, provides a more terse way to express the same information while also potentially providing more information for screening ready users.
+
+While these elements don't have any default styling beyond just having display block by default, you can use your stylesheet just as you would for a class name to select for these elements to make them fit your site's design.
+
+### 13.11 Quiz: Landmarks
+This blog uses some nice readable CSS class names which refer to page structure rather than the details of the style used.
+
+[![wa13-34](../assets/images/wa13-34-small.jpg)](../assets/images/wa13-34.jpg)
+
+For example, right up to the top we see blog header and a little further down this banner area is called blog hero. For blog header, we could just as easily have used a header element and modify our style sheet to refer to the tag name instead of the class. And then we would get the added benefit of some extra semantic information for assistive technology users.
+
+We've highlighted four other areas of this page which have some class names suggestive of the HTML sectioning elements of the page we just learned about.
+
+Your job is to fill in the appropriate tag names just like we did with header.
+
+#### Solution
+
+[![wa13-35](../assets/images/wa13-35-small.jpg)](../assets/images/wa13-35.jpg)
+
+First up, this little list of links in the header. If I inspect one of those links, I could see it's in a div with the class of blog nav.So that could just as easily be a nav element.
+
+Next, this big green section, it's under the hero section and I see something called row. But I think that's just a layout helper div so I'm going to drill a little deeper. The next element we see has a class of col-sm-8which seems like a grid system class, but also blog-main. So that's probably a good candidate for our main element.
+
+This sidebar here, this one's a little tricky. But if we look through our list of semantic elements, we see there is one called aside. The spec says of aside that it can be used for groups of nav elements and for other content that is considered separate from the main content of the page.
+
+So we could definitely use an aside here. Finally, right inside the main element we have something called blog-post. Now there's no post element, but there is certainly an article element and that would work really well here.
+
+### 13.12 Lesson Summary
+
+[![wa13-1](../assets/images/wa13-1-small.jpg)](../assets/images/wa13-1.jpg)
+
+**Alice:** "Thanks so much for giving us that extra insight into how you use websites Victor. If you could have our students take away just two things from this lesson what would they be?"
+
+**Victor:** "First of all make sure to use meaningful headings and link text as well as good pay structure."
+
+**Victor:** "Secondly, as a general rule, you shouldn't try to control the experience a screen reader user will have. They will use the information available to them because the tool they're using to find that information on the web page. Things such as trying to control or fine tune exactly what a screen reader says, or make an elements focusable which shouldn't be, generally lead to more confusion and worse experience for users.
+
+**Alice:** "That's really helpful advice thank you."
+
+**Alice:** "Now in our next lesson, we're going to take a look at what we can do if HTML doesn't have the precise semantic we need or if, for some reason or other, the HTML element we'd usually use isn't a good fit for some other reason."
