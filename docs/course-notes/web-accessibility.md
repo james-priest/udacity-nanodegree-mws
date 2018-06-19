@@ -15,6 +15,9 @@ description: Notes by James Priest
 - [Web Content Accessibility Guidelines 2.0 (WCAG)](https://www.w3.org/TR/WCAG20/)
 - [ChromeVox Lite Screen Reader](http://udacity.github.io/ud891/lesson1-overview/06-experiencing-screen-reader/) - Sample in-page screen reader by Google
 - [Web Accessibility GitHub repo](https://github.com/udacity/ud891) - Udacity's GitHub repo for this course
+- ARIA 1.0 roles: [https://www.w3.org/TR/wai-aria-1.0/#roles](https://www.w3.org/TR/wai-aria-1.0/#roles)
+- ARIA 1.1 roles: [https://www.w3.org/TR/wai-aria-1.1/#roles](https://www.w3.org/TR/wai-aria-1.1/#roles)
+- ARIA 1.1 practices guide: [https://www.w3.org/TR/wai-aria-practices-1.1/](https://www.w3.org/TR/wai-aria-practices-1.1/)
 
 ## Lesson 10. Accessibility Overview
 ### 10.1 Intro to Accessibility
@@ -1848,3 +1851,310 @@ So we could definitely use an aside here. Finally, right inside the main element
 **Alice:** "That's really helpful advice thank you."
 
 **Alice:** "Now in our next lesson, we're going to take a look at what we can do if HTML doesn't have the precise semantic we need or if, for some reason or other, the HTML element we'd usually use isn't a good fit for some other reason."
+
+## Lesson 14. ARIA
+### 14.1 ARIA Intro
+Accessibility of web content requires semantic information about user input widgets, structures, and behavior, to allow specific technologies to convey appropriate information to people with disabilities.
+
+[![wa14-1](../assets/images/wa14-1-small.jpg)](../assets/images/wa14-1.jpg)
+
+So far we've looked at how to make a web app accessible using a sensible **DOM order**, which helps you create a logical **focus strategy**, which lays the groundwork for a **rich keyboard experience**, both through the use of built-in keyboard interactions and sophisticated custom keyboard event handling.
+
+Using native elements for optimal keyboard usability also gives us the built-in **semantics** used by assistive technology to present a customized interface.
+
+But we also need to think about **labeling** controls and images and being sure to add page structure using **headings** and other semantic HTML elements to provide **landmark** information for assistive technology and finally the importance of **links** in creating a rich interactive experience in a complex site.
+
+HTML comes with support for all of those things built in and that gets us a really long way, but sometimes it just doesn't quite go far enough.
+
+For example, so far there's no standardized HTML element fora drop down menu which is a pretty commonly used UI metaphor and there are some more subtle semantics like, "the user needs to know about this as soon as possible".
+
+So in this lesson, we're going to learn how we can express semantics, which HTML can't express on its own.
+
+### 14.2 Why ARIA
+So far we've strongly encouraged using native elements because they give you **focus**, **keyboard support**, and built in **semantics** essentially for free. But there are instances when native HTML won't cut it.
+
+[![wa14-2](../assets/images/wa14-2-small.jpg)](../assets/images/wa14-2.jpg)
+
+The Web Accessibility Initiatives Accessible Rich Internet Applications spec is good for bridging areas where there are accessibility issues that can't be managed with native HTML.
+
+I don't have time to keep saying the Web Accessibility Initiatives Accessible Rich Internet Applications specification. So for the rest of the course, we'll be calling it by its much friendlier nickname, ARIA, but you'll often see it referred to as WAI-ARIA as well, which is helpful if you want to search for it.
+
+**Aria works by allowing you to specify attributes on elements which modify the way that element is translated into the accessibility tree.**
+
+Let's take a look at a really basic example to show how this works.
+
+[![wa14-3](../assets/images/wa14-3-small.jpg)](../assets/images/wa14-3.jpg)
+
+If we create a plain check box, we saw in less than three that a screen reader will
+
+1. Announce it as a check box (role)
+2. Tell you its label if it has one (name)
+3. Tell you whether it is checked or not (state)
+
+And similarly users of other assistive technologies like voice control will be able to operate it.
+
+However, what happens if for some reason we decide, we really need to re-implement a basic checkbox?
+
+Well, for a start, we know from lesson two that we need to make it focusable and handle the same keyboard interactions as a native check box. But what happens if we then try to use it with a screen reader?
+
+The screen reader gives us no indication that the element is meant to be a check box. Sighted users can see the visual cues which indicate the check box pattern, but nothing is announced to screen reader users.
+
+[![wa14-4](../assets/images/wa14-4-small.jpg)](../assets/images/wa14-4.jpg)
+
+Using ARIA allows us to tell the screen reader that extra information.
+
+To give you an idea how it works, let's look at this toy fake check box example. Just to clarify,there's very little reason you'd ever want to write code like this. You're usually much better off styling a regular check box, but this gives us a taste of what ARIA allows us to do.
+
+[![wa14-5](../assets/images/wa14-5-small.jpg)](../assets/images/wa14-5.jpg)
+
+So I'll run ChromeVox Light on this page, to show what things are like before we do anything.
+
+> "Tim-tams, mint slices"
+
+We have a checked and unchecked custom check box up here. ChromeVox reads out the labels as "tim-tams and mint slices", but doesn't give us any indication that either one is a check box.
+
+If we compare that with the native checkbox.
+
+> "[SOUND] Tim-Tams check box checked"<br>
+> "[SOUND] Mint slices, check box not checked"
+
+ChromeVox reads out the label, the role, and the checked state of each, and plays a small ear-con, which is that small sound effect you might have heard at the start, to give a quick indication of the role and checked state as well.
+
+So I'm going to pop open DevTools, and add an ARIA role of check box and an ARIA-checked state to each of those custom check boxes. So the first one gets an aria-checked state of true and the second one will get an aria-checked state of false.
+
+[![wa14-6](../assets/images/wa14-6-small.jpg)](../assets/images/wa14-6.jpg)
+
+Note that I need to explicitly specify that aria-checked is true or false. Just adding the attribute with an empty string, like we often do with other HTML attributes, won't do the job. ARIA attributes always need to have explicit values.
+
+So now we're going to close the dev tools and start up ChomeVox Lite again.
+
+> "[SOUND] TIm-Tams checkbox checked"<br>
+> "[SOUND] mint slices checkbox not checked"<br>
+> "[SOUND] Tim-Tams check box checked"
+
+So now we can hear that there's really no difference from ChromeVox's point of view, between the fake check boxes and the native check boxes. They all sound identical.
+
+So adding that role attribute and that aria-checked attribute causes the node in the accessibility tree to have the desired role and state, without changing anything else about that node's appearance or behavior.
+
+[![wa14-7](../assets/images/wa14-7-small.jpg)](../assets/images/wa14-7.jpg)
+
+In terms of the accessibility tree, what ARIA does is allow you to essentially do some tree surgery. 
+
+We take the accessibility tree as generated from the plain HTML tree, add ARIA and get a different accessibility tree.
+
+[![wa14-8](../assets/images/wa14-8-small.jpg)](../assets/images/wa14-8.jpg)
+
+It may be subtly different or radically different depending on what attributes we use and where. 
+
+However, we need to keep in mind that this is the only thing ARIA changes. It doesn't change anything about the behavior of the element it's added to.
+
+[![wa14-9](../assets/images/wa14-9-small.jpg)](../assets/images/wa14-9.jpg)
+
+For example, it's not going to make the element focusable or add keyboard event listeners. We still need to do the work by making sure we're keeping the promise we're making by telling assistive technology that it has that role.
+
+We'll be looking closer at what that means throughout this lesson, but I'll point out right now that it's no coincidence that we're covering ARIA after the lesson on focus and keyboard.
+
+### 14.3 Quiz: ARIA First Steps
+Okay, we just had a look at making a screen reader accessible custom checkbox.The more astute of you may have noticed that while we did specify the checkbox state as checked, that wasn't going to stay in sync with the actual state of the checkbox.
+
+In this exercise your job is to fully implement the ARIA for this custom checkbox. You'll need to give it a `role` of checkbox and an `aria-checked` to checked value which matches it's checked state at all times.
+
+This exercise can be found in the folder `lesson5-aria/03-first-steps` within this [course's GitHub Repository](https://github.com/udacity/ud891).
+
+You will probably want to start by looking at `checkboxes.js`.
+
+#### Solution
+In the JavaScript file, in the Checkbox's initialization, I'm going to add an initial role of checkbox.
+
+[![wa14-10](../assets/images/wa14-10-small.jpg)](../assets/images/wa14-10.jpg)
+
+I'm also going to add an aria-checked value dependent upon what the initial checked value of the checkbox is.
+
+This next function also looks promising.
+
+[![wa14-11](../assets/images/wa14-11-small.jpg)](../assets/images/wa14-11.jpg)
+
+It changes the checked attribute on the element. So I can just add an extra line here to set the aria-checked value accordingly.
+
+Now when I interact with the checkbox, you'll be able to see the aria-checked attribute change in the DOM. You would also be able to fire up VoiceOver and see that it works just the same as a regular checkbox too.
+
+### 14.4 What can ARIA do
+The checkbox example demonstrated how ARIA modifies the semantic information of an element on the page.
+
+[![wa14-7](../assets/images/wa14-7-small.jpg)](../assets/images/wa14-7.jpg)
+
+ARIA attributes can be used in a number of ways to augment the existing ways we can express semantics in HTML.
+
+Firstly, as we saw with the checkbox example, ARIA can add semantics to an element where no native semantics exist.Such as a div element which explicitly and deliberately has no native semantics.
+
+[![wa14-12](../assets/images/wa14-12-small.jpg)](../assets/images/wa14-12.jpg)
+
+ARIA can also modify existing elements semantics within certain bounds. For example, I might use a button element to implementan on off switch type of control.
+
+[![wa14-13](../assets/images/wa14-13-small.jpg)](../assets/images/wa14-13.jpg)
+
+I can add an ARIA role of switch to the button to more accurately express its semantics.
+
+One quick note is that switch role is part of the forthcoming ARIA 1.1 spec. So as I'm recording this, it's not quite ready for prime time yet. Just like all web standards, ARIA is moving and evolving to keep up with new UI patterns.
+
+ARIA can express the semantic UI patterns which don't exist in HTML. This is where ARIA really comes into its own.
+
+The checkbox example is really reinventing the wheel. It's probably more work to create a fully accessible custom checkbox then to add custom styling to a native checkbox. But in many cases, ARIA allows us to create accessible widgets which would not be possible using plain HTML.
+
+This example shows a tree widget which we could hypothetically create for navigating this course.
+
+[![wa14-14](../assets/images/wa14-14-small.jpg)](../assets/images/wa14-14.jpg)
+
+We can take an unordered list and add ARIA roles of tree, treeitem, and group and add ARIA-expanded attributes to express the semantics at this widget.
+
+ARIA can add extra label and description text, which is only exposed to assisted technology APIs.
+
+[![wa14-15](../assets/images/wa14-15-small.jpg)](../assets/images/wa14-15.jpg)
+
+For example, if I have an image only button which doesn't use an actual image that I could put alt text on, I can use ARIA to provide an accessible label for that button.
+
+ARIA can also expressed semantic relationships between elements which go beyond standard DOM parent, child, and sibling relationships.
+
+[![wa14-16](../assets/images/wa14-16-small.jpg)](../assets/images/wa14-16.jpg)
+
+One example of a more complex relationship is something like "this controls that". In this case, we have a button which controls whether a particular part of the page is visible or hidden in the form of the disclosure widget.
+
+And ARIA can make part of the page live, that is, inform assistive technology right away when they change.
+
+[![wa14-17](../assets/images/wa14-17-small.jpg)](../assets/images/wa14-17.jpg)
+
+In this case, we have an alert which a screen reader might choose to immediately speak to the user interrupting whatever else they're doing.
+
+#### Resources
+
+- ARIA 1.0 spec: [https://www.w3.org/TR/wai-aria/](https://www.w3.org/TR/wai-aria/)
+- ARIA 1.1 spec: [https://www.w3.org/TR/wai-aria-1.1/](https://www.w3.org/TR/wai-aria-1.1/)
+
+### 14.5 Roleplaying
+One of the core aspects of the ARIA system is its collection of roles.
+
+[![wa14-18](../assets/images/wa14-18-small.jpg)](../assets/images/wa14-18.jpg)
+
+As we learned in lessons 12 and 13, a role, an accessibility term, amounts to a shorthand for a particular UI pattern.
+
+[![wa14-19](../assets/images/wa14-19-small.jpg)](../assets/images/wa14-19.jpg)
+
+ARIA provides a vocabulary of patterns we can use via the role attribute on any HTML element.
+
+[![wa14-20](../assets/images/wa14-20-small.jpg)](../assets/images/wa14-20.jpg)
+
+When we applied role=checkbox in the example earlier, we were telling assistive technology that the element should follow the checkbox pattern.
+
+[![wa14-21](../assets/images/wa14-21-small.jpg)](../assets/images/wa14-21.jpg)
+
+We're promising that it will have a checked state, either checked or not checked, and that the state may be toggled using the mouse or via the space bar.
+
+If we followed the advice in earlier lessons, we've already kept part of that promise by implementing keyboard behaviors.
+
+In fact, since the keyboard interactions feature so prominently, it's very important to make sure that when creating a custom widget, the role attribute is always applied in the same place as the tabindex attribute so that keyboard events will go to the right place and so that when page focus lands on an element, its role is conveyed accurately.
+
+[![wa14-22](../assets/images/wa14-22-small.jpg)](../assets/images/wa14-22.jpg)
+
+The ARIA spec describes a taxonomy of possible values for the role attribute and associated ARIA attributes which may legally be used in conjunction with those roles.
+
+[![wa14-23](../assets/images/wa14-23-small.jpg)](../assets/images/wa14-23.jpg)
+
+This is the best source of truth when it comes to understanding how the ARIA roles and attributes all work together and may be used in a way that is supported by browsers and assistive technologies.
+
+It's well worth browsing through the list of roles linked from the instructor notes, since there's a finite vocabulary of roles which can be used and each one has specific semantic implications.
+
+Also, in this screenshot, we can see that certain roles are designated as abstract. These capture certain properties which may be common to several roles, but may not be used as values for the role attribute.
+
+The ARIA spec also has a section on each role, explaining its semantic meaning as well as any associated attributes that may or may not be used with it.
+
+[![wa14-24](../assets/images/wa14-24-small.jpg)](../assets/images/wa14-24.jpg)
+
+Let's walk through these sections.
+
+The top section gives you the name of the role, a brief description of its semantic meaning, as well as a brief description of the related radio group role.
+
+[![wa14-25](../assets/images/wa14-25-small.jpg)](../assets/images/wa14-25.jpg)
+
+Then, in the table, we start off with a super class role. The role's model includes a taxonomy of roles, including some abstract roles, which capture groups of roles with common properties but can't be used on their own.
+
+[![wa14-26](../assets/images/wa14-26-small.jpg)](../assets/images/wa14-26.jpg)
+
+In this case, the superclass roles are option and checkbox. So radio button inherits properties from both of those.
+
+We also have a related concept. This is just kind of a catch-all for things that are semantically related. In this case, a radio input is related because it's a common presentation of a radio button.
+
+These inherited states and properties are all the properties which may or must be applied to this element based on its superclass roles.
+
+[![wa14-27](../assets/images/wa14-27-small.jpg)](../assets/images/wa14-27.jpg)
+
+Most of these will be optional generic global attributes. But in this case, we see aria-checked, which is inherited from the checkbox role, is a required attribute.
+
+So if we're going to create an ARIA radio button we have to make sure aria-checked is set correctly.
+
+We have some information about labels referred to as name here. Name From indicates whether the name may be taken from the element's text content like a button element or needs to be provided by some other mechanism like a native HTML radio input.
+
+[![wa14-28](../assets/images/wa14-28-small.jpg)](../assets/images/wa14-28.jpg)
+
+Having contents as one of the options here indicates that the element's text content if it has any will be used as its accessible label.
+
+Author indicates that the author must explicitly provide a name, which we'll cover a bit later in this lesson.
+
+Accessible Name Required obviously indicates you've got to specify some type of name for this role. This is usually but not always true. For example, the main role indicates the main region of a page,which requires no explanation in most cases.
+
+And finally, the implicit value note here indicates that the default value for aria-checked is false. This means that if we omit the aria-checked attribute, the radio button will be represented as being unselected.
+
+It's definitely worth learning to navigate the ARIA spec to find out about the specifics of ARIA roles, states, and properties. But if you can find a specific pattern you want in the ARIA practices guide,then that gives you all the information you need to implement the widget in one place.
+
+[![wa14-29](../assets/images/wa14-29-small.jpg)](../assets/images/wa14-29.jpg)
+
+It also links back to the ARIA spec for information on all of the ARIA attributes I've mentioned.
+
+Earlier we saw the 1.0 version of this document. This is the 1.1 version, which at the time I'm recording this, is a working draft. I'm working off this version in this lesson since it's more up to date and will eventually become the standard version.
+
+This is the design pattern we already saw fora radio group, which gives us the keyboard interaction and also some more detailed advice on the ARIA attributes which should be used.
+
+[![wa14-30](../assets/images/wa14-30-small.jpg)](../assets/images/wa14-30.jpg)
+
+The design pattern tells us that we need to put our radio buttons in a container element with a role of radiogroup, give each one a role of radio, and ensure that we set aria-checked correctly. So let's try that out.
+
+#### Resources
+- ARIA 1.0 roles: [https://www.w3.org/TR/wai-aria-1.0/#roles](https://www.w3.org/TR/wai-aria-1.0/#roles)
+- ARIA 1.1 roles (draft): [https://www.w3.org/TR/wai-aria-1.1/#roles](https://www.w3.org/TR/wai-aria-1.1/#roles)
+- ARIA 1.1 practices guide (draft): [https://www.w3.org/TR/wai-aria-practices-1.1/](https://www.w3.org/TR/wai-aria-practices-1.1/)
+
+### 14.6 Quiz: Custom radio button group with ARIA
+We've seen that we can apply ARIA roles and properties to an element to modify the way it is exposed in the accessibility tree.
+
+[![wa14-31](../assets/images/wa14-31-small.jpg)](../assets/images/wa14-31.jpg)
+
+The ARIA practices doc helps us decide what area roles and properties to use.
+
+We're going to start with the radio group example from lesson two. You might remember we use the [ARIA Authoring Practices 1.1 doc](https://www.w3.org/TR/wai-aria-practices-1.1/#radiobutton) to get some guidance as to what keyboard handling we needed to add.
+
+In this exercise we're going to revisit the same example, but we're going to follow the design pattern guidance for the ARIA Roles, States, and Properties on each radio button in the group.
+
+Remember to make sure the state is kept in sync with the visual state of the button.
+
+One quick note, the ARIA design pattern mentions aria-labeledby and aria-describedby, we're going to skip those for this exercise but you'll be learning more about them shortly.
+
+#### Resources
+This exercise can be found in the folder `lesson5-semantics-aria/06-radio-group` within this course's GitHub Repository.
+
+Refer to the [ARIA Practices 1.1 recommendations for the "radio group" pattern](https://www.w3.org/TR/wai-aria-practices-1.1/#radiobutton).
+
+You will probably want to start by looking at `radiolist.js`.
+
+#### Solution
+The ARIA Practices document has this to say about the radio group pattern.
+
+Use a container with a role radio group for the set of radio buttons. Then individual radio buttons have a role of radio. So we set both of those below
+
+[![wa14-32](../assets/images/wa14-32-small.jpg)](../assets/images/wa14-32.jpg)
+
+Now if a radio button's selected, it's aria-checked attribute needs to be true and if it's not selected it needs to be false.
+
+[![wa14-33](../assets/images/wa14-33-small.jpg)](../assets/images/wa14-33.jpg)
+
+We come here to this changeFocus function. We need to make sure that we keep the aria-checked attribute in sync with the checked value. 
+
+We modify our JavaScript so that every time we change the checked attribute, we also change the aria-checked attribute.
