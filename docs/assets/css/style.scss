@@ -89,6 +89,9 @@ hr { margin: 20px 0; }
 section>ol, section>ul { 
     margin: 0 40px 0 30px;
 }
+section li {
+    line-height: 1.2;
+}
 section ul ul, ul ol, ol ul, ol ol {
     margin-bottom: 4px;
     padding: 0 0 0 20px
