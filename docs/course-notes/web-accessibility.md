@@ -2158,3 +2158,319 @@ Now if a radio button's selected, it's aria-checked attribute needs to be true a
 We come here to this changeFocus function. We need to make sure that we keep the aria-checked attribute in sync with the checked value. 
 
 We modify our JavaScript so that every time we change the checked attribute, we also change the aria-checked attribute.
+
+### 14.7 ARIA Labels
+[![wa14-34](../assets/images/wa14-34-small.jpg)](../assets/images/wa14-34.jpg)
+
+The ARIA design practices' advice for the radio group Pattern notes. 
+
+- "It is recommended that both the radio group and the radio button have a label that is visible and referenced using the aria-labelledby property"
+- "Use an aria-describedby property to add additional information to the radiobuttons or radio group."
+
+Aria provides several mechanisms for adding labels and descriptions to elements. In fact, aria is the only way to add accessible help or description text.
+
+[![wa14-35](../assets/images/wa14-35-small.jpg)](../assets/images/wa14-35.jpg)
+
+Let's take a look at the properties aria provides to enable us to create accessible labels.
+
+Aria-label allows us to specify a string directly to be used as the accessible label.
+
+[![wa14-36](../assets/images/wa14-36-small.jpg)](../assets/images/wa14-36.jpg)
+
+One situation in which you might use an aria-label attribute is where you have some kind of visual indication as to the purpose of an element but still need to clarify that for anyone who might not be able to access that visual indication, such as a button which uses a graphic to indicate its purpose.
+
+This overrides any other native labeling mechanism such as a label element. Or for example, if a button has both text content and an aria-label, only the aria-label value will be used.
+
+[![wa14-37](../assets/images/wa14-37-small.jpg)](../assets/images/wa14-37.jpg)
+
+Aria-labelledby allows us to specify an element ID to refer to another element in the DOM as this element's label.
+
+[![wa14-38](../assets/images/wa14-38-small.jpg)](../assets/images/wa14-38.jpg)
+
+Aria-labelledby is much like we're using a label element with some key differences. Aria-labelledby may be used on any element, not just labellable elements.
+
+[![wa14-39](../assets/images/wa14-39-small.jpg)](../assets/images/wa14-39.jpg)
+
+While a label element refers to the thing it labels, the relationship is reversed in the case of aria-laelledby. The thing which is labeled refers to the thing which labels it.
+
+Since aria only affects the accessibility tree, aria-laelledby by does not give you the nice label clicking behavior you get from the label element.
+
+Aria-labelledby can take a list of ID refs to compose a label out of multiple elements.
+
+[![wa14-40](../assets/images/wa14-40-small.jpg)](../assets/images/wa14-40.jpg)
+
+The label will be concatenated in the order the ID refs are given and aria-labelledby can refer to elements which are otherwise hidden from assistive technology.
+
+Aria-labelledby overrides all other name sources for an element.
+
+[![wa14-41](../assets/images/wa14-41-small.jpg)](../assets/images/wa14-41.jpg)
+
+So for example, if something has both an aria-labelledby and an aria-label; or an aria-labelledby and a native HTML label, **the aria-labelledby label will always take precedence**.
+
+### 14.8 Quiz: Name that element
+We've covered several ways to label elements already and just learned about two more, aria-label and aria-labelledby.
+
+[![wa14-42](../assets/images/wa14-42-small.jpg)](../assets/images/wa14-42.jpg)
+
+In this quiz, we're going to see some of those labeling techniques in action and put our skills to the test by figuring out the accessible name for each element.
+
+**Hints:**
+
+- In each case, provide the label for the first, or outermost, element.
+- If the element would be hidden from the accessibility tree, choose "No label".
+- HTML labelling techniques, and ARIA roles and attributes, must be used correctly in order to be effective.
+
+#### Solution
+
+[![wa14-43](../assets/images/wa14-43-small.jpg)](../assets/images/wa14-43.jpg)
+
+For the first button, we have two options. The content, which says, Eucalyptus, or the area that's labeled, which says, Gumnut.
+
+We just learned that the **aria-label overrides any other native labeling**, including content. So in this case, the button will have a label of Gumnut.
+
+For the native checkbox we have a label field next to it, however, **the label is not correctly associated with the input**. So the input won't have a label.
+
+We could fix that by giving the checkbox an ID of roo, as well as a name.
+
+For thi div we have a role of button and content, Wombat. Normally a div on it's own wouldn't get included in the accessibility tree. We would just get the text node inside of it **but since it has a role of button, it will be exposed as a button with a label**, Wombat.
+
+And finally, the span needs a pretty close look. It has a role of checkbox. aria-checked state is false. aria-labeledby pointing to label. And aria-label of, Not checked.
+
+So it will be exposed in accessibility tree because it has a role but the label will be one of, Not checked, and, Wallaby. We heard in the previous lesson that **aria-labelledby overrides all other types of labels**.
+
+So the label for this will be, Wallaby.
+
+### 14.9 Breather Recap
+ARIA allows us to add extra semantics into our HTML via attributes. Essentially, it allows us to modify the accessibility tree without changing anything else about the page presentation or behavior.
+
+By default, it won't affect styling nor will it affect interactive behavior. The only thing it changes is how the page appears to assistive technology users.
+
+We've already taken a look at how we can use ARIA to change an element's role, state, and properties. And how we can use ARIA to fine tune the accessible name for an element.
+
+Next,
+
+1. We're going to learn a little more about how ARIA's semantics interact with native HTML semantics
+2. We're also going to look at some special ARIA attributes which allow us to define some more nuanced relationships between elements than what we can express in the DOM
+3. We're going to learn about how and why we can choose to hide or show information exclusively for assistive technology users.
+
+### 14.10 Default Semantics & Landmarks
+We just took an initial look at how we can use Aria rolls and properties to specify the semantics for a particular element.
+
+[![wa14-7](../assets/images/wa14-7-small.jpg)](../assets/images/wa14-7.jpg)
+
+However, we should remember that native HTML elements have implicit semantics.
+
+[![wa14-44](../assets/images/wa14-44-small.jpg)](../assets/images/wa14-44.jpg)
+
+For example, input type=checkbox implicitly has a role of checkbox.
+
+This means two things:
+
+1. There is usually no need to redefine default semantics. It does not need an extra role=checkbox attribute to be announced as a checkbox. (We'll come to an exception to this rule later on.)
+  [![wa14-45](../assets/images/wa14-45-small.jpg)](../assets/images/wa14-45.jpg)
+2. Certain HTML elements have restrictions on what ARIA role and attribute values may be used effectively on them.
+  [![wa14-46](../assets/images/wa14-46-small.jpg)](../assets/images/wa14-46.jpg)
+Most of the time unless you're doing something pretty weird, you won't run into any issues but the ARIA in HTML spec has a table explaining what ARIA may and may not be used with each type of HTML element in case you want to get creative. For example a text field input type="text" may not have a role attribute applied.
+
+Speaking of implicit semantics, we mentioned earlier that HTML landmark elements may be used to help assistive technology users to find their way around the page.
+
+[![wa13-33](../assets/images/wa13-33-small.jpg)](../assets/images/wa13-33.jpg)
+
+ARIA also offers a set of landmark and document structure roles. Many of these are redundant with HTML5 semantic elements but depending on what browser versions you need to support, it may be necessary in some cases to use both an HTML5 semantic element and a redundant ARIA role.
+
+[![wa14-47](../assets/images/wa14-47-small.jpg)](../assets/images/wa14-47.jpg)
+
+For example, breaking the general rule of not redefining default semantics because the default semantics may not be fully supported in this case.
+
+#### Resources
+ARIA in HTML spec, including guidance on what ARIA roles may and may not be used with which HTML elements: [https://www.w3.org/TR/html-aria/](https://www.w3.org/TR/html-aria/)
+
+### 14.11 ARIA Relationships
+aria-labelledby is an example of what we refer to as a relationship attribute. A relationship attribute creates some kind of semantic relationship between elements on the page.
+
+[![wa14-48](../assets/images/wa14-48-small.jpg)](../assets/images/wa14-48.jpg)
+
+In the case of aria-labelledby, that relationship is "this element is labeled by that element", or as the case may be, "this element is labeled by those elements".
+
+The Aria 1.0 spec lists several relationship attributes, with a few more coming in at Aria 1.1. 
+
+[![wa14-49](../assets/images/wa14-49-small.jpg)](../assets/images/wa14-49.jpg)
+
+Most Aria relationship attributes take a reference to one or more elements to create a new link between elements on the page. What differs in each case is what that link means and how it is presented to users.
+
+One of the most widely used Aria relationships is aria-owns. This allows us to tell assistive technology that an element, which is separate in the DOM, should be treated as a child of the current element, or to rearrange existing child elements into a different order.
+
+[![wa14-50](../assets/images/wa14-50-small.jpg)](../assets/images/wa14-50.jpg)
+
+For example, if a pop-up submenu is visually positioned near its parent menu, but cannot be a DOM child of it because that would affect the visual presentation, or because the element is used in several different contexts, we can use aria-owns to present the submenu as a child of the parent menu.
+
+In terms of the accessibility tree, we start off with two menus which aren't semantically linked in any way.
+
+[![wa14-51](../assets/images/wa14-51-small.jpg)](../assets/images/wa14-51.jpg)
+
+If the submenu is showing, an assistive technology user would not be able to explore into it in the context of the other menu. It would appear after the end of it.
+
+By setting aria-owns on a placeholder in the top level menu, we can express the submenu relationship without affecting the appearance of the submenu.
+
+[![wa14-52](../assets/images/wa14-52-small.jpg)](../assets/images/wa14-52.jpg)
+
+aria-owns can take a list of ID references, so it can also be used to explicitly specify the order of children.
+
+[![wa14-53](../assets/images/wa14-53-small.jpg)](../assets/images/wa14-53.jpg)
+
+For example, to rearrange children, or interleave  native and non-native children. By default, aria-owned children will come after natively-owned children.
+
+aria-activedescendant plays a related role. Just as the active element of a page is the one which has focus, setting the active descendant of an element allows us to tell assistive technology that when its parent has page focus, it should be presented to the user as the actual focused element.
+
+[![wa14-54](../assets/images/wa14-54-small.jpg)](../assets/images/wa14-54.jpg)
+
+For example, if we have a list box widget, we may wish to keep focus on the list box container, so that it can receive keyboard events and keep its aria-activedescendant attribute updated to the currently selected list item.
+
+This makes the currently selected item appear to assistive technologyas if it is the focused item.
+
+aria-describedby allows you to provide an accessible description, in the exact same way that aria-labelledby allows you to provide a label. This is a useful technique whenever there is some extra explanatory text that a user might need, whether that applies to only users of assistive technology or all users.
+
+[![wa14-55](../assets/images/wa14-55-small.jpg)](../assets/images/wa14-55.jpg)
+
+One common example is a password input field, which is accompanied by some descriptive text explaining the requirements for a valid password.
+
+Unlike a label, the description may or may not ever be presented to the user. They may have a choice of whether to access it or it may come after all the other information and be preempted by something else.
+
+For example, if they start entering information, their input would be echoed back and interact with the description of the element. So description is a great way to communicate information, which is supplementary, but not essential. It won't get in the way of other more essential information, like the role of the element.
+
+Like aria-labelledby, aria-describedby may reference elements which are otherwise not visible, whether they're hidden from the DOM or hidden from assistive technology users.
+
+The remaining two relationship attributes are a little different and work together. aria-posinset, short for position inset, and aria-setsize are about defining a relationship between sibling elements in a set, such as a list.
+
+[![wa14-56](../assets/images/wa14-56-small.jpg)](../assets/images/wa14-56.jpg)
+
+In the case where the size of the full set cannot be determined by the elements present in the DOM, such as when lazy rendering is used to avoid having all of our large lists in the DOM at any given time, aria-setsize can be used to specify the actual size of the set. And aria-posinset can be used to specify the position of the element in the set.
+
+For example, in a set which might potentially contain 1,000 elements, I can say that a particular element has an aria-posinset of 857, even though it appears first in the DOM. And then use dynamic HTML techniques to ensure the user can explore the full list on demand.
+
+Note that aria-setsize is set on the items in the set and not on the set container.
+
+#### Resources
+ARIA 1.0 relationship attributes: [https://www.w3.org/TR/wai-aria/states_and_properties#attrs_relationships](https://www.w3.org/TR/wai-aria/states_and_properties#attrs_relationships)
+
+ARIA 1.1 relationship attributes: [https://www.w3.org/TR/wai-aria-1.1/#attrs_relationships](https://www.w3.org/TR/wai-aria-1.1/#attrs_relationships)
+
+### 14.12 Quiz: Combo Box
+This combo box example gets most of the way there, but it's missing some aria relationships. Let's take a look at the current situation.
+
+[![wa14-57](../assets/images/wa14-57-small.jpg)](../assets/images/wa14-57.jpg)
+
+I'll turn on ChromeVox Lite and then tab to the combo box. It gets announced as "Choose a drink:, Combo box". So far, so good.
+
+[![wa14-58](../assets/images/wa14-58-small.jpg)](../assets/images/wa14-58.jpg)
+
+Since this is a combo box, I get this list of options. I can choose with the arrow keys or I can type.
+
+If I were to arrow down into the list, I can see that the selected item was changing but I don't hear any feedback.
+
+Now let's see a version with a few tweaks to make it work well. 
+
+Just as before, I'll turn on ChromeVox Lite andI move to the combo box. Now, if I use the arrow keys to move through the list, it tells me coffee, one of seven, Tea two of seven and so on.
+
+[![wa14-59](../assets/images/wa14-59-small.jpg)](../assets/images/wa14-59.jpg)
+
+And if I type in "c", "o" and arrow through the list again, it tells me that there are now only two options.
+
+[![wa14-68](../assets/images/wa14-68-small.jpg)](../assets/images/wa14-68.jpg)
+
+So how do we code this? Well, the code sample has a few FIXME's in it. That's probably a good place to start.
+
+#### Resources
+This exercise can be found in the folder `lesson5-semantics-aria/13-combobox` within this [course's GitHub Repository](https://github.com/udacity/ud891).
+
+Refer to the [ARIA Practices 1.1 recommendations for the "combo box" pattern](https://www.w3.org/TR/2016/WD-wai-aria-practices-1.1-20160317/#combobox).
+
+You will probably want to start by searching for "FIXME" in `combobox.js`.
+
+#### Solution
+This is a pretty tricky exercise, so let's go through all the steps we need to take.
+
+First we have this "need to call this method somewhere :)". All right thanks, we get the hint.
+
+[![wa14-60](../assets/images/wa14-60-small.jpg)](../assets/images/wa14-60.jpg)
+
+Next, we see ChromeVox reports the wrong list size and position.
+
+[![wa14-61](../assets/images/wa14-61-small.jpg)](../assets/images/wa14-61.jpg)
+
+Okay but we still don't have enough context to check that. So let's move on to the next FIXME.
+
+[![wa14-62](../assets/images/wa14-62-small.jpg)](../assets/images/wa14-62.jpg)
+
+All right, this last one says, need to ensure focus stays on text box, but report active list option.
+
+That sounds like a job for aria-activedescendent, which is designed to make focus appear to be somewhere other than the web page focus. In this case, we can't use a roving focus technique because if we moved focus off the text box, we wouldn't be able to type into it anymore.
+
+[![wa14-63](../assets/images/wa14-63-small.jpg)](../assets/images/wa14-63.jpg)
+
+So now we go back to that subtle hint from earlier, the setActiveDescendant method on the combo box prototype. We can call that here with that newActive element.
+
+[![wa14-64](../assets/images/wa14-64-small.jpg)](../assets/images/wa14-64.jpg)
+
+Now if we were to try this out and we selected Coffee, it would say one of seven. And if we selected Cola, ChromeVox would say five of seven.
+
+[![wa14-65](../assets/images/wa14-65-small.jpg)](../assets/images/wa14-65.jpg)
+
+What? If we take a look at the DOM we can see that we've just hidden the filtered out list items. They're still there in the DOM.
+
+[![wa14-66](../assets/images/wa14-66-small.jpg)](../assets/images/wa14-66.jpg)
+
+Now most screen readers would have no trouble with this, since they would be hidden from the accessibility tree, but ChromeVox works a little differently. So we're going to use another aria relationship technique to handle this.
+
+This is where we get back to that ChromeVox reports the wrong list size and position.
+
+[![wa14-61](../assets/images/wa14-61-small.jpg)](../assets/images/wa14-61.jpg)
+
+aria-posinset and aria-setsize are our friends here. Both of them need to go on the list items. So we iterate over the visible list items, and then we can set aria-posinset to the item index + 1 since aria-posinset is a 1 based index, and aria-setsize to the number of visibleItems.
+
+[![wa14-67](../assets/images/wa14-67-small.jpg)](../assets/images/wa14-67.jpg)
+
+Yes, it seems a bit redundant to set that on every list item, but this is just how aria-posinset works. If we were to try this out, we type "c", "o" and press down, we would get Coffee one of two, and Cola two of two.
+
+[![wa14-68](../assets/images/wa14-68-small.jpg)](../assets/images/wa14-68.jpg)
+
+So we're all set.
+
+<!-- 
+### 14.13 Hide In Plain Sight
+Another important technique in fine tuning the experience for assistive technology users involves ensuring that only the relevant parts of the page are exposed to assistive technology.
+
+[![wa14-69](../assets/images/wa14-69-small.jpg)](../assets/images/wa14-69.jpg)
+
+There are several ways to ensure that a section of the dom does not get exposed to accessibility APIs or is exposed only to accessibility APIs.
+
+Firstly, anything which is explicitly hidden will also not be included in the accessibility tree.
+
+[![wa14-70](../assets/images/wa14-70-small.jpg)](../assets/images/wa14-70.jpg)
+
+So anything which has a visibility hidden, or display none CSS style. Or uses the HTML5 hidden attribute, will also be hidden from assistive technology users.
+
+However an element which is not visually rendered, but not explicitly hidden, is still included in the accessibility tree.
+
+[![wa14-71](../assets/images/wa14-71-small.jpg)](../assets/images/wa14-71.jpg)
+
+One common technique is to include `.screenreader` only text in an element which absolutely positioned far off screen. Although, as we have seen, it's also possible to provide screen reader only text via an aria label attribute.
+
+[![wa14-36](../assets/images/wa14-36-small.jpg)](../assets/images/wa14-36.jpg)
+
+Or an aria-labeled by or aria-describedby attribute referencing element which is otherwise hidden.
+
+[![wa14-72](../assets/images/wa14-72-small.jpg)](../assets/images/wa14-72.jpg)
+
+The instructor notes have a link to some more information on providing screen reader only text.
+
+Finally, aria provides a mechanism for excluding content from assistive technology which is not visually hidden in the form of an aria-hidden attribute.
+
+[![wa14-73](../assets/images/wa14-73-small.jpg)](../assets/images/wa14-73.jpg)
+
+Applying this attribute to an element effectively removes it and all of its descendants from the accessibility tree, with the exception of any element which is referred to via an aria-labeledby or aria-describedby attribute.
+
+For example, in an online slide deck you might need to have next and previous slides pre-rendered and ready to slide in but not make them visible to users who are viewing the deck via assistive technology, until they're all the way on the screen.
+
+#### Resources
+For more information on screen reader-only text, check out [WebAIM's article on "invisible content"](http://webaim.org/techniques/css/invisiblecontent/). -->
