@@ -2135,7 +2135,7 @@ In this exercise we're going to revisit the same example, but we're going to fol
 
 Remember to make sure the state is kept in sync with the visual state of the button.
 
-One quick note, the ARIA design pattern mentions aria-labeledby and aria-describedby, we're going to skip those for this exercise but you'll be learning more about them shortly.
+One quick note, the ARIA design pattern mentions aria-labelledby and aria-describedby, we're going to skip those for this exercise but you'll be learning more about them shortly.
 
 #### Resources
 This exercise can be found in the folder `lesson5-semantics-aria/06-radio-group` within this course's GitHub Repository.
@@ -2234,7 +2234,7 @@ We could fix that by giving the checkbox an ID of roo, as well as a name.
 
 For thi div we have a role of button and content, Wombat. Normally a div on it's own wouldn't get included in the accessibility tree. We would just get the text node inside of it **but since it has a role of button, it will be exposed as a button with a label**, Wombat.
 
-And finally, the span needs a pretty close look. It has a role of checkbox. aria-checked state is false. aria-labeledby pointing to label. And aria-label of, Not checked.
+And finally, the span needs a pretty close look. It has a role of checkbox. aria-checked state is false. aria-labelledby pointing to label. And aria-label of, Not checked.
 
 So it will be exposed in accessibility tree because it has a role but the label will be one of, Not checked, and, Wallaby. We heard in the previous lesson that **aria-labelledby overrides all other types of labels**.
 
@@ -2436,7 +2436,6 @@ Yes, it seems a bit redundant to set that on every list item, but this is just h
 
 So we're all set.
 
-<!-- 
 ### 14.13 Hide In Plain Sight
 Another important technique in fine tuning the experience for assistive technology users involves ensuring that only the relevant parts of the page are exposed to assistive technology.
 
@@ -2458,7 +2457,7 @@ One common technique is to include `.screenreader` only text in an element which
 
 [![wa14-36](../assets/images/wa14-36-small.jpg)](../assets/images/wa14-36.jpg)
 
-Or an aria-labeled by or aria-describedby attribute referencing element which is otherwise hidden.
+Or an aria-labelled by or aria-describedby attribute referencing element which is otherwise hidden.
 
 [![wa14-72](../assets/images/wa14-72-small.jpg)](../assets/images/wa14-72.jpg)
 
@@ -2468,9 +2467,357 @@ Finally, aria provides a mechanism for excluding content from assistive technolo
 
 [![wa14-73](../assets/images/wa14-73-small.jpg)](../assets/images/wa14-73.jpg)
 
-Applying this attribute to an element effectively removes it and all of its descendants from the accessibility tree, with the exception of any element which is referred to via an aria-labeledby or aria-describedby attribute.
+Applying this attribute to an element effectively removes it and all of its descendants from the accessibility tree, with the exception of any element which is referred to via an aria-labelledby or aria-describedby attribute.
 
 For example, in an online slide deck you might need to have next and previous slides pre-rendered and ready to slide in but not make them visible to users who are viewing the deck via assistive technology, until they're all the way on the screen.
 
 #### Resources
-For more information on screen reader-only text, check out [WebAIM's article on "invisible content"](http://webaim.org/techniques/css/invisiblecontent/). -->
+For more information on screen reader-only text, check out [WebAIM's article on "invisible content"](http://webaim.org/techniques/css/invisiblecontent/).
+
+### 14.14 Quiz: Name that element R2
+Identify the labels for each of these elements. If there isn't a label appropriately defined, check the box, no label.
+
+[![wa14-74](../assets/images/wa14-74-small.jpg)](../assets/images/wa14-74.jpg)
+
+#### Hints
+- In each case, provide the label for the *first*, or *outermost*, element.
+- If the element would be hidden from the accessibility tree, choose "No label".
+- ARIA roles and attributes must be used correctly in order to be effective.
+
+Relevant information:
+
+- [`aria-hidden` definition](https://www.w3.org/TR/wai-aria/states_and_properties#aria-hidden)
+- [HTML5 `hidden` definition](http://w3c.github.io/html/editing.html#the-hidden-attribute)
+  - [Discussion of the difference between `aria-hidden` and `hidden`](https://www.paciellogroup.com/blog/2012/05/html5-accessibility-chops-hidden-and-aria-hidden/)
+- [aria-labelledby definition](https://www.w3.org/TR/wai-aria/states_and_properties#aria-labelledby)
+  - Recall that `aria-labelledby` may refer to elements otherwise hidden from the accessibility tree.
+- [treeitem role](https://www.w3.org/TR/wai-aria/roles#treeitem)
+- [button role](https://www.w3.org/TR/wai-aria/roles#button)
+- [checkbox role](https://www.w3.org/TR/wai-aria/roles#checkbox)
+
+#### Solution
+[![wa14-75](../assets/images/wa14-75-small.jpg)](../assets/images/wa14-75.jpg)
+
+This first div has content saying semantics, but it also has an aria-hidden attribute. However, the aria-hidden attribute doesn't have an explicit value. So, this element isn't actually hidden from assistive technology. So it has a label, Semantics.
+
+The span has a role of checkbox and is aria-labelledby an element with an ID of "label" which is right below it. The element it's labeled by is hidden. However, area-labelledby may refer to elements which are hidden. So this gets a label of Styling.
+
+The button has a hidden attribute which causes it to be explicitly not rendered, so it has no label.
+
+The span has a role of button and contains another span with the role of image and an aria-label of "menu". Since the outer span contains the inner span, it uses its computed label as its contents. So it ends up with a label of "menu".
+
+### 14.15 Recap so far
+So now you understand the basics of ARIA, how it plays with native HTML semantics, and how it can be used to perform fairly major surgery on the accessibility tree as well as changing the semantics of a single element.
+
+To wrap up our whirlwind tour of ARIA, we're going to take a look at how we can use it to convey time-sensitive information and a deeper look at exactly what it means to add an ARIA role to an element.
+
+### 14.16 ARIA Live
+aria-live allows developers to mark a part of the page as live, in the sense that updates should be communicated to users in a timely manner rather than if and when they happen to explore that part of the page.
+
+[![wa14-76](../assets/images/wa14-76-small.jpg)](../assets/images/wa14-76.jpg)
+
+One example might be a status message which appears as a result of either a user action or an external event.
+
+If this message is important enough to grab aside a user's attention, we can direct and assist a technology user's attention to it by setting an aria-live attribute on it.
+
+When an element has an aria-live attribute we refer to the part of the page containing it and its descendants, as a live region.
+
+[![wa14-77](../assets/images/wa14-77-small.jpg)](../assets/images/wa14-77.jpg)
+
+aria-alive has three allowable values, off, polite, and assertive.
+
+Off is the default value. It can be specified explicitly if need be, but not setting it aria-live attribute at all will have the same effect.
+
+#### aria-live="polite"
+aria-live="polite" tells us assistive technology, alert the user to this change when you finished whatever you were doing.
+
+[![wa14-78](../assets/images/wa14-78-small.jpg)](../assets/images/wa14-78.jpg)
+
+It's great to use if something is important but not urgent and accounts for the majority of aria-live use.
+
+In this example we have a chat widget which uses aria-live to reflect the most recent chat activity.
+
+[![wa14-79](../assets/images/wa14-79-small.jpg)](../assets/images/wa14-79.jpg)
+
+When a new check message appears it'll be announced to a screen reader user once any in-progress utterance has finished.
+
+#### aria-live="assertive"
+aria-live="assertive" tells assistive technology to interrupt whatever it's doing and alert the use to this change immediately.
+
+[![wa14-80](../assets/images/wa14-80-small.jpg)](../assets/images/wa14-80.jpg)
+
+This is only for important and urgent updates, such as a status message like, "there has been a server error and your changes are not being saved, please refresh the page".Or update to an input field as a direct result of a user action,such as buttons on a step or widget.
+
+In this case, once this alert bar has some content, it'll interrupt whatever the user was doing with an announcement of its content.
+
+#### demo
+To demonstrate this in practice, here's a demo of aria-live use in the custom number input. You can see the dom for the custom number input on the right.
+
+[![wa14-81](../assets/images/wa14-81-small.jpg)](../assets/images/wa14-81.jpg)
+
+We have a container element with a roll of spin button. Then a span containing the numerical value and an Add and Subtract button.
+
+The span within the numeric value has an aria-live value of assertive, meaning whenever it changes, whatever speech is in progress should be interrupted.
+
+One of the thing to notice is I've used aria-describedby, to associate the element with this bit of help text underneath. So I'll probably hear that once I set focus on the element.
+
+I'm going to turn on ChromeVox Light, tab to the element, and then I should hear the label and it's going to start reading the description. Then I'm going to use the up arrow to add ten to the value.
+
+> [SOUND] "Number input demo. Current value, Spin button. Use add and subtract buttons or up and down arrows." [SOUND] "10."
+
+Great.So it immediately told me the new value, and interrupted what it was saying. I can do that again.
+
+> [SOUND] "20."
+
+Or use the mouse.
+
+> [SOUND] "30." [SOUND] "20."
+
+Or use the screen reader.
+
+> [SOUND] "Add button." [SOUND] "30."
+
+And the same thing happens.
+
+So those are the basics of aria-live. We have just a couple of tips for working with aria-live regions in practice.
+
+Firstly, your aria-live region should probably be in the initial page load. This is not a hard and fast rule, but if you're having difficulty with an aria-live region, this could be one of the issues.
+
+[![wa14-82](../assets/images/wa14-82-small.jpg)](../assets/images/wa14-82.jpg)
+
+Secondly, different screen readers and assistive technologies react differently to different types of changes.
+
+[![wa14-83](../assets/images/wa14-83-small.jpg)](../assets/images/wa14-83.jpg)
+
+For example, it's possible to trigger an alert on some screen readers by toggling a descendant element's hidden style from true to false. But this technique does not work on others. So if you're having issues with getting an aria-live region to speak, experiment with some different types of content changes to see what works on the platforms you're targeting.
+
+### 14.17 Atomic Relevant Busy
+There are three attributes which work with aria-live to fine tune what is communicated to the user when the live region changes.
+
+[![wa14-84](../assets/images/wa14-84-small.jpg)](../assets/images/wa14-84.jpg)
+
+Aria-atomic indicates whether the entire region should be considered as a whole when communicating updates.
+
+[![wa14-85](../assets/images/wa14-85-small.jpg)](../assets/images/wa14-85.jpg)
+
+For example, if we couldn't use a date input, we might want to create a date widget consisting of a stepper for each of day, month, and year with aria-live=polite and aria-atomic=true on the containment node.
+
+[![wa14-86](../assets/images/wa14-86-small.jpg)](../assets/images/wa14-86.jpg)
+
+If the user used the month stepper to change the month value alone, the full contents of the date widget would be read out.
+
+The values for aria-atomic may be true or false, with false being the default.
+
+[![wa14-87](../assets/images/wa14-87-small.jpg)](../assets/images/wa14-87.jpg)
+
+This means that you don't need to explicitly specify when aria-atomic is false.
+
+Aria-relevant indicates what types of changes should be presented to the user.
+
+There are three distinct options which may be used separately or as a token list: additions, removals, and text.
+
+[![wa14-88](../assets/images/wa14-88-small.jpg)](../assets/images/wa14-88.jpg)
+
+An aria-relevant value of additions means that any element being added to the live region is significant.
+
+[![wa14-89](../assets/images/wa14-89-small.jpg)](../assets/images/wa14-89.jpg)
+
+For example, appending a span to our log of chat messages would mean that the span would be announced to the user, assuming that aria-atomic was false.
+
+An aria relevant value of text implies that text content being added to any descendant node is relevant regardless of whether a new element is actually added.
+
+[![wa14-90](../assets/images/wa14-90-small.jpg)](../assets/images/wa14-90.jpg)
+
+For example, changing the text content of our alert bar would trigger an announcement, even though we haven't actually added a descendant element.
+
+[![wa14-91](../assets/images/wa14-91-small.jpg)](../assets/images/wa14-91.jpg)
+
+And aria-relevant value of removals implies that removing any text or any descendant element should trigger an announcement.
+
+[![wa14-92](../assets/images/wa14-92-small.jpg)](../assets/images/wa14-92.jpg)
+
+The default value for aria-relevant is additions text, meaning that adding either a descendant element,or adding text content through some other mechanism is significant.
+
+[![wa14-93](../assets/images/wa14-93-small.jpg)](../assets/images/wa14-93.jpg)
+
+This is the most common situation so it's rarely necessary to specify aria-relevant explicitly.
+
+There's also an all option which is shorthand for additions removals text.Meaning that literally any change is significant.
+
+Finally, aria-busy let's us notify a specific technology that it should temporarily ignore changes to this element, such as when things alerting say after a temporary connectivity lapse.
+
+[![wa14-94](../assets/images/wa14-94-small.jpg)](../assets/images/wa14-94.jpg)
+
+Once everything is back in place, aria-busy should be set to false.
+
+### 14.18 Recap
+All right, we've learned a lot in this lesson. Let's take a quick recap before we move on to the last exercise.
+
+[![wa14-95](../assets/images/wa14-95-small.jpg)](../assets/images/wa14-95.jpg)
+
+We covered what ARIA does to the accessibility tree. Essentially, ARIA allows you to intervene and do some tree surgery before the accessibility tree is exposed to assistive technology.
+
+From changing the role name or properties of a single element through to actually removing or moving parts of the tree route.
+
+[![wa14-8](../assets/images/wa14-8-small.jpg)](../assets/images/wa14-8.jpg)
+
+We talked about how to use the role attribute to modify the role of a single element.
+
+[![wa14-12](../assets/images/wa14-12-small.jpg)](../assets/images/wa14-12.jpg)
+
+We saw how to use the ARIA spec to find information about roles and attributes.
+
+For example, we can use the ARIA spec to find a specific role then dive down into the detailed information for that role to learn about what attributes it supports and what default semantics it may have.
+
+[![wa14-24](../assets/images/wa14-24-small.jpg)](../assets/images/wa14-24.jpg)
+
+Similarly, we can find information about particular aria properties.
+
+[![wa14-24](../assets/images/wa14-24-small.jpg)](../assets/images/wa14-24.jpg)
+
+We learnt how to use ARIA extended labeling options.
+
+- aria-label, to provide a screen reader only label string.
+- aria-labeledby, to refer to some visible element as a label.
+- aria-describedby, to provide some extra information alongside the label.
+
+We looked at the way ARIA can specify semantic relationships beyond the labeledby and describedby relationships such as aria-owns to modify the shape of the accessibility tree.
+
+[![wa14-50](../assets/images/wa14-50-small.jpg)](../assets/images/wa14-50.jpg)
+
+We examine the default semantics of native HTML elements, and saw that some of those semantics may not be overridden with ARIA.
+
+[![wa14-46](../assets/images/wa14-46-small.jpg)](../assets/images/wa14-46.jpg)
+
+We learned that ARIA has a set of landmark and document structure roles to help users navigate and understand page structure.
+
+[![wa14-47](../assets/images/wa14-47-small.jpg)](../assets/images/wa14-47.jpg)
+
+We looked at how to hide things from assistive technology, or show things only to assistive technology.
+
+[![wa14-73](../assets/images/wa14-73-small.jpg)](../assets/images/wa14-73.jpg)
+
+And lastly, we spent some time exploring Aria-live regions.
+
+[![wa14-76](../assets/images/wa14-76-small.jpg)](../assets/images/wa14-76.jpg)
+
+This is really only the very basics of ARIA, but it should be enough to help you understand what ARIA can offer and how to read and understand the ARIA documentation to learn more.
+
+### 14.19 Quiz: Modal Dialog Quiz
+We've learned about ARIA roles, Design Patterns, live regions, labeling mechanisms, and ways to hide parts of the page from assistive technology.
+
+[![wa12-25](../assets/images/wa12-25-small.jpg)](../assets/images/wa12-25.jpg)
+
+Now we're going to put all of that together by building on the modal dialog from Lesson 2 to create a fully semantic dialog with a confirmation message which appears on submit.
+
+Remember that modal dialog that Rob showed us in Lesson two? We're going to look at it in the context of a more complicated page.
+
+So here, we have the familiar flight booking page, and we've added a sign up button here.
+
+[![wa14-96](../assets/images/wa14-96-small.jpg)](../assets/images/wa14-96.jpg)
+
+I'll start ChromeVox Light and then tab through these links to get to the sign up button.
+
+I can press Enter or Space to click the button which pops open the modal dialog.
+
+[![wa14-97](../assets/images/wa14-97-small.jpg)](../assets/images/wa14-97.jpg)
+
+It focuses the first focusable element, and tells me about that element.
+
+> "Frequent flyer number. Edit text."
+
+It doesn't give me any information about the context for that form field. In this case, we can get by without it but it would have been nice to hear the heading, "Log in to Kangaroo Kilometres", and to know that we were in a modal dialog and couldn't get to the rest of the page without closing it.
+
+I can use the ChromeVox Light controls to work backwards to explore the context for this form and see if there's anything important in there.
+
+> "Log into kangaroo kilometers heading one"
+
+So going backwards, I hear the heading "Log into Kangaroo Kilometers", great.
+
+[![wa14-98](../assets/images/wa14-98-small.jpg)](../assets/images/wa14-98.jpg)
+
+Was there anything else I missed? I'll hit previous again.
+
+> "Copyright 2015 Udacity, Internal link footer."&gt;&gt; 
+
+Okay, now I'm outside the dialogue in the footer, what happened?
+
+Since ChromeVox isn't directly moving focus in this case, our nice focus trapping code didn't get triggered and we were able to break out of the dialogue.
+
+So we have a couple of issues we need to fix here. We aren't told we're in a dialogue and we can break out of the dialogue with the screen reader.
+
+Have a think back over this lesson, and have a look at the hints in the code and see if you can figure out how we can fix these issues.
+
+Once you fix the example, come back here and pick all the statements which are true.
+
+#### Solution
+Let's have a look at the HTML first. I see a "FIXME here, there's a role for that".
+
+[![wa14-99](../assets/images/wa14-99-small.jpg)](../assets/images/wa14-99.jpg)
+
+Let's go have a look at the aria roles we can use. All right, dialog seems like a good fit.
+
+[![wa14-100](../assets/images/wa14-100-small.jpg)](../assets/images/wa14-100.jpg)
+
+> "A dialog is an application window that is designed to interrupt the current processing of an application in order to prompt the user to enter information or require a response."
+
+Let's add that role and see how it changes things.
+
+[![wa14-102](../assets/images/wa14-102-small.jpg)](../assets/images/wa14-102.jpg)
+
+Now with ChromeVox Lite running, when I click the Sign in button, it tells me
+
+> "Entered dialog, Log in to Kangaroo Kilometers Dialog, Frequent flyer number, Edit text"
+
+[![wa14-101](../assets/images/wa14-101-small.jpg)](../assets/images/wa14-101.jpg)
+
+How did it know the name of the dialog?
+
+Yeah, it already had an aria-labelledby attribute on there, pointing at the heading but at this point, if I were to Shift+Tab backwards, I would see that I could still jump out of the dialog and into the footer.
+
+If we look at the DOM, we can see why.
+
+[![wa14-103](../assets/images/wa14-103-small.jpg)](../assets/images/wa14-103.jpg)
+
+The dialog is placed after the page content. So if we work backwards from the dialog, we'll end up at the end of the page contents.
+
+Let's have a look at the JavaScript here then. There's a comment down here saying "FIXME: hide non-modal content from screen readers".
+
+[![wa14-104](../assets/images/wa14-104-small.jpg)](../assets/images/wa14-104.jpg)
+
+Perhaps aria-hidden would be a good fit here. So let's give that a shot.
+
+We'll add a line here, looking for that wrapper element, and set the aria-hidden attribute to true.
+
+[![wa14-106](../assets/images/wa14-106-small.jpg)](../assets/images/wa14-106.jpg)
+
+Then of course, we need to remember to set it back to false once the dialog is closed. Since the default value for aria-hidden is false, we can just remove the attribute.
+
+Now let's see if that worked. With ChromeVox Lite running, I can open the dialog again and working backwards from this text field, I go to the Log in button, which is exactly what I would expect.
+
+[![wa14-107](../assets/images/wa14-107-small.jpg)](../assets/images/wa14-107.jpg)
+
+The focus is locked to just this dialog.Awesome.And if I close the dialog, the focus goes back to the Sign in button, exactly where we started this process.
+
+### 14.20 Summary
+Aria allows us to express an extremely broad range of semantic concepts via the use of HTML attributes.
+
+[![wa14-108](../assets/images/wa14-108-small.jpg)](../assets/images/wa14-108.jpg)
+
+Obviously Aria is a very complex topic and it can take a long time to learn all of the precise details of the best use of Aria roles, states, and properties, and special roles and attributes like Aria Live.
+
+The [Aria Authoring Practices document](https://www.w3.org/TR/wai-aria-practices-1.1/) is a great place to get information for well-known Aria best practices and design patterns.
+
+And the [Aria spec](https://www.w3.org/TR/wai-aria-1.1/) has all of the nitty gritty details of what each of the roles and attributes does if you need to take a deeper dive.
+
+Then like any skill, it's a matter of experimentation, practice and persistence. There is no substitute for trying things out with the real world assistive technology, especially screen readers.
+
+And keep an eye out because browsers are also developing tooling which will start to make all of this easier.
+
+However it bears repeating that if you don't need to use Aria, you can just not. Implicit HTML semantics can get you a very long way and will save you a lot of effort in re-implementing the semantics and behaviors of many standard user experience patterns.
+
+So that wraps up our discussion of semantics. It's been a long journey, but we're not quite done with the course yet.
+
+While we definitely need to make sure our semantics are in order for assistive technology users, we also need to make sure that the visual UI is usable for everyone as well.
+
+So in the next lesson, Rob is going to explain the role that styling can play in accessibility.
