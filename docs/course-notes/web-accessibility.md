@@ -2821,3 +2821,191 @@ So that wraps up our discussion of semantics. It's been a long journey, but we'r
 While we definitely need to make sure our semantics are in order for assistive technology users, we also need to make sure that the visual UI is usable for everyone as well.
 
 So in the next lesson, Rob is going to explain the role that styling can play in accessibility.
+
+## Lesson 15. Style
+### 15.1 Style Intro
+So you understand focus and you understand semantics, two crucial pillars of accessibility. To wrap things up, let's spend some time talking about styling.
+
+[![wa15-1](../assets/images/wa15-1-small.jpg)](../assets/images/wa15-1.jpg)
+
+Now this is a broad topic, but I'm going to try and segment it into a few important areas.
+
+The first is ensuring that our elements are styled to support the accessibility of work that we've already done. This means adding styles for focus and various ARIA states.
+
+Once you've got that squared away, we can look at how to make sure our UIs are flexible, and can handle being zoomed or scaled up for users who may have trouble reading smaller text.
+
+Lastly, I'll talk about color choices, look at the importance of contrast and making sure we're not conveying information with color, alone.
+
+### 15.2 Focus styles
+In the previous sections, any time we focused an element, we relied on the built-in browser focus ring to style that element for us.
+
+[![wa15-2](../assets/images/wa15-2-small.jpg)](../assets/images/wa15-2.jpg)
+
+The focus ring is great because without it, it's impossible for a keyboard user to tell which element is currently focused.
+
+In fact, the WebAIM checklist specifically states in section 2.4.7 that it should be "visually apparent which page element has the current keyboard focus as you tab through the page".
+
+[![wa15-3](../assets/images/wa15-3-small.jpg)](../assets/images/wa15-3.jpg)
+
+But sometimes the default focus ring may not fit in well with your design.
+
+For instance, here I've got a blue focus ring on a blue background. So it's just really hard to see.
+
+[![wa15-4](../assets/images/wa15-4-small.jpg)](../assets/images/wa15-4.jpg)
+
+In some cases, the focus ring can kind of awkwardly wrap around elements as we saw in our lesson to for example.
+
+[![wa15-5](../assets/images/wa15-5-small.jpg)](../assets/images/wa15-5.jpg)
+
+So we need a way to change the appearance of our element, and we'd like that change to happen only when the element is focused. To do this, we can use the focus pseudo class.
+
+[![wa15-6](../assets/images/wa15-6-small.jpg)](../assets/images/wa15-6.jpg)
+
+The focus pseudo class only matches when an element has focus. To change the appearance of our focus ring, we can then use the outline property.
+
+Here, I'm using the outline property to change the appearance of the focus ring to a one pixel dotted white line.
+
+[![wa15-7](../assets/images/wa15-7-small.jpg)](../assets/images/wa15-7.jpg)
+
+Now, some developers choose to remove the style altogether by setting the outline property of the element to zero or none and this, by itself, is a major anti-pattern.
+
+Without a focus indicator, how is a keyboard user supposed to tell which item they're interacting with?
+
+[![wa15-8](../assets/images/wa15-8-small.jpg)](../assets/images/wa15-8.jpg)
+
+If you're going to remove the focus ring because you don't like how it looks, then you need to replace it with another consistent focus indicator so a keyboard or switch device user can navigate your page.
+
+Using that example from before, let's look at how we can provide our own alternative focus indicator.
+
+So you might be familiar with adding hover states to your controls using the hover pseudo class. Here, I've set my buttons to have a red background with white text and a text underline whenever they're hovered.
+
+[![wa15-9](../assets/images/wa15-9-small.jpg)](../assets/images/wa15-9.jpg)
+
+I can actually see this in practice as I go and mouse over the items on my page. So a simple solution of removing the focus ring and replacing it is just to give your element the same hover and focus styles.
+
+I can do this by adding another line to my block of CSS here that uses the focus pseudo class.
+
+[![wa15-10](../assets/images/wa15-10-small.jpg)](../assets/images/wa15-10.jpg)
+
+And because the hover style might not make it obvious which element has focus, I'm also going to write a style specifically using the focus pseudo class.
+
+This style right here is going to remove that default focus ring, and replace it with a colored box-shadow.
+
+[![wa15-11](../assets/images/wa15-11-small.jpg)](../assets/images/wa15-11.jpg)
+
+Now, you might be wondering why use a box-shadow instead of just changing the color of the focus ring, which is a really good question.
+
+Because the various browsers out there style the outline properties slightly differently, just changing the color might not always produce a consistent experience.
+
+Using a box shadow here, I know that I'm going to get a consistent focus indicator across the different browsers. Now, as I tab through the page, it's much easier to tell which element currently has focus.
+
+[![wa15-12](../assets/images/wa15-12-small.jpg)](../assets/images/wa15-12.jpg)
+
+Let's use the same technique to fix up the radio group example from lesson two.
+
+I'll start off by removing this sort of awkward wrapping focus indicator by setting the outline to none using that focus pseudo class.
+
+[![wa15-13](../assets/images/wa15-13-small.jpg)](../assets/images/wa15-13.jpg)
+
+And then, I'll use a focus tile to just target my before pseudo elements. These are what actually produce our little radio circles here.
+
+I'm going to give those radio circles a blue tinted box shadow so now when the user presses their arrow keys,it's very obvious which item currently has focus.
+
+[![wa15-14](../assets/images/wa15-14-small.jpg)](../assets/images/wa15-14.jpg)
+
+So, to sum it up, if at all possible leave the default browser focus ring in place, as it's what many users have come to expect.
+
+If, however, the ring is clashing with your page styles or it's just awkwardly wrapping around your elements, then you can use the focus pseudo class to provide your own custom focus indicator.
+
+#### Resources
+WebAIM checklist items:
+
+- 2.4.7: [http://webaim.org/standards/wcag/checklist#sc2.4.7](http://webaim.org/standards/wcag/checklist#sc2.4.7)
+- [:focus pseudo-class](https://developer.mozilla.org/en-US/docs/Web/CSS/:focus)
+- [outline CSS property](https://developer.mozilla.org/en-US/docs/Web/CSS/outline)
+- [:hover pseudo-class](https://developer.mozilla.org/en-US/docs/Web/CSS/:hover)
+- [::before pseudo-element](https://developer.mozilla.org/en-US/docs/Web/CSS/::before)
+
+### 15.3 Quiz: Write focus style
+The buttons on this site don't have focus styles making them pretty much useless to a keyboard user. With your new CSS knowledge, try using the focused pseudo class to give these buttons interesting focus states.
+
+[![wa15-15](../assets/images/wa15-15-small.jpg)](../assets/images/wa15-15.jpg)
+
+You're free to use whatever CSS properties you like, so long as they make buttons stand out.
+
+For this exercise you should do all of your work in the provided main.css file. Looking at the main.css file, you'll notice the anchor tags and the button tags have their outline set to none.
+
+[![wa15-16](../assets/images/wa15-16-small.jpg)](../assets/images/wa15-16.jpg)
+
+So I need to find all of the anchor and button elements in this page and give them new focus styles.This means I need to style these navigation elements,any buttons inside the jumbotron, and these raised elements.
+
+#### Solution
+Looking at the main.css file, you'll notice the anchor tags and the button tags have their outline set to none. So I need to find all of the anchor and button elements in this page and give them new focus styles.
+
+This means I need to style navigation elements, any buttons inside the Jumbotron, and raised elements.
+
+[![wa15-17](../assets/images/wa15-17-small.jpg)](../assets/images/wa15-17.jpg)
+
+[![wa15-18](../assets/images/wa15-18-small.jpg)](../assets/images/wa15-18.jpg)
+
+Because I want my focus tiles to look consistent, I'm going to copy each of these selectors and group them at the bottom.
+
+[![wa15-19](../assets/images/wa15-19-small.jpg)](../assets/images/wa15-19.jpg)
+
+Next, I'll add pseudo classes for focus and hover to each.
+
+Finally I'll add some styling. I'm going to give each element a red background on white texts.
+
+This reversing effect will really make the focus buttons stand out but I also want to be careful about just conveying information with color because some of my users may have a color vision impairment.
+
+Rob will talk about color vision impairments in an upcoming lesson but to cater to these users, I'll also add a text underline so there's a bit more visual indication that something has changed.
+
+Finally I'll steal this fancy drop shadow from the raised buttons and apply it to all the elements. Adding some shadow will also help the elements stand out a little bit more.
+
+Tabbing through the updated site, I can now clearly track focus across the page.
+
+[![wa15-20](../assets/images/wa15-20-small.jpg)](../assets/images/wa15-20.jpg)
+
+My designer's happy, because the focus tiles fit the look of the site and my keyboard users are happy, because they can easily navigate the page.
+
+#### Resources
+This exercise can be found in the folder `lesson6-styling/01-focus-styles` within this [course's GitHub Repository](https://github.com/udacity/ud891).
+
+The buttons on this page don’t currently have focus styles, making them pretty much useless to a keyboard user. With your new CSS knowledge, try using the :focus pseudo-class to give these buttons interesting focus states.
+
+### 15.4 Input Modality
+I want you to pay attention to how a native button element reacts when it receives input from different devices.
+
+When I go and click on it with a mouse, I don't see a focus ring, but when I press the tab key, I do see a focus ring.
+
+Now let's check out a custom button that I've created using a focus style. When I go and click on the button with a mouse, both the focus style and the focus ring are applied, and they stick around.
+
+So what's going on here? Why does my custom button not work like the native button?
+
+Well for native elements like button, browsers implement special behaviors to let them differentiate between mouse and keyboard focus and they only display the focus ring for keyboard focus. The thinking being that mouse users are less likely to need the focus ring since they know what they just clicked on.
+
+Now unfortunately that same trick does not apply to custom controls you create yourself. Because I've added a tab index to this element, it means that regardless of how it gained focus, that ring will always be displayed. And because I've used a focused pseudo class style on it, that style will also be displayed, regardless of whether this gained focused through a keyboard or a mouse.
+
+[![wa15-21](../assets/images/wa15-21-small.jpg)](../assets/images/wa15-21.jpg)
+
+Now, I should point out that as of the time of this recording, this behavior I'm describing varies by the different browsers, so it's not even consistent when and where you'll see focused rings and focused dials once you start applying them in your application.
+
+So this is actually pretty frustrating for web developers. Unfortunately, there isn't currently any single cross-browser solution that will let us differentiate between mouse and keyboard focus.
+
+In Firefox,the moz-focusring CSS pseudoclass does allow you to write a focus style that will only be applied if the element is focused via the keyboard.
+
+So for instance, I can go in and click on this custom button and I won't see anything, but when I press tab, I see the focus states that I would expect.
+
+[![wa15-22](../assets/images/wa15-22-small.jpg)](../assets/images/wa15-22.jpg)
+
+Now while the pseudo class is currently only supported in Firefox, there is currently work going on to add it to other browsers, like Chrome. So who knows, by the time you're watching this, maybe it will have shipped and this will be a much easier problem to work around.
+
+Similarly, Alice and Brian Kardell have written a great article exploring this topic in more detail, and their article also contains a JavaScript shim for differentiating between mouse and keyboard input.
+
+You can use this shim today in your applications to split things up, and in the future roll in the focus ring pseudo class when it has more widespread browser support.
+
+#### Resources
+
+- [:moz-focusring pseudo-class](https://developer.mozilla.org/en-US/docs/Web/CSS/:-moz-focusring)
+- [Proposing CSS input modality article](http://radar.oreilly.com/2015/08/proposing-css-input-modailty.html)
+- [Input modality shim](https://github.com/alice/modality)
