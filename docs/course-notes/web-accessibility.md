@@ -3009,3 +3009,462 @@ You can use this shim today in your applications to split things up, and in the 
 - [:moz-focusring pseudo-class](https://developer.mozilla.org/en-US/docs/Web/CSS/:-moz-focusring)
 - [Proposing CSS input modality article](http://radar.oreilly.com/2015/08/proposing-css-input-modailty.html)
 - [Input modality shim](https://github.com/alice/modality)
+
+### 15.5 Styling with Aria
+When you're building components, it's a very common practice to reflect the state of the component using CSS classes.
+
+[![wa15-23](../assets/images/wa15-23-small.jpg)](../assets/images/wa15-23.jpg)
+
+For instance here is a toggle button that I've built and when I click on it, it's going to go into a pressed state.
+
+[![wa15-24](../assets/images/wa15-24-small.jpg)](../assets/images/wa15-24.jpg)
+
+In order to style that state, my JavaScript has added a "pressed" class to my class list, and because I want to have good semantics, my JavaScript has also set the aria-pressed state for this toggle button to true. Lastly, we have tabindex set so that keyboard users can easily interact with the element.
+
+Now to style the pressed state of the button in my CSS, I have a selector that targets any instance of the button that has the "pressed" class.
+
+[![wa15-25](../assets/images/wa15-25-small.jpg)](../assets/images/wa15-25.jpg)
+
+Now a useful technique which we can employ in this situation is to actually remove this "pressed" class, and instead replace it with aria attributes.
+
+So I'm going to update the selector so that it looks like this.
+
+[![wa15-26](../assets/images/wa15-26-small.jpg)](../assets/images/wa15-26.jpg)
+
+Here I'm using a CSS attribute selector to target the element when aria-pressed is true.
+
+The effect is the same as before, but now I get this nice verification that I've set the aria state properly because it's visually reflected by my element.
+
+Not to mention I can cut down on some of my CSS noise by getting rid of additional selectors and replacing them with aria attributes.
+
+#### Resources
+
+- [CSS attribute selectors](https://developer.mozilla.org/en-US/docs/Web/CSS/Attribute_selectors)
+
+### 15.6. Quiz: Styling with ARIA
+Here's a disclosure button which adds classes to the element for styling the open and close states.
+
+[![wa15-27](../assets/images/wa15-27-small.jpg)](../assets/images/wa15-27.jpg)
+
+I'm wondering if we could instead style off of the Aria attributes. This would create a nice relationship between the actual state of the component and our visual representation.
+
+Take a look and see if you can find a place where we could update our CSS selectors to use Aria attributes instead of classes.
+
+#### Resources
+This exercise can be found in the folder `lesson6-styling/02-style-aria-states` within this [course's GitHub Repository](https://github.com/udacity/ud891).
+
+See if you can do a better job styling this button using ARIA states. One huge benefit to styling with ARIA is that it provides visual feedback that you've applied the state correctly, which can act as a safeguard when you're testing and debugging your code.
+
+#### Solution
+Taking a look at the "disclosure.js" file which powers the widget I can see that when the button is toggled JavaScript will check to see if the content is currently being displayed.
+
+[![wa15-28](../assets/images/wa15-28-small.jpg)](../assets/images/wa15-28.jpg)
+
+If it's not, it will set Aria hidden to falase on the content and Aria expanded true on the button to indicate that the widget is open. Or if the content was already displaying it would do the opposite.
+
+I can also see that it's applying classes to the content and button elements to indicate whether they're showing or not.
+
+Instead of targeting expanded or the collapse classes for a visual state we can use attribute selectors to target the Aria expanded and Aria hidden attributes and alternate the appearance of the component depending on their state.
+
+[![wa15-29](../assets/images/wa15-29-small.jpg)](../assets/images/wa15-29.jpg)
+
+Starting with the button itself, I'll update the styles to use an attribute selector for Aria expanded
+when Aria expanded is false.
+
+[![wa15-30](../assets/images/wa15-30-small.jpg)](../assets/images/wa15-30.jpg)
+
+I'll set my button to its closed state represented by the triangle icon when Aria expanded is true. I'll change the state of the icon to indicate that the button is open. Similarly, I'll update the content styles to use the matching Aria hidden attribute styling off of the element.
+
+Aria states creates a nice relationship where we can verify that our states are being set properly because they trigger actual visual updates to our component.
+
+### 15.7 Responsive Design
+In the previous examples, we looked at how to write accessible styles for individual components. But let's take a step back for a moment, and consider how we can apply accessibility best practices to our entire site.
+
+I'm sure you're familiar with the concepts around building a responsive website and why it's a best practice to design responsively so you get a great multi-device experience.
+
+But did you realize that responsive design is also a huge win for accessibility?
+
+Let me show you some examples of how you can use responsive design to improve the experience on your site for all your users.
+
+### 15.8 Responsive Design 2
+Let's take an example site like udacity.com and imagine that I am a user who has difficulty reading small print.
+
+[![wa15-31](../assets/images/wa15-31-small.jpg)](../assets/images/wa15-31.jpg)
+
+Now naturally, one thing I may do to help with this is to zoom the page. So let's go ahead and we'll just zoom this page up to about 400%.
+
+Now an interesting thing happens, we're now viewing the mobile version of the site on our desktop.
+
+[![wa15-32](../assets/images/wa15-32-small.jpg)](../assets/images/wa15-32.jpg)
+
+Because the page was designed responsively, the UI has rearranged itself for the smaller viewport. 
+
+This is great for desktop users who require screen magnification, and it's great for mobile screen reader users since there are fewer elements to touch and explore.
+
+This is a total win. In fact, just by designing responsively, we're meeting rule 1.4.4 of the WebAIM checklist which states that a page should be "readable and functional when the text size is doubled".
+
+[![wa15-33](../assets/images/wa15-33-small.jpg)](../assets/images/wa15-33.jpg)
+
+Now going over all of responsive design is way outside the scope of this course. Fortunately, there is a separate Udacity course just on this topic which you should totally check out if you get a chance.
+
+Here is a link to my [course notes for Udacity's Responsive Web Design Fundamentals](responsive-web-design-fundamentals.html).
+
+There are a few important points which I did want to cover which will be both important to improve your responsive experience but also to give your users better access to your content.
+
+The first of those is to make sure that you're always using a meta viewport tag, and that you're setting its width equal to device width and its initial scale to 1.
+
+[![wa15-34](../assets/images/wa15-34-small.jpg)](../assets/images/wa15-34.jpg)
+
+The meta viewport tag gives the browser instructions on how to control the page's dimensions and its scaling. By setting width equal to device-width we're telling the viewport to match the screen's width in device independent pixels.
+
+And by setting initial-scale equal to 1 we're establishing a one to one relationship between CSS pixels and device independent pixels. Doing this will instruct the browser to fit our content to the screen so that the user doesn't just see a bunch of scrunched up text.
+
+Now one thing to note, when using the viewport tag, make sure you don't force max scale to one or set user-scalable to no. This is a bit of an anti-pattern because it prevents users from easily pinching to zoom the content of the page which is useful if you have a hard time reading smaller text
+
+So be mindful of this one.
+
+The next technique is to make sure that you're designing with a responsive grid.
+
+[![wa15-35](../assets/images/wa15-35-small.jpg)](../assets/images/wa15-35.jpg)
+
+As I demonstrated with the Udacity site, designing with a grid means your content will reflow when the page changes its size.
+
+So this is great for working on mobile devices but it's also great for those of us who need to zoom in the page in order to read smaller text content.
+
+Often times these layouts are produced using relative units, like percents, ems, and rems, instead of hard coded pixel values.
+
+[![wa15-36](../assets/images/wa15-36-small.jpg)](../assets/images/wa15-36.jpg)
+
+The advantage of using relative units is that text and content can enlarge and force other items down the page. So the DOM order and the reading order remains the same even if the layout is changing because of magnification.
+
+Now you might also consider using relative units like or rem, specifically for text size instead of pixel values, as some browsers support resizing just the text in a page via a user preference setting.
+
+If you're using a pixel value for text, it may not zoom when that setting is turned on. If, however, you've used relative units throughout, then the text should update to reflect that user setting.
+
+Lastly, when your design is displaying on a mobile device, you need to ensure that your interactive elements like buttons or links have touch targets that are large enough and have enough space around them to make them easy to press without accidentally overlapping onto other elements.
+
+[![wa15-37](../assets/images/wa15-37-small.jpg)](../assets/images/wa15-37.jpg)
+
+This benefits all of your users, but it's especially helpful for anyone with a motor impairment.
+
+A minimum recommended touch target size is around 48 device independent pixels on a site with a properly set mobile viewport.
+
+The 48 by 48 pixel area corresponds to around 9 millimeters, which is the same size as someone's finger pad.
+
+So in this case I've got two buttons. The top one is about 40 pixels, the one below it is about 24 pixels.
+
+So to get up to this 48 device independent pixel range what I can do is add some additional padding to each to make sure that their final touch target size meets this requirement.
+
+[![wa15-38](../assets/images/wa15-38-small.jpg)](../assets/images/wa15-38.jpg)
+
+Now touch targets should also be spaced about 32 pixels apart, both horizontally and vertically so that a user's finger pressing on one touch target will not inadvertently overlap onto another one.
+
+So while this icon here has a touch target area of 48 by 48, I'm also going to ensure that it has 32 pixels of margining around it to make sure that it's not overlapping with this other interactive element over here.
+
+[![wa15-39](../assets/images/wa15-39-small.jpg)](../assets/images/wa15-39.jpg)
+
+Following this set of guidelines will go a long way to ensure your experienceis both easy to interact with and accessible regardless of the device size.
+
+#### Resources
+
+- [WebAIM checklist item 1.4.4](http://webaim.org/standards/wcag/checklist#sc1.4.4)
+- [Udacity course on Responsive Web Design Fundamentals](https://www.udacity.com/course/responsive-web-design-fundamentals--ud893)
+- [Responsive web design basics on Web Fundamentals](https://developers.google.com/web/fundamentals/design-and-ui/responsive/fundamentals/set-the-viewport?hl=en)
+- [Material Design Accessibility recommendations for touch targets](https://material.google.com/usability/accessibility.html#accessibility-layout)
+
+### 15.9 Mobile Screen Readers
+Since we’re on the subject of responsive design, I thought it would be a good chance for us to get our hands dirty and try out a mobile screen reader. I’m going to walk you through the steps of enabling the screen reader on both iOS and Android and in the next lesson you’ll need to do some basic screen reader commands to navigate to a secret element on the page.
+
+### 15.10 iOS Screen Reader
+[![wa15-40](../assets/images/wa15-40-small.jpg)](../assets/images/wa15-40.jpg)
+
+Let's start off by going to our settings. We'll go to accessibility, click on VoiceOver, and then I'll turn the VoiceOver switch on.
+
+> "VoiceOver on, settings, accessibility, back button"
+ 
+And I can swipe.
+
+> "VoiceOver heading. VoiceOver, on"
+
+And that'll advance VoiceOver.
+
+> "Double tap to toggle setting"
+
+Double tapping on the home button, I can switch to the accessibility blog.
+
+> "Active Chrome, active"
+
+And from here I can swipe to select different items.
+
+> "New features.Press link the accessibility blog.A sample blog to help teach accessibility topics.A sample blog post, heading level too"
+
+And when I find something I want to click on I can just double tap.
+
+### 15.11 Android Screen Reader
+[![wa15-41](../assets/images/wa15-41-small.jpg)](../assets/images/wa15-41.jpg)
+
+In the home screen I can click on Settings and then click on Accessibility and click on TalkBack and switch TalkBack on.
+
+> "TalkBack on.Settings"
+
+I can also go to the settings forTalkBack and double tap to select it.
+
+> "Showing items 1 to 9 of 3"
+
+To scroll I can use two fingers. I'm going to scroll down the page here, there is a little tutorial,
+
+> "Showing items 19 to, launch explore by touch tutorial"
+
+I highly recommend you check this out.
+
+> "Overview button, overview settings, Chrome the accessibility blog, Chrome"
+
+Now taking a look at our accessibility blog we can explore by touch. Swipe, just switch to different headings.
+
+> "The accessibility blog. Topics. Sample blog post. Double tap to select"
+
+And when we find something that we're interested in, we can highlight it and double tap it to select it.
+
+### 15.12 Quiz: Mobile Screen Reader
+We just saw how to set up and use a mobile screen reader. If you have an Android or iOS device, try enabling your screen reader and navigating to this page.
+
+[![wa15-42](../assets/images/wa15-42-small.jpg)](../assets/images/wa15-42.jpg)
+
+This button has a label on it that will tell you a secret password.Once you know the secret word,you can enter it into this text field to continue.
+
+#### Resources
+Using your mobile device, navigate to [bit.ly/mobile-screenreader](http://bit.ly/mobile-screenreader). You'll need to use the mobile screen reader to navigate to the button on the page and find the magic word. When you've done that, come back here and enter the magic word into the field.
+
+### 15.13 Color & Contrast
+So you have a good understanding of focus styles and leveraging Aria in your CSS.
+
+We've also talked about the double win you get from using fluid and responsive styles in your app, to both improve the multi device experience and accessibility.
+
+The last series I want to touch on are the roles that color and contrast should play in your application.
+
+If you have good vision, it's really easy to fall into the trap of thinking that everyone perceives colors or text legibility the same way that you do, but evidence proves otherwise.
+
+So let's wrap things up by looking at how we can effectively use color andcontrast to create pleasant designs that are accessible to everyone.
+
+### 15.14 Contrast Requirements
+Take a look at these columns of text. Some of you may be able to read all of the columns and for some of you, it might be a little difficult or frustrating, especially as we get further over to the right. 
+
+[![wa15-43](../assets/images/wa15-43-small.jpg)](../assets/images/wa15-43.jpg)
+
+What you're looking at is a range of of contrasts and above each column, I've placed a contrast ratio which is the relationship between the foreground color and the background color in terms of luminance.
+
+When the colors are very similar, we have a low contrast ratio. When the colors are very different we get a high contrast ratio.
+
+In section 1.4.3 the web link checklist recommends a minimum contrast ratio of 4.5 to 1 for all body text and images.
+
+[![wa15-44](../assets/images/wa15-44-small.jpg)](../assets/images/wa15-44.jpg)
+
+An exception is made for a larger text. Text that's about 120 or 150% larger than the default body copy. For that larger text the ratio can go down to 3 to 1.
+
+The contrast ratio of 4.5 to 1 was chosen as a minimum, because it compensates for the loss in contrast sensitivity, usually experienced by users with 20/40 vision. 20/40 vision is commonly reported as the typical visual acuity for someone of around 80 years of age.
+
+So, looking at our columns of text, we can see that really only these first two columns would pass for acceptable body copy.
+
+[![wa15-45](../assets/images/wa15-45-small.jpg)](../assets/images/wa15-45.jpg)
+
+The third one here is just a little too low on the contrast scale, and this last one is far too light.
+
+Now I mention that these are contrast minimums. So while they might work well for someone who has lost a bit of vision as they age they will not necessarily work well for all users, especially those who suffer from a low vision impairment.
+
+For users with low vision impairments, or color vision deficiencies we can increase the contrast up to a ratio of 7 to 1 for body copy and 4.5 to 1 for larger text.
+
+[![wa15-46](../assets/images/wa15-46-small.jpg)](../assets/images/wa15-46.jpg)
+
+Looking again at our columns we can see that, really only this first column would meet that criteria.
+
+[![wa15-47](../assets/images/wa15-47-small.jpg)](../assets/images/wa15-47.jpg)
+
+Now since most modern web sites use a range of type sizes and colors, you're going to need a way to quickly audit your page to verify that you're meeting these contrasts requirements.
+
+To do this we can use the Chrome accessibility dev tools extension. So what I want to do is audit this page, I'm going to open my dev tools, I'm going to go to the Audits panel and I'll run an accessibility audit.
+
+[![wa15-48](../assets/images/wa15-48-small.jpg)](../assets/images/wa15-48.jpg)
+
+I can see that the extension is reporting a number of accessibility errors all related to my anchor tags.
+
+So let me go inspect one of those anchor tags right now. When I go and look at the accessibility properties for this item I'm presented with a number of options.
+
+First I see a warning indicating that my contrast is just too low. And then I see options for minimum and enhanced contrast.
+
+[![wa15-49](../assets/images/wa15-49-small.jpg)](../assets/images/wa15-49.jpg)
+
+Now the nice thing is that the hex values are right here so I can just copy these into my style sheet if I want. But one really cool feature of the dev tools extension is that I can click on the swatches and see the anchor tags update in the document.
+
+So I can see here for instance that that is what the enhanced colors would look like in my application.
+
+### 15.15 Quiz: Contrast Audit
+Now that we know how to use the accessibility audit to find and fix errors on our page, let's get our hands dirty and try it out for ourselves.
+
+I've got a simple blog here, and though everything seems okay to me, I think we should give it a once -over using the audit tool.
+
+[![wa15-50](../assets/images/wa15-50-small.jpg)](../assets/images/wa15-50.jpg)
+
+Take a crack at it and if you find any issues, fix them up before moving on.
+
+#### Resources
+This exercise can be found in the folder lesson6-styling/03-contrast-audit within this [course's GitHub Repository](https://github.com/udacity/ud891).
+
+Using the [Chrome Accessibility Developer Tools extension](https://chrome.google.com/webstore/detail/accessibility-developer-t/fpkknkljclfencbdbgkenhalefipecmb?hl=en), audit the page and fix up any contrast issues you find. You'll need to update styles in the `blog.css` file.
+
+#### Solution
+Well it looks like there may have been a few spots we overlooked in our design. Both the buttons in our menu as well as the sub heads and our articles are not quite meeting AA contrast requirements.
+
+[![wa15-51](../assets/images/wa15-51-small.jpg)](../assets/images/wa15-51.jpg)
+
+In my CSS I'll start by changing my masthead to have a darker color.
+
+[![wa15-52](../assets/images/wa15-52-small.jpg)](../assets/images/wa15-52.jpg)
+
+I'll also update the blog description class with darker text. And i'll use that same color on my blog-post-meta class.
+
+```css
+.blog-description {
+  font-size: 20px;
+  color: #767676;
+}
+.blog-post-meta {
+  font-size: 20px;
+  color: #767676;
+}
+```
+
+Now we're all set to launch our site and we can be confident knowing that our users with low vision should have an easier time accessing our content.
+
+### 15.16 Don't convey info with color alone
+Okay interesting fact time, did you know that there are roughly 320 million users with some form of color vision deficiency? To put it another way that means 1 in 12 men and 1 in 200 hundred women suffer from some form of color blindness, which affects men much more substantially than women.
+
+That also means that around 1 out of 20 users of your site will likely have some form of color vision deficiency. Now imagine telling your manager that 1 out of 20 users of your site will not beable to complete the experience.
+
+That seems like a conversation that wouldn't go over very well, but when we rely too heavily on conveying information with color alone, that's effectively what we're setting ourselves up for.
+
+To give you an example, here's a form that I filled out previously, but something's wrong. Can you spot it? All right, how about now?
+
+[![wa15-53](../assets/images/wa15-53-small.jpg)](../assets/images/wa15-53.jpg)
+
+Notice that the telephone number field is underlined red signifying that it's invalid.
+
+But to a colorblind user or a screen reader user, this information may not be conveyed. And because of this, you should always try to provide multiple avenues for the user of your site to access critical information.
+
+The WebAIM checklist specifically states in section 1.4.1 that color alone should not be used as the sole method of conveying content or distinguishing visual elements .And that color should not be used to distinguish links from surrounding text unless they meet certain contrast requirements which we covered in our previous lesson.
+
+[![wa15-54](../assets/images/wa15-54-small.jpg)](../assets/images/wa15-54.jpg)
+
+Instead, the checklist recommends adding an additional indicator like an underline to indicate when a link is active.
+
+So an easy way to fix that previous example is just to add an additional message to the field announcing that it's invalid.
+
+[![wa15-55](../assets/images/wa15-55-small.jpg)](../assets/images/wa15-55.jpg)
+
+When you're building an app, try to keep these sorts of things in mind and watch out for any areas where you may be relying too heavily on color to convey important information.
+
+If you're curious, you can use the NoCoffee chrome extension to simulate various forms of visual impairment including different types of color blindness.
+
+If you're relying heavily on the use of color in your UI,you may want to do a pass using a tool like NoCoffee to see if there are areas where you can improve things.
+
+#### Resources
+
+- [WebAIM checklist items: 1.4.1](http://webaim.org/standards/wcag/checklist#sc1.4.1)
+- [NoCoffee Chrome extension](https://chrome.google.com/webstore/detail/nocoffee/jjeeggmbnhckmgdhmgdckeigabjfbddl?hl=en-US)
+
+For more information on color blindness, check out [the Colour Blind Awareness site](http://www.colourblindawareness.org/colour-blindness/).
+
+### 15.17 High Contrast Mode
+This is an example of the GMail inbox displayed using a feature called High Contrast Mode.
+
+[![wa15-56](../assets/images/wa15-56-small.jpg)](../assets/images/wa15-56.jpg)
+
+High Contrast Mode allows the user to invert foreground and background colors which may help the text stand out a lot better.
+
+For someone with a little vision impairment High Contrast Mode can make it much easier to navigate the content of the page.
+
+There's a few ways to get high contrast set up on your machine. Operating systems like Mac, OS X and Windows offer High Contrast Modes that can be enabled for everything at the system level.
+
+Here's an example of the high contrast controls from the Mac Accessibility system preferences.
+
+[![wa15-57](../assets/images/wa15-57-small.jpg)](../assets/images/wa15-57.jpg)
+
+I can go on and I can turn on invert colors, increase contrast and there's also a slider so I can fine tune the amount of contrast, I would like to have.
+
+Similarly users can install an extension like the Chrome High Contrast extension to only enable high contrast in that specific app.
+
+[![wa15-58](../assets/images/wa15-58-small.jpg)](../assets/images/wa15-58.jpg)
+
+Now a useful exercise is to turn on high contrast settings and verify that all of your UI is still visible.
+
+For example, in a navigation bar that uses a very subtle background color to indicate which item is currently selected. If I view it using Chrome's high contrast extension, that background color may pretty much completely disappear and with it goes my understanding of which page is currently active.
+
+Similarly, if we check out our form example from the previous lesson, that red underline on the invalid phone number field is now showing up as sort of a bright bluish green color.
+
+[![wa15-59](../assets/images/wa15-59-small.jpg)](../assets/images/wa15-59.jpg)
+
+Thankfully, we added a message down there to tell us what's wrong with the field.
+
+Now if you're meeting the contrast ratios we covered in the previous lessons, you should be okay when it comes to supporting high contrast users. But for added peace of mind, consider installing the Chrome High Contrast extension and giving your page a once over just to double check that everything works as expected.
+
+#### Resources
+[Chrom High Contrast extension](https://chrome.google.com/webstore/detail/high-contrast/djcfdncoelnlbldjfhinnjlhdjlikmph?hl=en)
+
+### 15.18 Style Summary
+As you've seen in this lesson, there are a lot of interesting facets to accessibility worth considering when you're building your app.
+
+[![wa15-1](../assets/images/wa15-1-small.jpg)](../assets/images/wa15-1.jpg)
+
+We saw in the second lesson that a well laid out focus strategy is extremely important, but without focus styling, that effort goes completely to waste.
+
+We also learned previously that semantic markup is critical to assistive technology users. And with styling keyed off of semantic properties, we can ensure a consistent experience for all of our users.
+
+Ensuring all text meets a minimum color contrast ratio is an easy way to improve readability for everyone, particularly those users with any kind of vision impairment.
+
+And responsive design benefits all mobile device usersas well as users who employ browsers' zoom.
+
+So keeping all of that in mind means our final product is going to reach more users, and those users are just going to have a better time using our app.
+
+### 15.19 Course Summary
+Congratulations you've made it to the finish line and covered a ton of ground.
+
+[![wa15-60](../assets/images/wa15-60-small.jpg)](../assets/images/wa15-60.jpg)
+
+In this course we've learned about focus, semantics, aria, and styling and how they all fit into the WCAG and WebAIM checklists. These are really important tools in our accessibility tool belt but it can be easy to get caught up in the low level implementation details and forget that accessibility is really all about making sure all of your users can access your content.
+
+Throughout the course we met some users with various forms of impairments. Including
+
+- Laura, a program manager on Chrome who has low vision
+- Adda, a software engineer with motor impairment
+- Geotza who is blind and manages a team of test engineers
+- Sam a recruiter at Google who's also deaf
+- Our good friend Victor who is a blind technical program manager working across several product areas.
+
+It's important to remember that no matter what your product is there's a whole range of users out there not just the narrow spectrum that we might be designing for.
+
+Building only for that subset of users is excluding not only anyone with a permanent disability or impairment but also means our product may fail any user when they're in a context which impacts the way that they use technology such as trying to use a phone one handed while wrangling a screaming toddler.
+
+So having empathy is a huge part of creating an accessible product. Another really important aspect is to make a part of the process from the beginning and make it part of everyone's job. And by that we mean everyone.
+
+Developers obviously have a really important role to play in making sure that we implement interface it in a way which maximizes accessibility and takes advantage of the HTML platform.
+
+But designers also  have a responsibility to ensure that accessibility is considered from the beginning both in terms of ensuring that the visual design is accessible but also considering keyboard usability and semantics and labeling.
+
+Project or product managers have a responsibility to ensure the accessibility is a blocking criterion for launch and to make sure that it's scheduled appropriately.
+
+However all of that is a best case scenario we know the real world is messier than that. So what can we do to try and make things better right away?
+
+Remediating accessibility like anytime you're trying to reduce the number of bugs in your software is  best looked at through the lens of impact.
+
+How can you have the most impact on users with the least amount of effort>  and this boils down to
+you three main things:
+
+1. How frequently is this piece of UI used?
+  - Is it a critical part of the application like the sign in form or something that might be a handy feature but less commonly used?
+2. How badly does this accessibility issue affect our users?
+  - For example is it something which is just going to stop screen reader users in their tracks or is it something which maybe is annoying but can be worked around?
+3. How expensive is it going to be to fix this issue?
+  - Could we fix three other critical accessibility bugs in the time it takes to fix this one?
+
+In the end the only true measure of accessibility is whether users can use our products. Well designed and built products are going to work for a very broad range of users in a very broad range of situations.
+
+So ultimately good accessibility equals good UX and making a part of your process is going to benefit everyone.
