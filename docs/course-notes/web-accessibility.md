@@ -11,11 +11,18 @@ description: Notes by James Priest
 ---
 
 ### Supporting Links
+#### Sample Code
+- [Web Accessibility GitHub repo](https://github.com/udacity/ud891) - Udacity's GitHub repo for this course
+
+#### Tools
+- [ChromeVox Screen Reader](https://chrome.google.com/webstore/detail/chromevox/kgejglhpjiefppelpmljglcjbhoiplfn?hl=en) - Chrome browser extension by Google
+- [ChromeVox Lite Screen Reader](http://udacity.github.io/ud891/lesson1-overview/06-experiencing-screen-reader/) - In-page sample screen reader by Google
+
+#### WCAG
 - [WebAIM Checklist for WCAG 2.0](http://webaim.org/standards/wcag/checklist)
 - [Web Content Accessibility Guidelines 2.0 (WCAG)](https://www.w3.org/TR/WCAG20/)
-- [ChromeVox Lite Screen Reader](http://udacity.github.io/ud891/lesson1-overview/06-experiencing-screen-reader/) - Sample in-page screen reader by Google
-- [Web Accessibility GitHub repo](https://github.com/udacity/ud891) - Udacity's GitHub repo for this course
-- ARIA 1.0 roles: [https://www.w3.org/TR/wai-aria-1.0/#roles](https://www.w3.org/TR/wai-aria-1.0/#roles)
+
+#### ARIA
 - ARIA 1.1 roles: [https://www.w3.org/TR/wai-aria-1.1/#roles](https://www.w3.org/TR/wai-aria-1.1/#roles)
 - ARIA 1.1 practices guide: [https://www.w3.org/TR/wai-aria-practices-1.1/](https://www.w3.org/TR/wai-aria-practices-1.1/)
 
@@ -299,7 +306,6 @@ With these tools in hand we can chart a direction for our accessibility work and
 #### Resources
 
 - [Web Content Accessibility Guidelines 2.0 (WCAG)](https://www.w3.org/TR/WCAG20/)
-- [WebAIM Checklist for WCAG 2.0](http://webaim.org/standards/wcag/checklist)- [Web Content Accessibility Guidelines 2.0 (WCAG)](https://www.w3.org/TR/WCAG20/)
 - [WebAIM Checklist for WCAG 2.0](http://webaim.org/standards/wcag/checklist)
 
 ### 10.13 Quiz: Using WebAIM Checklist
@@ -797,12 +803,7 @@ Now, Alice is going to cover ARIA in more detail in the following sections, but 
 #### Resources
 The ARIA Authoring Practices doc (or "ARIA Design Patterns doc") is a great resource for figuring out what kind of keyboard support your complex components should implement.
 
-There are currently two versions:
-
-- [WAI-ARIA Authoring Practices 1.0](https://www.w3.org/TR/wai-aria-practices/)
-- [WAI-ARIA Authoring Practices 1.1](https://www.w3.org/TR/wai-aria-practices-1.1/) (Newer working draft)
-
-I personally prefer the 1.1 version because the layout is a bit easier to navigate and it includes a few fixes currently missing from the 1.0 version.
+- [WAI-ARIA Authoring Practices 1.1](https://www.w3.org/TR/wai-aria-practices-1.1/)
 
 ### 11.13 Keyboard Design Patterns
 Here's a custom component I've been working on which closely resembles a radio group.
