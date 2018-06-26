@@ -11,8 +11,11 @@ description: Notes by James Priest
 ---
 
 ### Supporting Links
-#### Sample Code
-- [Web Accessibility GitHub repo](https://github.com/udacity/ud891) - Udacity's GitHub repo for this course
+#### APIs
+- [Google's APIs](https://developers.google.com/apis-explorer/) - All the Google services you can imagine.
+- [Programmable Web's API directory](http://www.programmableweb.com/apis/directory) - A giant database of APIs
+- [Udacity API](https://www.udacity.com/public-api/v1/catalog) - API to access and share the catalog of courses.
+
 
 ## Lesson 1. Ajax with XHR
 ### 1.1 Course Intro
