@@ -174,7 +174,6 @@ When the response does come back it's been prepped to handle the return data.
 
 With this analogy in mind let's look at the XHR object in detail.
 
-<!-- 
 ### 1.6 The XHR Object
 Just like how the `document` boject is provided by the JavaScript engine, the JavaScript engine also provides a way for us to make asynchronous HTTP requests. We do that with an `XMLHttpRequest` object. We can create these objects with the provided `XMLHttpRequest` constructor function.
 
@@ -194,4 +193,305 @@ XMLHttpRequests (commonly abbreviated as XHR or xhr) can be used to request any 
 
 - [MDN's XMLHttpRequest doc](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/open)
 - [WHATWG XHR Spec](https://xhr.spec.whatwg.org/)
-- [W3C XMLHttpRequest Spec](https://www.w3.org/TR/XMLHttpRequest/) -->
+- [W3C XMLHttpRequest Spec](https://www.w3.org/TR/XMLHttpRequest/)
+
+### 1.7 XHR .open() method
+So we've constructed an XHR object named asyncRequestObject. There are a number of methods that are available to us. One of the most important is the open method.
+
+```js
+asyncRequestObject.open();
+```
+
+`.open()` takes a number of parameters, but the most important are its first two: the HTTP method URL to send the request
+
+If we want to asynchronously request the homepage from the popular high-res image site, Unsplash, we'd use a `GET` request and provide the URL:
+
+```js
+asyncRequestObject.open('GET', 'https://unsplash.com');
+```
+
+#### HTTP methods
+The main two that you'll be using are:
+
+- `GET` - to retrieve data
+- `POST` - to send data
+
+For more info, check out the Udacity course [HTTP & Web Servers](https://classroom.udacity.com/courses/ud303).
+
+> **Warning:** For security reasons, you can only make requests for assets and data on the same domain as the site that will end up loading the data. For example, to asynchronously request data from google.com your browser needs to be on google.com. This is known as the [same-origin policy](https://developer.mozilla.org/en-US/docs/Web/Security/Same-origin_policy). This might seem extremely limiting, and it is!
+>
+>The reason for this is because JavaScript has control over so much information on the page. It has access to all cookies and can determine passwords since it can track what keys are pressed. However, the web wouldn't be what it is today if all information was bordered off in its own silos. The way to circumvent the same-origin policy is with [CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS) (Cross-Origin Resource Sharing). CORS is a technology that is implemented on the server. Services that provide APIs use CORS to allow developers to circumvent the same-origin policy and access their information.
+
+#### Question 1 of 2
+Go to Google, open up the developer tools, and run the following on the console:
+
+```js
+const req = new XMLHttpRequest();
+req.open('GET', 'https://www.google.com/');
+```
+
+What happens?
+
+- [ ] The Google homepage open in the browser
+- [ ] An async request sent to [https://www.google.com](https://www.google.com)
+- [x] Nothing happens
+- [ ] An error occurs
+
+##### Why
+The XHR's `.open()` method **does not actually send the request**! It sets the stage and gives the object the info it will need when the request is actually sent.
+
+A bit anti-climactic… So let's actually send the request!
+
+#### Question 2 of 2
+An XHR object's `.open()` method can take a number of arguments. Use [the MDN XMLHttpRequest.open() documentation](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/open) to explain what the following code does:
+
+```js
+const myAsyncRequest = new XMLHttpRequest();
+myAsyncRequest.open('GET', 'https://udacity.com/', false);
+```
+
+- [ ] Nothing special, this is the standard way `.open()` works.
+- [ ] The request is sent immediately
+- [x] The JavaScript freezes and waits until the request is returned.
+
+##### Why
+Passing `false` as the third option makes the XHR request become a synchronous one.
+
+This will cause the JavaScript engine to pause and wait until the request is returned before continuing - this "pause and wait" is also called "blocking".
+
+This is a terrible idea and completely defeats the purpose for having an asynchronous behavior. Make sure you never set your XHR objects this way!
+
+Instead, either pass true as the 3rd argument or leave it blank (which makes it default to true).'
+
+### 1.8 XHR's .send() method
+To actually send the request, we need to use the [send method](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/send):
+
+```js
+asyncRequestObject.send();
+```
+
+Let's check out what happens:
+
+[![ajax1-9](../assets/images/ajax1-9-small.jpg)](../assets/images/ajax1-9.jpg)
+
+We just saw that running this code doesn't do anything. Well, that's not actually true because something does happen.
+
+A request is actually sent. We can see this if we check out the network pane. We want to record network traffic so make sure dev tools is recording. The record button is red so I know it's recording.
+
+[![ajax1-10](../assets/images/ajax1-10-small.jpg)](../assets/images/ajax1-10.jpg)
+
+If it's not red then just click on it to turn the recording feature on.
+
+Now if I come down here and run the request it actually sends. The request is shown below.
+
+[![ajax1-11](../assets/images/ajax1-11-small.jpg)](../assets/images/ajax1-11.jpg)
+
+Let's stop recording for now.
+
+If I select the request we can see its headers. 
+
+[![ajax1-12](../assets/images/ajax1-12-small.jpg)](../assets/images/ajax1-12.jpg)
+
+Here's the URL that we requested and the request method. We can also see a preview of the request and then the response pane contains the actual HTML of the response.
+
+So even though nothing happens to the page or in the code, the request is actually sent.
+
+Now, it's a little pointless to make a request for something but then do absolutely nothing with it! Why would you order some cake and then not go to pick it up or not eat it?
+
+#### Handling Success
+To handle the successful response of an XHR request, we set the [XMLHttpRequest onload property](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequestEventTarget/onload) on the object to a function that will handle it:
+
+```js
+function handleSuccess () {
+  // the `this` value is the XHR object
+  // this.responseText holds the response from the server
+  console.log( this.responseText ); // the HTML of https://unsplash.com/
+}
+
+asyncRequestObject.onload = handleSuccess;
+```
+
+As we just saw, if `onload` isn't set, the request *does* return... but nothing happens with it.
+
+#### Handling Errors
+You might've picked up that **onload** is called when the response is *successful*. If something happens with the request and it can't be fulfilled, then we need to use the **onerror property**:
+
+```js
+function handleError () {
+  // the `this` value is the XHR object
+  console.log( 'An error occurred 😞' );
+}
+
+asyncRequestObject.onerror = handleError;
+```
+
+As with `onload`, if `onerror` isn't set and an error occurs, that error will just fail silently and your code (and your user!) won't have any idea what's wrong or any way to recover.
+
+### 1.9 A Full Request
+Here's what we've built so far.
+
+```js
+function handleSuccess () {
+  console.log( this.responseText ); // the HTML of https://unsplash.com/
+function handleError () {
+  console.log( 'An error occurred 😞' );
+}
+
+const asyncRequestObject = new XMLHttpRequest();
+asyncRequestObject.open('GET', 'https://unsplash.com');
+asyncRequestObject.onload = handleSuccess;
+asyncRequestObject.onerror = handleError;
+asyncRequestObject.send();
+```
+
+- Const to assign the newly created the XHR object to
+- Open method to tell it what info to request
+- Assignment of handlers for a success or error
+- Call send method on XHR object to send the request
+
+#### APIs and JSON
+Getting the HTML of a website is ok, but it's probably not very useful. The data it returns is in a format that is extremely difficult to parse and consume.
+
+It's a lot easier if we get just the data we want in an easily formatted data structure. The format for this is JSON.
+
+Instead of requesting the base URL for Unsplash, let's create an app that pulls an image from Unsplash's API and relevant articles from the New York Times.
+
+When making a request from an API that returns JSON, all we need to do is convert that JSON response into a JavaScript object.
+
+We can do that with `JSON.parse();`. Let's tweak the onload function to handle a JSON response:
+
+```js
+function handleSuccess () {
+  // convert data from JSON to a JavaScript object
+  const data = JSON.parse( this.responseText );
+  console.log( data );
+}
+
+asyncRequestObject.onload = handleSuccess;
+```
+
+### 1.10 Project Walkthrough
+This is the project that we'll be building. 
+
+[![ajax1-13](../assets/images/ajax1-13-small.jpg)](../assets/images/ajax1-13.jpg)
+
+There's a form that lets you search for something you're interested in. It displays an image and some articles about it.
+
+[![ajax1-14](../assets/images/ajax1-14-small.jpg)](../assets/images/ajax1-14.jpg)
+
+This is how it will work when it's finished.
+
+Now let me revert to the start of the project. This is what the project looks like right now.
+
+[![ajax1-15](../assets/images/ajax1-15-small.jpg)](../assets/images/ajax1-15.jpg)
+
+Currently it's just a form.
+
+Here's the code for the HTML form and this is the part of the page that will get populated with the data from the response.
+
+[![ajax1-16](../assets/images/ajax1-16-small.jpg)](../assets/images/ajax1-16.jpg)
+
+Here in the JavaScript file we're storing all of the necessary DOM elements and we have an event listener for the form.
+
+[![ajax1-17](../assets/images/ajax1-17-small.jpg)](../assets/images/ajax1-17.jpg)
+
+In here is where we'll kick off the async requests. So let's get going.
+
+#### Download the Starter Code
+The starter project is on GitHub: [https://github.com/udacity/course-ajax](https://github.com/udacity/course-ajax). You can clone the project by running the following Git command in your terminal:
+
+```bash
+git clone https://github.com/udacity/course-ajax.git
+```
+
+Once you've cloned the project, you'll notice that it has three separate folders:
+
+1. lesson-1-async-w-xhr
+2. lesson-2-async-w-jQuery
+3. lesson-3-async-w-fetch
+
+Make sure to work on the files for the correct lesson. Since this is the *first* lesson, we'll be working in the `lesson-1-async-w-xhr` directory.
+
+#### Create Your Accounts
+To complete these final steps, you'll need accounts with Unsplash and The New York Times.
+
+##### Unsplash
+- Create a developer account here - [https://unsplash.com/developers](https://unsplash.com/developers)
+- Next, create an application here - [https://unsplash.com/oauth/applications](https://unsplash.com/oauth/applications)
+  - this will give you an "Application ID" that you'll need to make requests
+
+##### The New York Times
+- Create a developer account here - [https://developer.nytimes.com/](https://developer.nytimes.com/)
+- They'll email you your api-key (you'll need this to make requests)
+
+#### Unsplash Request
+In our app, the variable `searchedForText` contains the text we're interested in, and we'll set the `onload` property to a function called `addImage` (which is a do-nothing function that we'll flesh out in a moment). If we temporarily set `searchedForText` to "hippos", the code for the XHR call to Unsplash is:
+
+```js
+function addImage(){}
+const searchedForText = 'hippos';
+const unsplashRequest = new XMLHttpRequest();
+
+unsplashRequest.open('GET', 
+  `https://api.unsplash.com/search/photos?page=1&query=${searchedForText}`);
+unsplashRequest.onload = addImage;
+
+unsplashRequest.send()
+```
+
+...but if you try running this code, you'll get an error.
+
+#### Quiz Question
+The request for Unsplash doesn't work because it needs an HTTP header to be sent along. What is the XHR method to add a header to the request? Check out the [XMLHttpRequest documentation on MDN](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest) for help!
+
+- [ ] .includeRequestHeader()
+- [ ] .addHeader()
+- [x] .setRequestHeader()
+- [ ] .sendHeader()
+
+<!-- 
+### 1.11 Set Request Header
+The XHR method to include a header with the request is [setRequestHeader](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/setRequestHeader). So the full code needs to be:
+
+```js
+const searchedForText = 'hippos';
+const unsplashRequest = new XMLHttpRequest();
+
+unsplashRequest.open('GET',
+  `https://api.unsplash.com/search/photos?page=1&query=${searchedForText}`);
+unsplashRequest.onload = addImage;
+unsplashRequest.setRequestHeader('Authorization', 'Client-ID <client-id>');
+unsplashRequest.send();
+
+function addImage(){
+}
+```
+
+After the request returned successfully let's pause inside the function to check out what's been returned.
+
+To do that let's add a debugger right here.
+
+[![ajax1-18](../assets/images/ajax1-18-small.jpg)](../assets/images/ajax1-18.jpg)
+
+Now if I refresh the page and search for flamingo's it'll pause. The `this` value is the xhr object itself and the response is stored in `responseText`.
+
+[![ajax1-19](../assets/images/ajax1-19-small.jpg)](../assets/images/ajax1-19.jpg)
+
+This is a JSON response and shows all of the text. We can see this information a lot more easily in the network pane. This request returned 13 responses.
+
+[![ajax1-20](../assets/images/ajax1-20-small.jpg)](../assets/images/ajax1-20.jpg)
+
+So we need to convert the response from JSON into a JavaScript object, then format the data. Next we get the first image. Once we have the first image, we just need to add it to the page.
+
+[![ajax1-21](../assets/images/ajax1-21-small.jpg)](../assets/images/ajax1-21.jpg)
+
+This code will add a `<figure>` element with an image pointing to the image from unsplash and a caption of the person that took the photo.
+
+It will add this inside the response container as the first element.
+
+Now we also want to make sure that we handle the case if no images are returned. This will check to
+make sure there are some image results returned.
+
+[![ajax1-22](../assets/images/ajax1-22-small.jpg)](../assets/images/ajax1-22.jpg)
+
+If there aren't any, then we'll just display a message that there are no images. -->
