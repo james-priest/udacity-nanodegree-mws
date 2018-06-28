@@ -334,7 +334,7 @@ Here's what we've built so far.
 function handleSuccess () {
   console.log( this.responseText ); // the HTML of https://unsplash.com/
 function handleError () {
-  console.log( 'An error occurred 😞' );
+  console.log( 'An error occurred.😞' );
 }
 
 const asyncRequestObject = new XMLHttpRequest();
@@ -430,13 +430,12 @@ In our app, the variable `searchedForText` contains the text we're interested in
 ```js
 function addImage(){}
 const searchedForText = 'hippos';
-const unsplashRequest = new XMLHttpRequest();
+const imgRequest = new XMLHttpRequest();
 
-unsplashRequest.open('GET', 
+imgRequest.open('GET', 
   `https://api.unsplash.com/search/photos?page=1&query=${searchedForText}`);
-unsplashRequest.onload = addImage;
-
-unsplashRequest.send()
+imgRequest.onload = addImage;
+imgRequest.send()
 ```
 
 ...but if you try running this code, you'll get an error.
@@ -449,27 +448,28 @@ The request for Unsplash doesn't work because it needs an HTTP header to be sent
 - [x] .setRequestHeader()
 - [ ] .sendHeader()
 
-<!-- 
 ### 1.11 Set Request Header
+#### Unsplash.com Images
 The XHR method to include a header with the request is [setRequestHeader](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/setRequestHeader). So the full code needs to be:
 
 ```js
 const searchedForText = 'hippos';
-const unsplashRequest = new XMLHttpRequest();
+const imgRequest = new XMLHttpRequest();
 
-unsplashRequest.open('GET',
+imgRequest.open('GET',
   `https://api.unsplash.com/search/photos?page=1&query=${searchedForText}`);
-unsplashRequest.onload = addImage;
-unsplashRequest.setRequestHeader('Authorization', 'Client-ID <client-id>');
-unsplashRequest.send();
+imgRequest.onload = addImage;
+imgRequest.setRequestHeader('Authorization', 'Client-ID <client-id>');
+imgRequest.send();
 
 function addImage(){
+  debugger; // break debugger at this point...
 }
 ```
 
 After the request returned successfully let's pause inside the function to check out what's been returned.
 
-To do that let's add a debugger right here.
+To do that let's add a debugger inside the `addImage()` function.
 
 [![ajax1-18](../assets/images/ajax1-18-small.jpg)](../assets/images/ajax1-18.jpg)
 
@@ -481,17 +481,213 @@ This is a JSON response and shows all of the text. We can see this information a
 
 [![ajax1-20](../assets/images/ajax1-20-small.jpg)](../assets/images/ajax1-20.jpg)
 
-So we need to convert the response from JSON into a JavaScript object, then format the data. Next we get the first image. Once we have the first image, we just need to add it to the page.
+So we need to:
 
-[![ajax1-21](../assets/images/ajax1-21-small.jpg)](../assets/images/ajax1-21.jpg)
+1. convert the response from JSON into a JavaScript object
+2. get the first image
+3. format the data
+4. add it to the page.
+
+<!-- [![ajax1-21](../assets/images/ajax1-21-small.jpg)](../assets/images/ajax1-21.jpg) -->
+
+```js
+function addImage() {
+  let htmlContent = '';
+  const data = JSON.parse(this.responseText);
+  const firstImage = data.results[0];
+
+  htmlContent = `<figure>
+    <img src="${firstImage.urls.regular}" alt="${searchedForText}">
+    <figcaption>${searchedForText} by ${firstImage.user.name}</figcaption>
+  </figure>`;
+
+  responseContainer.insertAdjacentHTML('afterbegin', htmlContent);
+}
+```
 
 This code will add a `<figure>` element with an image pointing to the image from unsplash and a caption of the person that took the photo.
 
 It will add this inside the response container as the first element.
 
-Now we also want to make sure that we handle the case if no images are returned. This will check to
+Now we also want to make sure that we handle the case if no images are returned. We add in a check to
 make sure there are some image results returned.
 
-[![ajax1-22](../assets/images/ajax1-22-small.jpg)](../assets/images/ajax1-22.jpg)
+<!-- [![ajax1-22](../assets/images/ajax1-22-small.jpg)](../assets/images/ajax1-22.jpg) -->
 
-If there aren't any, then we'll just display a message that there are no images. -->
+```js
+function addImage() {
+  let htmlContent = '';
+  const data = JSON.parse(this.responseText);
+  
+  if (data && data.results && data.results[0]) {
+    const firstImage = data.results[0];
+    htmlContent = `<figure>
+      <img src="${firstImage.urls.regular}" alt="${searchedForText}">
+      <figcaption>${searchedForText} by ${firstImage.user.name}</figcaption>
+    </figure>`;
+  } else {
+    htmlContent = '<div class="error-no-image">No images available</div>';
+  }
+  
+  responseContainer.insertAdjacentHTML('afterbegin', htmlContent);
+}
+```
+
+If there aren't any, then we'll just display a message that there are no images.
+
+#### NY Times Articles
+Since the New York Times doesn't require a specific header, we don't need to do anything special with adding a header.
+
+We'll set the `onload` property to the function `addArticles` that we'll flesh out in a minute:
+
+```js
+function addArticles () {}
+const articleRequest = new XMLHttpRequest();
+articleRequest.onload = addArticles;
+articleRequest.open('GET',
+  `http://api.nytimes.com/svc/search/v2/articlesearch.json?
+    q=${searchedForText}&api-key=<your-API-key-goes-here>`);
+articleRequest.send();
+```
+
+Make sure to fill in the URL above with the API key you received in an email from the New York Times after signing up as a developer.
+
+##### Solution
+I've added a debugger and searched for Lion. 
+
+If I go to the Network tab in DevTools I can click on the Ajax request. This will allow me to click on the Preview tab to the right and view the hierarchical data returned.
+
+We can see that the response has a nested `response` object and inside that the `docs` property holds all of the articles.
+
+[![ajax1-23](../assets/images/ajax1-23-small.jpg)](../assets/images/ajax1-23.jpg)
+
+So we need to convert the response from JSON into a JavaScript object.
+
+```js
+function addArticles() {
+  let htmlContent = '';
+  const data = JSON.parse(this.responseText);
+
+  if (data && data.response.docs && data.response.docs[0]) {
+    htmlContent = '<ul>' + data.response.docs.map(article =>
+      `<li class="article">
+        <h2><a href="${article.web_url}">${article.headline.main}</a></h2>
+        <p>${article.snippet}</p>
+      </li>`
+    ).join('') + '</ul>';
+  } else {
+    htmlContent = '<div class="error-no-article">No article available</div>';
+  }
+  
+  responseContainer.insertAdjacentHTML('beforeend', htmlContent);
+}
+```
+
+If some articles have been returned, we map over each article and then return a list item that contains the article's headline and a snippet of the article.
+
+Finally we combine all article list items together inside an unordered list tag. This gets added to the bottom of the page inside the response container.
+
+[![ajax1-24](../assets/images/ajax1-24-small.jpg)](../assets/images/ajax1-24.jpg)
+
+If there are no articles then it just displays the text no articles available.
+
+### 1.12 Final Walkthough
+let's see our app in action.
+
+Looking at the code one last time, we set up a listener for when the form is submitted. This listener contains the code below.
+
+Our async requests are kicked off. One to unsplash.com and one to the New York Times.
+
+When the unsplash request returns, it calls the `addImage()` function.
+When the New York Times request returns, it calls the `addArticles()` function.
+
+Both of these functions convert the response from JSON, extract the data, and then add it
+to the page.
+
+There are a number of moving parts to handle asynchronous requests but it's pretty straight forward.
+
+```js
+const imgRequest = new XMLHttpRequest();
+imgRequest.open('GET', 
+  `https://api.unsplash.com/search/photos?page=1&query=${searchedForText}`);
+imgRequest.onload = addImage;
+imgRequest.onerror = handleError;
+imgRequest.setRequestHeader('Authorization', 'Client-ID <clinet-id-key>');
+imgRequest.send();
+
+function handleError(error) {
+  console.log('An error occurred.😞');
+  console.log('error:', error);
+}
+
+function addImage() {
+  let htmlContent = '';
+  const data = JSON.parse(this.responseText);
+  
+  if (data && data.results && data.results[0]) {
+    const firstImage = data.results[0];
+    htmlContent = `<figure>
+      <img src="${firstImage.urls.regular}" alt="${searchedForText}">
+      <figcaption>${searchedForText} by ${firstImage.user.name}</figcaption>
+    </figure>`;
+  } else {
+    htmlContent = '<div class="error-no-image">No images available</div>';
+  }
+  
+  responseContainer.insertAdjacentHTML('afterbegin', htmlContent);
+}
+
+const articleRequest = new XMLHttpRequest();
+articleRequest.onload = addArticles;
+articleRequest.open('GET', 
+  `http://api.nytimes.com/svc/search/v2/articlesearch.json?
+  q=${searchedForText}&api-key=<api-key>`);
+articleRequest.send();
+
+function addArticles() {
+  let htmlContent = '';
+  const data = JSON.parse(this.responseText);
+  if (data && data.response.docs && data.response.docs[0]) {
+    htmlContent = '<ul>' + data.response.docs.map(article =>
+      `<li class="article">
+        <h2><a href="${article.web_url}">${article.headline.main}</a></h2>
+        <p>${article.snippet}</p>
+      </li>`
+    ).join('') + '</ul>';
+  } else {
+    htmlContent = '<div class="error-no-article">No article available</div>';
+  }
+
+  responseContainer.insertAdjacentHTML('beforeend', htmlContent);
+}
+```
+
+### 1.13 XHR Review
+There are a number of steps you need to take to send an HTTP request asynchronously with JavaScript.
+
+#### To Send An Async Request
+- create an XHR object with the `XMLHttpRequest` constructor function
+- use the `.open()` method - set the HTTP method and the URL of the resource to be fetched
+- set the `.onload` property - set this to a function that will run upon a successful fetch
+- set the `.onerror` property - set this to a function that will run when an error occurs
+- use the `.send()` method - send the request
+
+#### To Use The Response
+- use the `.responseText` property - holds the text of the async request's response
+
+> **Note:** The original XHR specification was created in 2006. This was version 1 of the specification. A number of years with minimal changes to the spec.
+>
+> In 2012, work was started on a version 2 of the XHR specification. In 2014, the XHR2 spec was merged into the XHR1 spec so that there wouldn't be diverging standards. There are still references to XHR2, but the XHR specification now fully incorporates XHR2.
+>
+> Check out this HTML5Rocks article for info on the[ new tricks in XHR2](http://www.html5rocks.com/en/tutorials/file/xhr2/) that are now in the XHR spec.
+
+### 1.14 XHR Wrap-up
+We just looked at using the XHR object to create and send asynchronous requests.
+
+As you saw, there are a number of steps to create an XHR object, handle a successful request, and deal with errors.
+
+It was a lot of code, but do we really need to write all of that code every single time we want to send an asynchronous request?
+
+When using the XHR object the answer is yeah. But you don't always have to use the XHR object to make async requests. You could use some third-party library like jquery to make the request for you.
+
+Check out the next lesson to see how jquery makes async requests.
