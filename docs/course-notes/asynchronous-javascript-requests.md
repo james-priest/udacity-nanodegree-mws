@@ -535,6 +535,7 @@ function addImage() {
 
 If there aren't any, then we'll just display a message that there are no images.
 
+### 1.11b NY Times Request
 #### NY Times Articles
 Since the New York Times doesn't require a specific header, we don't need to do anything special with adding a header.
 
@@ -576,7 +577,7 @@ function addArticles() {
       </li>`
     ).join('') + '</ul>';
   } else {
-    htmlContent = '<div class="error-no-article">No article available</div>';
+    htmlContent = '<div class="error-no-articles">No article available</div>';
   }
   
   responseContainer.insertAdjacentHTML('beforeend', htmlContent);
@@ -655,7 +656,7 @@ function addArticles() {
       </li>`
     ).join('') + '</ul>';
   } else {
-    htmlContent = '<div class="error-no-article">No article available</div>';
+    htmlContent = '<div class="error-no-articles">No article available</div>';
   }
 
   responseContainer.insertAdjacentHTML('beforeend', htmlContent);
@@ -691,3 +692,323 @@ It was a lot of code, but do we really need to write all of that code every sing
 When using the XHR object the answer is yeah. But you don't always have to use the XHR object to make async requests. You could use some third-party library like jquery to make the request for you.
 
 Check out the next lesson to see how jquery makes async requests.
+
+## Lesson 2: Ajax with jQuery
+### 2.1 JQuery & Ajax
+Welcome back. So it turns out that the cake I made wasn't the prettiest thing in the world. It should taste great, but it looks kind of awful.
+
+[![ajax1-1](../assets/images/ajax1-1-small.jpg)](../assets/images/ajax1-1.jpg)
+
+Totally not something I can show up with and be proud of having at a birthday party. So instead of me baking the cake and frosting it, let's just have a professional do it.
+
+With the original cake, I had to get all the ingredients, combine them myself, watch it while it's in the oven, make the frosting, and then actually frost it. I had to do everything myself. It was just too much.
+
+Now, I just requested the bakery to make it for me. They're working on it now and will let me know when it's ready to come back and pick it up.
+
+So, I'm not doing all the work this time, but that doesn't mean it's not being done. Someone there is doing all of the same steps that I did in the previous lesson.
+
+So when you use a JavaScript library like jQuery to make async requests, you just request the data and then jQuery does all of the hands-on work under the hood. Let's check it out.
+
+#### jQuery
+jQuery is an incredibly popular JavaScript library that provides a lot of functionality right out of the box. It was created a number of years ago back when browsers hadn't joined together to standardize on functionality. jQuery made life easier for developers that were building websites that had to function in all of the major browsers by providing a unified interface. The developer would use jQuery-specific functions and then jQuery would figure out what code to run depending on the browser that was being used.
+
+jQuery is just JavaScript, so you'd[ download a current version](https://code.jquery.com/) and link to it with a regular `<script>` tag. Once it's been included it on the page, you've got this powerhouse of functionality right at your fingertips.
+
+Now that browsers have pretty much aligned, jQuery's usage is not as necessary as it was several years ago. However, one powerful tool that it provides is it's `ajax()` method. As its name suggests, jQuery's `ajax()` method is used to handle all asynchronous requests.
+
+Let's see it in action.
+
+> ##### Wanna Learn jQuery
+> jQuery is incredibly popular and used by hundreds of thousands of sites. If you want dig deeper into this cool JavaScript library, check out Udacity's [Intro to jQuery](https://www.udacity.com/course/intro-to-jquery--ud245) course.
+
+### 2.2 jQuery ajax() Method
+The [`.ajax()` method](http://api.jquery.com/jquery.ajax/) is at the heart of all asynchronous requests for the entire jQuery library. There are a couple of ways you can call the `.ajax()` method:
+
+```js
+$.ajax(<url-to-fetch>, <a-configuration-object>);
+
+// or 
+
+$.ajax(<just a configuration object>);
+```
+
+The most common way to use the `.ajax()` method is with just the configuration object, since everything can be set inside the configuration object.
+
+#### What's a "configuration object"
+A configuration object is just a plain ol' JavaScript object that's used to configure something. For example:
+
+```js
+var settings = {
+   frosting: 'buttercream',
+   colors: ['orange', 'blue'],
+   layers: 2,
+   isRound: true
+};
+```
+
+...the settings configuration object can be used in the imaginary MakeCake constructor function:
+
+```js
+const myDeliciousCake = MakeCake( settings );
+```
+
+Alternatively, the settings object could be passed in directly:
+
+```js
+const myDeliciousCake = MakeCake({
+   frosting: 'buttercream',
+   colors: ['orange', 'blue'],
+   layers: 2,
+   isRound: true
+});
+```
+
+#### Making an Ajax call
+jQuery's .ajax() method has to be incredibly versatile and powerful if it's what powers all of jQuery's asynchronous requests. A simple Ajax request would look like this:
+
+```js
+$.ajax({
+    url: 'https://swapi.co/api/people/1/'
+});
+```
+
+Let's test it out!
+
+1. go to the jQuery website
+2. open up your browser's developer tools
+3. make sure the network traffic is being recorded
+    - in Chrome, switch to the network pane
+4. add the request above to the console
+5. ...and run it!
+
+[![swapi request](../assets/images/fixed/ud109-l2-swapi-request.gif)](../assets/images/fixed/ud109-l2-swapi-request.gif)
+**Running an asynchronous request in the console. The request is for a resource on SWAPI. The request is displayed in the network pane.**
+
+So we can make a request with `.ajax()`, but we haven't handled the response yet.
+
+### 2.3 Handling Returned Data
+If you recall from setting up an XHR object, the response was handled by a function. It's the same thing with the `.ajax()` method.
+
+We can chain onto `.ajax()` with a `.done()` method. We pass the `.done()` method a function that will run when the Ajax call is done!
+
+```js
+function handleResponse(data) {
+    console.log('the ajax request has finished!');
+    console.log(data);
+}
+
+$.ajax({
+    url: 'https://swapi.co/api/people/1/'
+}).done(handleResponse);
+```
+
+[![swapi request with done](../assets/images/fixed/ud109-l2-swapi-request-with-done.gif)](../assets/images/fixed/ud109-l2-swapi-request-with-done.gif)
+**Asynchronous call set up with a `done` method to handle the response. The request is made, and then the response is logged to the console.**
+
+Let's convert the existing, plain XHR call with jQuery's `.ajax()`. This is what the app currently has:
+
+```js
+const imgRequest = new XMLHttpRequest();
+imgRequest.onload = addImage;
+imgRequest.open('GET',
+  `https://api.unsplash.com/search/photos?page=1&query=${searchedForText}`);
+imgRequest.setRequestHeader('Authorization', 'Client-ID <client-id-here>');
+imgRequest.send();
+```
+
+A lot of this information is handled behind the scene by jQuery, so here's the first step in the conversion:
+
+```js
+$.ajax({
+  url: `https://api.unsplash.com/search/photos?page=1&query=${searchedForText}`
+}).done(addImage);
+```
+
+With the jQuery code:
+
+- we do not need to create an XHR object
+- instead of specifying that the request is a `GET` request, it defaults to that and we just provide the URL of the resource we're requesting
+- instead of setting `onload`, we use the `.done()` method
+
+#### Quiz Question
+The only change that needs to be made is including the Client ID header along with the request so that Unsplash will verify the request.
+
+Why don't you check out the [API for the .ajax() method](http://api.jquery.com/jQuery.ajax/) and select the code below that correctly adds an "Authorization" header to the request.
+
+- [ ] option 1
+  ```js
+  $.ajax({
+    url: `https://api.unsplash.com/search/photos?
+      page=1&query=${searchedForText}`
+  }).addHeader('Authorization', 'Client-ID <client-id-here>')
+  .done(addImage);
+  ```
+- [ ] option 2
+  ```js
+  $.ajax({
+    url: `https://api.unsplash.com/search/photos?
+      page=1&query=${searchedForText}`,
+    setHeader:[['Authorization', 'Client-ID <client-id-here>']]
+  }).done(addImage);
+  ```
+- [ ] option 3
+  ```js
+  $.ajax({
+    url: `https://api.unsplash.com/search/photos?
+      page=1&query=${searchedForText}`,
+    authorization: 'Client-ID <client-id-here>'
+  }).done(addImage);
+  ```
+- [x] option 4
+  ```js
+  $.ajax({
+    url: `https://api.unsplash.com/search/photos?
+      page=1&query=${searchedForText}`,
+    headers: {
+      Authorization: 'Client-ID <client-id-here>'
+    }
+  }).done(addImage);
+  ```
+
+  The correct answer is option 4.
+
+  A header is added to the request by passing a `headers` object as a property. Each key in the `headers` object is the name of the header, and the value is what will be used as the value for the header.
+
+The request should send perfectly now. Fantastic work! But there seem to be issues with the response and how it's handled.
+
+### 2.4 Success Callback Cleanup
+Right now, content isn't getting added to the page. We need to clean-up the `addImage()` function. which gets called on success which is now the `.done()` method.
+
+jQuery detects the response and if it's JSON, it will automatically convert it to JavaScript for us. How awesome is that!
+
+So we only need to make a few tweaks to the existing code.
+
+- First we condense the code by building the string literal inside the `insertAdjacentHTML()` method
+
+Here's what it currently is:
+
+```js
+function addImage() {
+  const data = JSON.parse(this.responseText);
+  const firstImage = data.results[0];
+
+  responseContainer.insertAdjacentHTML('afterbegin', `<figure>
+      <img src="${firstImage.urls.small}" alt="${searchedForText}">
+      <figcaption>${searchedForText} by ${firstImage.user.name}</figcaption>
+    </figure>`
+  );
+}
+```
+
+Now we need to change the first three lines from above to become this:
+
+```js
+function addImage(images) {
+  const firstImage = images.results[0];
+
+  responseContainer.insertAdjacentHTML('afterbegin', `<figure>
+      <img src="${firstImage.urls.small}" alt="${searchedForText}">
+      <figcaption>${searchedForText} by ${firstImage.user.name}</figcaption>
+    </figure>`
+  );
+}
+```
+
+#### What changed
+
+- the function now has one parameter images
+- this parameter has already been converted from JSON to a JavaScript object, so * the line that had JSON.parse() is no longer needed.
+- the firstImage variable is set to the images.results first item
+
+The code that adds the HTML to the response container hasn't changed at all!
+
+### 2.4b NY Times Request
+#### Replace NY Times XHR With $.Ajax()
+Now that we've walked through converting one request from using XHR to jQuery's `.ajax()` method, why don't you give it a shot on your own and convert the second request!
+
+Make sure to use the existing code as an example. If you get stuck, check out the documentation page.
+
+When you're successfully converted the code to use jQuery's `.ajax()` method and fixed the callback function so it adds the data to the page, check the checkbox to continue.
+
+### 2.5 Code Walkthrough
+Here's the completed project that uses jQuery's Ajax method to asynchronously fetch the data.
+
+Setting up the XHR object has been replaced with calls to `$.ajax()`, and the data is passed in directly as an object.
+
+When the response is returned it's handled by the `.done()` method.
+
+If there are any errors, then the `.fail()` method will display an error message letting the user know that content couldn't be loaded.
+
+```js
+$.ajax({
+  url: `https://api.unsplash.com/search/photos?page=1&query=${searchedForText}`,
+  headers: {
+    Authorization: 'Client-ID <client-id-here>'
+  }
+}).done(
+  addImage
+).fail(function (err) {
+  requestError(err, 'image');
+});
+
+function addImage(data) {
+  let htmlContent = '';
+
+  if (data && data.results && data.results.length > 1) {
+    const firstImage = data.results[0];
+
+    responseContainer.insertAdjacentHTML('afterbegin', `<figure>
+        <img src="${firstImage.urls.regular}" alt="${searchedForText}">
+        <figcaption>${searchedForText} by ${firstImage.user.name}</figcaption>
+      </figure>`
+    );
+  } else {
+    htmlContent = '<div class="error-no-image">No images available</div>';
+  }
+
+  responseContainer.insertAdjacentHTML('afterbegin', htmlContent);
+}
+
+$.ajax({
+  url: `http://api.nytimes.com/svc/search/v2/articlesearch.json?
+    q=${searchedForText}&api-key=<api-key-here>`
+}).done(
+  addArticles
+).fail(function (err) {
+  requestError(err, 'articles');
+});
+
+function addArticles(data) {
+  let htmlContent = ''
+
+  if (data.response && data.response.docs && data.response.docs.length > 1) {
+    htmlContent = '<ul>' + data.response.docs.map(article =>
+      `<li class="article">
+        <h2><a href="${article.web_url}">${article.headline.main}</a></h2>
+        <p>${article.snippet}</p>
+      </li>`
+    ).join('') + '</ul>';
+  } else {
+    htmlContent = '<div class="error-no-articles">No articles available</div>';
+  }
+
+  responseContainer.insertAdjacentHTML('beforeend', htmlContent);
+}
+
+function requestError(e, part) {
+  console.log('An error occurred.😞');
+  console.log('error:', e);
+  responseContainer.insertAdjacentHTML('beforeend',
+    `<p class="network-warning error-no-${part}">Missing ${part}</p>`);
+}
+```
+
+Since unsplash returns a JSON object, the response will automatically get converted to JSON by jQuery.
+
+Similarly, the New York Times request returns JSON data that will get converted to a regular JavaScript object.
+
+Pretty cool how jQuery handles most of the set up for us, isn't it?
+
+Using jQuery's .ajax() method, there's less setup code that you need to manage. That's good, but to use jQuery we also have to include the entire library and force our users to download the entire thing every time.
+
+It's true that they might have it cached, but do we really need jQuery? Is it doing something special?
