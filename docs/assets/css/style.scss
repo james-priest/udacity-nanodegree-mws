@@ -76,21 +76,29 @@ section {
     max-width: 615px;
     padding: 30px 20px 50px;
 }
+section a { color: #0378b3; font-weight: bold; }
 section > p, h4, h5, h6 {
     margin: 11px 40px;
     line-height: 1.2em;
 }
-blockquote > p {
-    margin: 20px 0;
+blockquote { 
+    font-style: normal;
+    margin: 20px 40px;
+}
+blockquote > p, blockquote > h4, blockquote > h5 {
+    margin: 11px 0;
     line-height: 1.2em;
 }
 hr { margin: 20px 0; }
 
 section>ol, section>ul { 
-    margin: 0 40px 0 30px;
+    margin: 0 40px 20px 30px;
 }
 section li {
     line-height: 1.2;
+}
+section li > p {
+    margin-bottom: 11px;
 }
 section ul ul, ul ol, ol ul, ol ol {
     margin-bottom: 4px;
@@ -127,8 +135,14 @@ h4 {
 h5 {
     font-size: 1em;
 }
-
-pre{ line-height: 1em; margin: 16px 40px; }
+pre{ 
+    line-height: 1em;
+    margin: 16px 40px;
+    padding: 8px 0 8px 15px
+}
+li pre {
+    margin: 4px 0 12px;
+}
 code {
     // font-family: Courier New, Courier, monospace; 
     font-family: Consolas, monospace;
@@ -146,7 +160,6 @@ p>code, li>code, blockquote code, h1>code, h2>code, h3>code, h4>code, strong>cod
     font-size: .785714em; /* 11px/14px */
     text-shadow: none;
 }
-blockquote { font-style: normal; margin-left: 40px;}
 footer {
     position: static;
 }
