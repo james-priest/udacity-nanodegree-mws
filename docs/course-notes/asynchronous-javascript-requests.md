@@ -1124,11 +1124,11 @@ After the callbacks for `onload`, `onerror`, & `onabort` are set up the `xhr.sen
 ### 2.9 Other Async Methods
 jQuery has a number of other methods that can be used to make asynchronous calls. These methods are:
 
-[.get()](http://api.jquery.com/jQuery.get/)
-[.getJSON()](http://api.jquery.com/jQuery.getJSON/)
-[.getScript()](http://api.jquery.com/jQuery.getScript/)
-[.post()](http://api.jquery.com/jQuery.post/)
-[.load()](http://api.jquery.com/load/)
+- [.get()](http://api.jquery.com/jQuery.get/)
+- [.getJSON()](http://api.jquery.com/jQuery.getJSON/)
+- [.getScript()](http://api.jquery.com/jQuery.getScript/)
+- [.post()](http://api.jquery.com/jQuery.post/)
+- [.load()](http://api.jquery.com/load/)
 
 Each one of these functions in turn calls jQuery's main `.ajax()` method.
 
