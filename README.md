@@ -24,6 +24,9 @@ Website: [https://james-priest.github.io/udacity-nanodegree-mws/](https://james-
 - Requests, Responses, & Real World HTTP (Lessons 6-8)
 - Browser Rendering Optimization (Lessons 9-14)
 
+### Optional Courses
+- [JavaScript Promises](docs/course-notes/javascript-promises.md) (Lessons 1 & 2)
+
 ## Projects
 - [Restaurant Reviews App - Stage 1](https://github.com/james-priest/mws-restaurant-stage-1)
   - [Code Log & Project Notes](https://james-priest.github.io/mws-restaurant-stage-1/)
