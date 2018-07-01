@@ -11,7 +11,8 @@ description: Notes by James Priest
 ---
 
 ### Supporting Links
-- [JavaScript Promises - Jake Archibald](https://developers.google.com/web/fundamentals/primers/promises) - Google Web Fundamentals
+- Udacity Course - [Javascript Promises](https://www.udacity.com/course/javascript-promises--ud898) by Google
+- Google Web Fundamentals - [JavaScript Promises - Jake Archibald](https://developers.google.com/web/fundamentals/primers/promises)
 
 ## Lesson 1. Creating Promises
 ### 1.1 Course Introduction
