@@ -44,7 +44,7 @@ Throughout this class, you'll be using promises to request real JSON data about 
 
 You'll be using promises to turn that data into useful information in the app. Are you ready to get started?
 
-### 1.2 Callbacks vs Promises
+### 1.2 Sync vs Async
 > "The Promise object is used for deferred and asynchronous computations."<br>
 > -MDN
 
