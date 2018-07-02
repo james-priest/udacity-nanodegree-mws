@@ -367,6 +367,19 @@ And like I said, when you're done, I have a question for you:
 
 - What is the scope of this inside the Promise?
 
+#### Resources
+##### Instructions
+
+1. Download `setTimeout-start.zip` from the Supporting Materials Section.
+2. Wrap `setTimeout` in a Promise inside the `wait()` function. `resolve()` in setTimeout's callback.
+3. `console.log(this)` inside the Promise and observe the results.
+4. Make sure `wait()` returns the Promise too!
+
+##### Supporting Materials
+
+- [setTimeout-start.zip](https://www.udacity.com/api/nodes/6078481442/supplemental_media/settimeout-startzip/download)
+- [setTimeout-solution.zip](https://www.udacity.com/api/nodes/6078481443/supplemental_media/settimeout-solutionzip/download)
+
 #### Solution
 So here's the solution. To start off I'm creating a Promise by using `new Promise()`.
 
@@ -396,9 +409,9 @@ It looks like `this` logged out the `window`, or the `global` object.
 
 > **Note:** the scope of `this`, could change depending on the context.
 >
-> For instance, arrow functions with ES2015 take `this` from the encolsing execution context. Whereas in ES5, every new function defined its own `this` value.
+> For instance, arrow functions with ES2015 take `this` from the enclosing execution context. Whereas in ES5, every new function defined its own `this` value.
 >
-> See [MDN article on Arrow functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions) for a complete explaination.
+> See [MDN article on Arrow functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions) for a complete explanation.
 
 So the correct answer is the 'global object'.
 
