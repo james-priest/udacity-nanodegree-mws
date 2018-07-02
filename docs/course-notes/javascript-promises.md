@@ -28,7 +28,7 @@ But before we start all that, I have an off topic question for you.
 
 You're looking at millions of stars in the disk of our Milky Way galaxy.
 
-[![ajax1-2](../assets/images/prom1-2-small.jpg)](../assets/images/ajax1-2.jpg)
+[![prom1-2](../assets/images/prom1-2-small.jpg)](../assets/images/prom1-2.jpg)
 
 Every dot is a star. Some are bigger and brighter than the sun, others smaller and dimmer. But what else is in this picture? Planets.
 
@@ -38,7 +38,7 @@ The Kepler Space Observatory has found more than 1,000 exoplanets like this one 
 
 I had an idea when I was designing this class, andI call it the Exoplanet Explorer. It's a web app that helps people learn about real planets around other stars.
 
-[![ajax1-3](../assets/images/prom1-3-small.jpg)](../assets/images/ajax1-3.jpg)
+[![prom1-3](../assets/images/prom1-3-small.jpg)](../assets/images/prom1-3.jpg)
 
 Throughout this class, you'll be using promises to request real JSON data about exoplanets, and that data is coming from NASA and CalTech.
 
@@ -54,17 +54,17 @@ So, the question is, what is asynchronous work?
 
 Asynchronous work happens at an unknown or unpredictable time.
 
-[![ajax1-4](../assets/images/prom1-4-small.jpg)](../assets/images/ajax1-4.jpg)
+[![prom1-4](../assets/images/prom1-4-small.jpg)](../assets/images/prom1-4.jpg)
 
 Normally code is synchronous. One statement executes, like this one, and there's a guarantee that the next statement executes immediately afterwards.
 
-[![ajax1-5](../assets/images/prom1-5-small.jpg)](../assets/images/ajax1-5.jpg)
+[![prom1-5](../assets/images/prom1-5-small.jpg)](../assets/images/prom1-5.jpg)
 
 Threading on processors doesn't necessarily guarantee that, however, the JavaScript threading model ensures that, for all intents and purposes, JavaScript runs in a single timeline.
 
 Unlike synchronous code. Asynchronous code is not guaranteed to execute in a single unbroken timeline.
 
-[![ajax1-6](../assets/images/prom1-6-small.jpg)](../assets/images/ajax1-6.jpg)
+[![prom1-6](../assets/images/prom1-6-small.jpg)](../assets/images/prom1-6.jpg)
 
 In fact, you should assume that you have no idea when asynchronous operations will complete.
 
@@ -74,7 +74,7 @@ Assume that either order is equally likely, as the fact that one or both request
 
 Network requests aren't the only examples of asynchronous code. Any code that relies on processes like these, like events, like threads, or just some kind of unknowable finishing time are asynchronous.
 
-[![ajax1-7](../assets/images/prom1-7-small.jpg)](../assets/images/ajax1-7.jpg)
+[![prom1-7](../assets/images/prom1-7-small.jpg)](../assets/images/prom1-7.jpg)
 
 So, the big question is, what is the best way to handle asynchronous code?
 
@@ -83,13 +83,13 @@ Okay, the answer is obviously promises. That's why you're here.
 ### 1.3 Callbacks vs Thens
 Callbacks are the default JavaScript technique for asynchronous work. Pass the function to another function, and then call the callback function at some later time when some conditions have been met.
 
-[![ajax1-8](../assets/images/prom1-8-small.jpg)](../assets/images/ajax1-8.jpg)
+[![prom1-8](../assets/images/prom1-8-small.jpg)](../assets/images/prom1-8.jpg)
 
 This works well but there are some questions without obvious answers. For instance, how do you handle errors?
 
 It's best practice to assume that any operation could fail at any time. It's doubly important to assume so with network requests.
 
-[![ajax1-9](../assets/images/prom1-9-small.jpg)](../assets/images/ajax1-9.jpg)
+[![prom1-9](../assets/images/prom1-9-small.jpg)](../assets/images/prom1-9.jpg)
 
 If an error occurs on line #2, should you still execute the call back? If so, what value should it receive? If not, then what should happen?
 
@@ -100,19 +100,19 @@ Node.js basically makes error first callbacks mandatory but that doesn't really 
 
 Assume that everything happened just fine, no errors and then this callback runs when the onload handler gets called.
 
-[![ajax1-10](../assets/images/prom1-10-small.jpg)](../assets/images/ajax1-10.jpg)
+[![prom1-10](../assets/images/prom1-10-small.jpg)](../assets/images/prom1-10.jpg)
 
 Great. Now you've chained together two pieces of work, but what if this callback is also an asynchronous operation and you need something else to happen afterwards? Do you pass another function with another callback here?
 
 This is one scenario that leads to something called the Pyramid of Doom. A dreadful situation where there are nasty, nasty nested callbacks within callbacks, within callbacks.
 
-[![ajax1-11](../assets/images/prom1-11-small.jpg)](../assets/images/ajax1-11.jpg)
+[![prom1-11](../assets/images/prom1-11-small.jpg)](../assets/images/prom1-11.jpg)
 
 This looks ugly and it's hard to write, but the real sin is that it is incredibly frustrating to debug.
 
 This is the same kind of code, but written with promises, and my, it looks nicer.
 
-[![ajax1-12](../assets/images/prom1-12-small.jpg)](../assets/images/ajax1-12.jpg)
+[![prom1-12](../assets/images/prom1-12-small.jpg)](../assets/images/prom1-12.jpg)
 
 You'll be learning all about the beauty of `.then` later in this course. For now, just read this and appreciate the fact that you can figure out what's happening here, despite the fact that you haven't even finished this course.
 
@@ -121,7 +121,7 @@ That's pretty awesome.
 ### 1.4 Course Map
 I broke this course into four stages that built on one another.
 
-[![ajax1-13](../assets/images/prom1-13-small.jpg)](../assets/images/ajax1-13.jpg)
+[![prom1-13](../assets/images/prom1-13-small.jpg)](../assets/images/prom1-13.jpg)
 
 You'll start in the **Wrapping** stage where you'll be learning the syntax of constructing promises.
 
@@ -135,7 +135,7 @@ It's also worth going over some promise vocabulary. I'm stealing these definitio
 
 There are four states a promise can have. You'll pick up these terms pretty quickly, but I recommend jotting them down on a piece of paper to help out as you're going through the course.
 
-[![ajax1-14](../assets/images/prom1-14-small.jpg)](../assets/images/ajax1-14.jpg)
+[![prom1-14](../assets/images/prom1-14-small.jpg)](../assets/images/prom1-14.jpg)
 
 Here they are.
 
@@ -156,12 +156,12 @@ Okay, now that you've got the terms behind promises and you know where we're goi
 
 #### Resources
 
-- [JavaScript Promises - Jake Archibald](http://www.html5rocks.com/en/tutorials/es6/promises/)
+- [JavaScript Promises - Jake Archibald](https://developers.google.com/web/fundamentals/primers/promises)
 
 ### 1.5 Promises Timeline
 I want you to imagine a situation like this, where you're setting an Event listener after the event has already fired.
 
-[![ajax1-15](../assets/images/prom1-15-small.jpg)](../assets/images/ajax1-15.jpg)
+[![prom1-15](../assets/images/prom1-15-small.jpg)](../assets/images/prom1-15.jpg)
 
 What happens? Nothing.
 
@@ -169,19 +169,19 @@ If the event doesn't fire again, the Event listener never gets called.
 
 Now imagine you're using promises and you set an action to occur for when a Promise resolves which is set after the promise has already resolved.
 
-[![ajax1-16](../assets/images/prom1-16-small.jpg)](../assets/images/ajax1-16.jpg)
+[![prom1-16](../assets/images/prom1-16-small.jpg)](../assets/images/prom1-16.jpg)
 
 Guess what? This will execute.
 
 Compare this to Event listener example where the Event listener would never get called if it's set after the event already fired.
 
-[![ajax1-17](../assets/images/prom1-17-small.jpg)](../assets/images/ajax1-17.jpg)
+[![prom1-17](../assets/images/prom1-17-small.jpg)](../assets/images/prom1-17.jpg)
 
 I want to quickly show you some code.
 
 This is a promise constructor, and you'll be learning more about this in the next video. This method `resolve()`, settles the promise.
 
-[![ajax1-18](../assets/images/prom1-18-small.jpg)](../assets/images/ajax1-18.jpg)
+[![prom1-18](../assets/images/prom1-18-small.jpg)](../assets/images/prom1-18.jpg)
 
 A promise can only settle once. So in this scenario, the second resolve is doing nothing. Nothing's going to happen, it's going to go by unnoticed.
 
@@ -189,7 +189,7 @@ Compare this to events. An event can fire many times, but a promise can only set
 
 Promises execute in the main thread, which means that they are still potentially blocking.
 
-[![ajax1-19](../assets/images/prom1-19-small.jpg)](../assets/images/ajax1-19.jpg)
+[![prom1-19](../assets/images/prom1-19-small.jpg)](../assets/images/prom1-19.jpg)
 
 If the work that happens inside the promise takes a long time, there's still a chance it could block the work the browser needs to do to render the page.
 
@@ -204,7 +204,7 @@ Okay, it's time for a quiz.
 ### 1.6 Quiz: Async Scenarios
 In which of these situations should you consider using Promises?
 
-[![ajax1-20](../assets/images/prom1-20-small.jpg)](../assets/images/ajax1-20.jpg)
+[![prom1-20](../assets/images/prom1-20-small.jpg)](../assets/images/prom1-20.jpg)
 
 1. Should you consider using Promises when you're working with information from an Ajax request?
 2. Should you use them when you're executing long-running image manipulation in the main thread?
@@ -233,3 +233,202 @@ So, which of these scenarios are right to be promisified? I'll go ahead and star
     Yes. Web workers run on separate threads and post data to the main thread. They are certainly asynchronous and perfect for promises.
 
 All right, that's enough discussion about promises. It's time to start writing them.
+
+### 1.7 Promise Syntax
+We are entering the wrapping stage. I want you to keep in mind that:
+
+- **A promise is a try-catch wrapper around code that will finish at an unpredictable time**.
+
+[![prom1-21](../assets/images/prom1-21-small.jpg)](../assets/images/prom1-21.jpg)
+
+Here, let me show you an example.
+
+**Promise is a constructor**. You can either store a promise as a variable like I'm doing right here, or you can simply work on it as soon as you create it.
+
+[![prom1-22](../assets/images/prom1-22-small.jpg)](../assets/images/prom1-22.jpg)
+
+Either way works just fine, but you'll often see me simply work on the promise without storing it as a variable.
+
+#### ES5
+Here's the code from above.
+
+```js
+var promise = new Promise(function(resolve, reject) {
+  var value = doSomething();
+  if(thingWorked) {
+    resolve();
+  } else if (somethingWentWrong) {
+    reject();
+  }
+}).then(function(value) {
+  // success!
+  return nextThing(value);
+}).catch(rejectFunction);
+```
+
+#### ES6
+This is the same promise constructor written in ES6.
+```js
+const promise = new Promise((resolve, reject) => {
+  const value = doSomething();
+  if(thingWorked) {
+    resolve();
+  } else if (somethingWentWrong) {
+    reject();
+  }
+}).then(value => {
+  //success!
+  return nextThing(value);
+}).catch(rejectFunction);
+```
+
+
+You pass a function to the promise with two arguments: `resolve` and `reject`.
+
+[![prom1-23](../assets/images/prom1-23-small.jpg)](../assets/images/prom1-23.jpg)
+
+`resolve` and `reject` are the two callbacks you use to specify when a promise has either **fulfilled**, because something worked, or **rejected** because something went wrong.
+
+Let me show you what this actually looks like.
+
+In this example, I'm wrapping an image tag loader in a promise because I want to do some work after the image loads on a page.
+
+[![prom1-24](../assets/images/prom1-24-small.jpg)](../assets/images/prom1-24.jpg)
+
+I'm using the image tag's `onload` handler to specify success.
+
+`onload` calls `resolve`, which queues up the function passed to `.then` to execute after the remainder of the code in this function block finishes executing.
+
+> **Note:** the JavaScript engine does not immediately stop executing this function upon calling `resolve`.
+>
+> It will execute the remaining lines in the function before transferring control to `.then` which in turn executes `finishLoading`.
+>
+> An example of this concept in action can be found in the *Resources* section below.
+
+Being able to call `resolve` and `reject` is important. This is what it gives you the flexibility to explicitly say what constitutes **fulfillment** and what constitutes **rejection** for the promise.
+
+When either `resolve` or `reject` has been called, the promise has been **settled**, and then at that point, the next part of the chain, usually, a `.then`, or it could be a `.catch`, is executed.
+
+Back to the original example, any value passed to `resolve` or `reject` will be received as an argument by this subsequent `.then` or `.catch`.
+
+[![prom1-25](../assets/images/prom1-25-small.jpg)](../assets/images/prom1-25.jpg)
+
+In the event that nothing is passed to `resolve` or `reject` as is the case here with the `reject`, then it's totally fine. The next link in the chain simply receives `undefined`.
+
+[![prom1-26](../assets/images/prom1-26-small.jpg)](../assets/images/prom1-26.jpg)
+
+> **Note:** Just to be clear, when passing values or `undefined` through `resolve()` and `reject()` to `.then` and `.catch`, the values themselves aren't being passed to `.then` or `.catch`, rather they're being passed to the functions called by `.then` or `.catch`.
+
+There's a third case and that is if the value that's passed is a promise.
+
+If so, then the promise will execute first and then whatever value it resolves to will be passed to the next link in the chain.
+
+[![prom1-27](../assets/images/prom1-27-small.jpg)](../assets/images/prom1-27.jpg)
+
+Note that `resolve` and `reject` have the same syntax. `resolve` leads to the next `.then` in the chain, while `reject` leads to the next `.catch`.
+
+Incidentally, if there is a JavaScript error somewhere in the body of the promise, `.catch` will also automatically get called.
+
+And by the way, there's a bit more to error handling and you'll be learning about it in the next lesson. In the meantime, it is time for you to write your first promise.
+
+#### Resources
+Sample code that shows the remainder of the code in the function block gets executed even after `resolve()` gets called.
+
+```js
+new Promise(function(resolve) {
+  console.log('first');
+  resolve();
+  console.log('second');
+}).then(function() {
+  console.log('third');
+});
+```
+
+You'll notice that `'first'`, `'second'` and `'third'` all get logged. Most notably, `'second'` gets logged despite the fact that it comes after `resolve()`.
+
+### 1.8 Quiz: Write a Promise
+For this quiz you'll be wrapping `setTimeout()` with a Promise. There won't be any error handling yet because I want to keep this first quiz simple.
+
+[![prom1-28](../assets/images/prom1-28-small.jpg)](../assets/images/prom1-28.jpg)
+
+I'm giving you a sample page to work with, and inside of it you'll find a function called `wait()`. This function should simply wait a set number of milliseconds before resolving.
+
+That means that you'll need to call `resolve` when `setTimeout()` executes its callback.
+
+While you're working on this function, I want you to `console.log(this)` inside the Promise. The reason is that I have a question for you about the scope of `this` inside Promises when you finish working on it.
+
+I also want you to return the Promise from `wait`. The reason is that, after you finish your work, you will be able to uncomment these two lines to test your code.
+
+[![prom1-29](../assets/images/prom1-29-small.jpg)](../assets/images/prom1-29.jpg)
+
+If there are no errors, and the text changes, you'll know you've done it right.
+
+And like I said, when you're done, I have a question for you:
+
+- What is the scope of this inside the Promise?
+
+#### Solution
+So here's the solution. To start off I'm creating a Promise by using `new Promise()`.
+
+[![prom1-30](../assets/images/prom1-30-small.jpg)](../assets/images/prom1-30.jpg)
+
+I'm going to pass a function into the Promise with the parameter `resolve`. There is no `reject` in this case because I'm never going to need to reject so I just don't include it.
+
+Inside the Promise I'm logging `this` so I can check out its scope later.
+
+You'll see that in the callback function to the `setTimeout()`, I'm calling `resolve()` to resolve the Promise.
+
+In this case the Promise will resolve after some number of milliseconds that's getting passed into `wait()`.
+
+Also notice that I am returning the Promise and you'll see why in a second.
+
+Then I've un-commented these two lines which say that after 2000 milliseconds the `finish` function should get called.
+
+[![prom1-31](../assets/images/prom1-31-small.jpg)](../assets/images/prom1-31.jpg)
+
+All right, let's see how this looks. I will go ahead and refresh the page.
+
+You see that two seconds later it is complete.
+
+[![prom1-32](../assets/images/prom1-32-small.jpg)](../assets/images/prom1-32.jpg)
+
+It looks like `this` logged out the `window`, or the `global` object.
+
+> **Note:** the scope of `this`, could change depending on the context.
+>
+> For instance, arrow functions with ES2015 take `this` from the encolsing execution context. Whereas in ES5, every new function defined its own `this` value.
+>
+> See [MDN article on Arrow functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions) for a complete explaination.
+
+So the correct answer is the 'global object'.
+
+#### ES6 Solution
+Here is the same code written using ES6 syntax.
+
+```js
+function wait(ms) {
+  return new Promise(resolve => {
+    console.log(this);
+    window.setTimeout( () => {
+      resolve();
+    }, ms);
+  });
+};
+
+var milliseconds = 2000;
+wait(milliseconds).then(finish);
+```
+
+This can be further shortened to:
+
+```js
+function wait(ms) {
+  return new Promise(resolve => {
+    console.log(this);
+    window.setTimeout( resolve, ms);
+  });
+};
+
+var milliseconds = 2000;
+wait(milliseconds).then(finish);
+```
