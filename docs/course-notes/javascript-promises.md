@@ -458,7 +458,7 @@ function finish() {
 };
 ```
 
-### 1.9 Quiz: Wrap readyState
+### 1.9 Quiz: Wrap & Chain
 Okay, that first quiz was a little bit on the simple side. This one's going to be more useful.
 
 You'll be replicating jQuery's `.ready()` feature by wrapping a check for `document.readyState` in a Promise.
