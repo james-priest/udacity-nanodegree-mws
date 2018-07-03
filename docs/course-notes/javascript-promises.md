@@ -430,6 +430,12 @@ function wait(ms) {
 
 var milliseconds = 2000;
 wait(milliseconds).then(finish);
+
+// function to test with
+function finish() {
+  var completion = document.querySelector('.completion');
+  completion.innerHTML = "Complete after " + milliseconds + "ms.";
+};
 ```
 
 This can be further shortened to:
@@ -444,4 +450,151 @@ function wait(ms) {
 
 var milliseconds = 2000;
 wait(milliseconds).then(finish);
+
+// function to test with
+function finish() {
+  var completion = document.querySelector('.completion');
+  completion.innerHTML = "Complete after " + milliseconds + "ms.";
+};
 ```
+
+### 1.9 Quiz: Wrap readyState
+Okay, that first quiz was a little bit on the simple side. This one's going to be more useful.
+
+You'll be replicating jQuery's `.ready()` feature by wrapping a check for `document.readyState` in a Promise.
+
+#### jQuery Sidenote
+While we won't be using jQuery for this exercise, I did want to note the new recommended syntax for calling [jQuery's `.ready()`](https://api.jquery.com/ready/) method.
+
+**Note:** The following syntaxes are all equivalent ways of attaching a function to run when the DOM is ready.
+- `$( handler )`
+- `$( document ).ready( handler )`
+- `$( 'document' ).ready( handler )`
+- `$( 'img' ).ready( handler )`
+- `$().ready( handler )`
+
+As of jQuery 3.0, only the first syntax is recommended.
+
+##### Depricated (as of jQuery 3.0)
+
+```js
+$(document).ready(function() {
+  // Handler for the .ready called  
+});
+```
+
+##### Recommended (as of jQuery 3.0)
+```js
+// es5
+$(function() {
+  // Handler for .ready() called
+});
+
+// es6
+$(() => {
+  // Handler for .ready() called
+});
+```
+
+#### Thening
+You are now in the thening stage of the course.
+
+[![prom1-33](../assets/images/prom1-33-small.jpg)](../assets/images/prom1-33.jpg)
+
+I want you to use `.then` to perform an action after a promised result.
+
+`document.readyState` has three possible states: loading, interactive, and complete.
+
+[![prom1-34](../assets/images/prom1-34-small.jpg)](../assets/images/prom1-34.jpg)
+
+1. **loading** - the document is still loading.
+2. **interactive** - the document has loaded and been parsed but sub-resources like images and style sheets have yet to load. This is equivalent to the `DOMContentLoaded` event.
+3. **complete** - all the sub-resources including images and style sheets have loaded.
+
+Every time the document's `readyState` changes, a `readystatechange` event fires.
+
+[![prom1-35](../assets/images/prom1-35-small.jpg)](../assets/images/prom1-35.jpg)
+
+Creating a promise to run on **interactive** is really useful if you want to run some code as soon as all of the initial DOM elements have been loaded.
+
+For this quiz I'm giving you an event handler for `readystatechange`.
+
+[![prom1-36](../assets/images/prom1-36-small.jpg)](../assets/images/prom1-36.jpg)
+
+I want you to wrap it in a promise so that it resolves when the DOM is '**interactive**'. Or, in other words, I want it to resolve when the `readyState` is no longer '**loading**'.
+
+Like the last quiz, you don't need to worry about error handling because if the DOM is never ready then the page won't display anyway.
+
+Make sure you test, too. Do so by using `.then` to chain the method `wrapperResolved` when the document is ready.
+
+[![prom1-37](../assets/images/prom1-37-small.jpg)](../assets/images/prom1-37.jpg)
+
+Make sure you check out the Instructor Notes forhelp getting started, and good luck.
+
+#### Resources
+
+- [document.readyState](https://developer.mozilla.org/en-US/docs/Web/API/Document/readyState) on MDN
+
+##### Instructions
+
+1. Download `readyState-start.zip` in the downloadables section.
+2. Set network throttling so that the page isn't ready instantly. (Also, it's generally a good practice to have some throttling when testing sites. It'll help you see your site's performance from your users' perspectives.)
+3. Wrap an event listener for `readystatechange` in a Promise.
+4. If `document.readyState` is not `'loading'`, `resolve()`.
+5. Test by chaining wrapperResolved(). If all goes well, you should see "Resolved" on the page!
+
+##### Supporting Materials
+- [readyState-start.zip](https://www.udacity.com/api/nodes/6105298604/supplemental_media/readystate-startzip/download)
+- [readyState-solution.zip](https://www.udacity.com/api/nodes/6027593911/supplemental_media/readystate-solutionzip/download)
+
+#### Solution
+To start off, I need to give credit to Jake Archibald, who came up with the idea for this quiz, and who also wrote this code.
+
+[![prom1-38](../assets/images/prom1-38-small.jpg)](../assets/images/prom1-38.jpg)
+
+There are two parts to the `ready()` method.
+
+1. It checks the `readyState` when the `readystatechange` event fires
+2. And it also checks the `readyState` immediately.
+
+By checking immediately, the `ready()` method will still work if `readyState` becomes '**interactive**' before this promise is created, so that's pretty useful.
+
+And if the `readyState` is still loading when the promise is created, it'll call `checkState` every time the `readystatechange` event fires.
+
+Once the `readyState` is no longer '**loading**', it resolves.
+
+So here's how I test it. I simply call `ready()`, and then chain, `.then(wrapperResolved)` to the end.
+
+Here's the completed code:
+
+```js
+function ready() {
+  return new Promise(resolve => {
+    function checkState() {
+      if(document.readyState !== 'loading') {
+        resolve();
+      }
+    }
+    document.addEventListener('readystatechange', checkState);
+    checkState();
+  });
+};
+
+ready().then(wrapperResolved);
+
+// function to test with
+function wrapperResolved() {
+  var completion = document.querySelector('.completion');
+  completion.innerHTML = "Resolved!";
+};
+```
+
+Time to see how it looks. To test with I'm using 3G so that the image takes a little bit to load.
+
+Remember the text should say "Resolved!" before the image shows up.
+
+[![prom1-39](../assets/images/prom1-39-small.jpg)](../assets/images/prom1-39.jpg)
+
+Now, it already say resolved but let see what happens when the page get refreshed. You can see that its resolved immediately before the image even finishes loading, that's pretty cool.
+
+Okay. Now it's time to try some error handling.
