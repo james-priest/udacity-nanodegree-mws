@@ -12,7 +12,11 @@ description: Notes by James Priest
 
 ### Supporting Links
 - Udacity Course - [Javascript Promises](https://www.udacity.com/course/javascript-promises--ud898) by Google
-- Google Web Fundamentals - [JavaScript Promises - Jake Archibald](https://developers.google.com/web/fundamentals/primers/promises)
+- Google Web Fundamentals - [JavaScript Promises](https://developers.google.com/web/fundamentals/primers/promises) by Jake Archibald
+- Article on [Fetch API Walkthough](https://davidwalsh.name/fetch) by David Walsh
+- MDN [Using Fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch)
+- MDN [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API)
+- MDN [Response](https://developer.mozilla.org/en-US/docs/Web/API/Response)
 
 ## Lesson 1. Creating Promises
 ### 1.1 Course Introduction
@@ -409,7 +413,7 @@ It looks like `this` logged out the `window`, or the `global` object.
 
 > **Note:** the scope of `this`, could change depending on the context.
 >
-> For instance, arrow functions with ES2015 take `this` from the enclosing execution context. Whereas in ES5, every new function defined its own `this` value.
+> For instance, arrow functions with ES2015 take `this` from the enclosing execution context. Whereas in ES5, every new function defines its own `this` value.
 >
 > See [MDN article on Arrow functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions) for a complete explanation.
 
@@ -463,38 +467,39 @@ Okay, that first quiz was a little bit on the simple side. This one's going to b
 
 You'll be replicating jQuery's `.ready()` feature by wrapping a check for `document.readyState` in a Promise.
 
-#### jQuery Sidenote
-While we won't be using jQuery for this exercise, I did want to note the new recommended syntax for calling [jQuery's `.ready()`](https://api.jquery.com/ready/) method.
-
-**Note:** The following syntaxes are all equivalent ways of attaching a function to run when the DOM is ready.
-- `$( handler )`
-- `$( document ).ready( handler )`
-- `$( 'document' ).ready( handler )`
-- `$( 'img' ).ready( handler )`
-- `$().ready( handler )`
-
-As of jQuery 3.0, only the first syntax is recommended.
-
-##### Depricated (as of jQuery 3.0)
-
-```js
-$(document).ready(function() {
-  // Handler for the .ready called  
-});
-```
-
-##### Recommended (as of jQuery 3.0)
-```js
-// es5
-$(function() {
-  // Handler for .ready() called
-});
-
-// es6
-$(() => {
-  // Handler for .ready() called
-});
-```
+> #### jQuery Sidenote
+> While we won't be using jQuery for this exercise, I did want to note the new recommended syntax for calling [jQuery's `.ready()`](https://api.jquery.com/ready/) method.
+>
+> **Note:** The following syntaxes are all equivalent ways of attaching a function to run when the DOM is ready.
+> - `$( handler )`
+> - `$( document ).ready( handler )`
+> - `$( 'document' ).ready( handler )`
+> - `$( 'img' ).ready( handler )`
+> - `$().ready( handler )`
+>
+> As of jQuery 3.0, only the first syntax is recommended.
+>
+> ##### Deprecated (as of jQuery 3.0)
+>
+> ```js
+> $(document).ready(function() {
+>   // Handler for the .ready called  
+> });
+> ```
+>
+> ##### Recommended (as of jQuery 3.0)
+>
+> ```js
+> // es5
+> $(function() {
+>   // Handler for .ready() called
+> });
+> 
+> // es6
+> $(() => {
+>   // Handler for .ready() called
+> });
+> ```
 
 #### Thening
 You are now in the thening stage of the course.
@@ -598,3 +603,443 @@ Remember the text should say "Resolved!" before the image shows up.
 Now, it already say resolved but let see what happens when the page get refreshed. You can see that its resolved immediately before the image even finishes loading, that's pretty cool.
 
 Okay. Now it's time to try some error handling.
+
+### 1.10 Install Exoplanet Explorer
+#### What is this?
+You'll be working with a stripped down version of the [Exoplanet Explorer](http://www.exoplanetexplorer.com/) to complete all of the programming quizzes for the rest of the course. So, you need to install it.
+
+#### Installation
+I built the Exoplanet Explorer from the [Polymer](https://www.polymer-project.org/1.0/) [Starter Kit](https://developers.google.com/web/tools/polymer-starter-kit/?hl=en). I'm copying most of the rest of these instructions from the README written by the Polymer team. If you ever need help, check out the README.
+
+##### Clone the repo first (for everyone)
+
+Here's the [link to the repo](https://github.com/udacity/exoplanet-explorer).
+
+You should be on the `xhr-start` branch. If not, then `git checkout xhr-start` or `git checkout origin xhr-start`.
+
+##### Quick-start (for experienced users)
+
+With Node.js installed, run the following one liner from the root of your Exoplanet Explorer download:
+
+```bash
+npm install -g gulp bower && npm install && bower install
+```
+
+##### Prerequisites (for everyone)
+
+The full starter kit requires the following major dependencies:
+
+- Node.js, used to run JavaScript tools from the command line.
+- npm, the node package manager, installed with Node.js and used to install Node.js packages.
+- gulp, a Node.js-based build tool.
+- bower, a Node.js-based package manager used to install front-end packages (like Polymer).
+
+##### To install dependencies:
+
+1. Check your Node.js version.
+
+    ```bash
+    node --version
+    ```
+
+    The version should be at or above 0.12.x.
+
+2. If you don't have Node.js installed, or you have a lower version, go to [nodejs.org](https://nodejs.org/) and click on the big green Install button.
+
+3. Install `gulp` and `bower` globally.
+
+    ```bash
+    npm install -g gulp bower
+    ```
+
+    This lets you run `gulp` and `bower` from the command line.
+
+4. Install the starter kit's local `npm` and `bower` dependencies.
+
+    ```bash
+    cd exoplanet-explorer && npm install && bower install
+    ```
+
+    This installs the element sets (Paper, Iron, Platinum) and tools the starter kit requires to build and serve apps.
+
+**NOTE! INSTALLATION MAY TAKE A LONG TIME!** There are many dependencies to download and install.
+
+#### Post-Installation and Workflow
+For every quiz, you'll be given a branch to checkout. You can always find it in the instructor notes. All of your work will be done in:
+
+```bash
+app/scripts/app.js
+```
+
+##### Serve / watch
+
+```bash
+gulp serve
+```
+
+This outputs an IP address you can use to locally test and another that can be used on devices connected to your network.
+
+It's recommended to use Chrome, as non-vulcanized Polymer projects will load fastest on Chrome.
+
+##### Build & Vulcanize
+
+```bash
+gulp
+```
+
+Build and optimize the current project, ready for deployment. This includes linting as well as vulcanization, image, script, stylesheet and HTML optimization and minification.
+
+##### Troubleshooting
+
+See [this bug](https://github.com/nodejs/node-gyp/issues/695) if you get the following error from Gyp:
+
+```bash
+"Error: self signed certificate in certificate chain"
+```
+
+### 1.11 Quiz: Wrap XHR
+I hope you're starting to get the hang of Promises. I've got another challenge for you.
+
+I want you to wrap an Ajax request in a Promise. You're now officially in the catching stage, and don't worry, it's pretty similar to the thening stage.
+
+[![prom1-40](../assets/images/prom1-40-small.jpg)](../assets/images/prom1-40.jpg)
+
+In the instructions I'll be asking you to add `.catch` to your promise as a way to see if there are any errors, and then do something about it.
+
+Right now you won't be recovering. You'll simply be console.logging them. To take this quiz, you'll be doing your work here, inside the Exoplanet Explorer app.js file.
+
+[![prom1-41](../assets/images/prom1-41-small.jpg)](../assets/images/prom1-41.jpg)
+
+I want you to wrap this XHR helper method with a Promise.
+
+Unlike the last two quizzes, a lot can go wrong with a XHR so you need to include error handling: `reject()` if there's an error, or if the request status is anything but 200.
+
+Remember, any value that you pass to `resolve()` or `reject()` will get passed to the next `.then` or `.catch`, and of course, don't forget to return the promise from `get()`.
+
+Test your Promise wrapper with the `get()` method (shown as commented out).
+
+[![prom1-42](../assets/images/prom1-42-small.jpg)](../assets/images/prom1-42.jpg)
+
+The file that's requested contains a simulated search response for the exoplanet explorer app, and it contains the URLs for some JSON data of some Earth-like planets.
+
+Pass the `response` to `addSearchHeader()` when it resolves, or if it fails to resolve, catch it by passing '`unknown`' to `addSearchHeader()` on reject.
+
+You might try messing up this URL to make sure your `.catch` works correctly.
+
+While you're working, I recommend using `gulp serve` to watch for changes and automatically reload the page.
+
+This is definitely the fastest way to work.
+
+#### Resources
+##### Instructions
+
+1. Checkout the `xhr-start` branch and navigate to `app/scripts/app.js`.
+
+    ```bash
+    git checkout xhr-start
+    ```
+
+2. Wrap the XHR in a Promise in the `get()` function. See [XHR documentation](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/Using_XMLHttpRequest) for more information.
+3. Resolve on load and reject on error.
+4. If the XHR resolves, use `addSearchHeader()` to add the search header to the page.
+5. If the XHR fails, `console.log()` the error and pass '`unknown`' to `addSearchHeader()`.
+
+The solution is on the `xhr-solution` branch.
+
+```bash
+git checkout xhr-solution
+```
+
+#### Solution
+To start off I'm calling `gulp serve`, and letting that run in the background.
+
+[![prom1-43](../assets/images/prom1-43-small.jpg)](../assets/images/prom1-43.jpg)
+
+So here's my promise wrapper inside `get()`.
+
+[![prom1-44](../assets/images/prom1-44-small.jpg)](../assets/images/prom1-44.jpg)
+
+Notice that I'm returning the promise, and I'm resolving when the request status is 200. I'm passing the response to resolve so that then gets the response as well.
+
+I'm rejecting on any error whether that's not a status of 200 or something else, and the rest of it looks good. I didn't have to change anything else.
+
+Down here in the web components ready listener, I am actually doing something to the page.
+
+[![prom1-45](../assets/images/prom1-45-small.jpg)](../assets/images/prom1-45.jpg)
+
+Once I get the data, I add the search header, and if something goes wrong, I add a search header of '`unknown`' and then console that log error.
+
+Okay, let's see what happens.
+
+[![prom1-46](../assets/images/prom1-46-small.jpg)](../assets/images/prom1-46.jpg)
+
+So it looks like this query works because you can see 'earth-like planets' on the page.
+
+But let me see what happens when I mess up that URL. I'll go ahead and just delete a character.
+
+[![prom1-47](../assets/images/prom1-47-small.jpg)](../assets/images/prom1-47.jpg)
+
+Okay, that looks good. I see 'unknown' as the query and I see an error here in the console. I can open it up and see that something went wrong with the XHR.
+
+Here's the completed code:
+
+```js
+function get(url) {
+  return new Promise(function (resolve, reject) {
+    var req = new XMLHttpRequest();
+    req.open('GET', url);
+    req.onload = function() {
+      if (req.status === 200) { // It worked!
+        resolve(req.response);
+      } else { // It failed :(
+        reject(Error(req.statusText));
+      }
+    };
+    req.onerror = function(error) { // It failed :(
+      reject(Error('Network Error'));
+    };
+    req.send();
+  });
+}
+
+window.addEventListener('WebComponentsReady', function() {
+  home = document.querySelector('section[data-route="home"]');
+  get('../data/earth-like-results.json')
+    .then(function (response) {
+      addSearchHeader(response);
+    }).catch(function (error) {
+      addSearchHeader('unknown');
+      console.log(error);
+    });
+});
+```
+
+Cool, I want to show you one more thing though. Inside the `addSearchHeader()` there is this call to `JSON.parse` of the response.
+
+[![prom1-48](../assets/images/prom1-48-small.jpg)](../assets/images/prom1-48.jpg)
+
+If you think about it, parsing a JSON really has nothing to do with adding a search header, so in the next quiz you'll be removing this all together and putting it inside a different method where it does belong.
+
+### 1.12 Web Technologies
+The course that you're taking is about native JavaScript promises. They started showing up in browsers around the end of 2014, but polyfills for promises have been around for much longer actually.
+
+jQuery, which is obviously a very popular library, implements its own version of promises, but prior to v3.0 they had some serious issues. So I definitely recommend reading up on them in the Resources section if you need to use them.
+
+The first version of Angular uses Q style promises. These are mostly the same as native promises, but have some slight differences.
+
+Angular 2, however, does actually take advantage of native JavaScript promises.
+
+As of January of 2016, native promises are safe to use with every major browser, except for Internet Explorer and Opera Mini. You'll need to make sure that you include a polyfill or some other kind of fall-back on your production sites.
+
+[![prom1-49](../assets/images/prom1-49-small.jpg)](../assets/images/prom1-49.jpg)
+
+There are some new APIs that are also taking advantage of promises. For instance, they're the recommended strategy for interacting with the Service Worker API.
+
+Service workers are a total game changer. They allow you to add a powerful layer of control between your app and the network, and that means that you can actually create apps that work offline.
+
+In the next quiz you'll be using another new API called the Fetch API. It uses native promises to simplify xml http requests.
+
+#### Resources
+##### jQuery Promises
+- 10 June 2016 update! [With the 3.0 release, jQuery promises now satisfy Promises/A+ compliance!](https://blog.jquery.com/2016/06/09/jquery-3-0-final-released/)
+- [You're Missing the Point of Promises](https://blog.domenic.me/youre-missing-the-point-of-promises/) - Domenic Denicola (Pre-jQuery 3.0)
+- [jQuery Deferred Broken](https://thewayofcode.wordpress.com/tag/jquery-deferred-broken/) - Valerio Gheri (Pre-jQuery 3.0)
+
+##### Q Style Promises
+- They're an implementation of the [Promises/A+ spec](https://promisesaplus.com/).
+- [$q service Documentation](https://goo.gl/J1K2iv).
+
+##### Browser Implementation
+- [Can I Use... - Promises](http://caniuse.com/#search=promises)
+- [ES2015 Promises Polyfill](https://github.com/jakearchibald/es6-promise)
+- [Q Library](https://github.com/kriskowal/q)
+- [Bluebird Promises](https://github.com/petkaantonov/bluebird)
+
+##### APIs that Use Promises
+- [Service Worker API](https://developers.google.com/web/fundamentals/primers/service-workers/)
+- [Fetch API](https://davidwalsh.name/fetch) by David Walsh
+
+### 1.13 Quiz: Fetch API
+As you probably realized a few videos ago, or maybe even longer, XHRs are really annoying.
+
+Even the simplest use case is fairly verbose, and it only gets worse as you address edge cases and browser compatibility issues.
+
+Fetching resources really just shouldn't be this hard. Luckily there's a new API that simplifies XHRs, the Fetch API.
+
+[![prom1-50](../assets/images/prom1-50-small.jpg)](../assets/images/prom1-50.jpg)
+
+Currently it's natively supported by all browsers except IE and Opera Mini. It's incredibly useful and also it's built on native promises.
+
+This is going to be a two step quiz. On the first part you're going to re-factor `get()` with the Fetch API and in the second part, you're going to be creating a new wrapper called `getJSON()`.
+
+[![prom1-51](../assets/images/prom1-51-small.jpg)](../assets/images/prom1-51.jpg)
+
+`getJSON()` should return a Promise and it should return a promise that's two steps.
+
+The first part should be getting the URL, you should use the `get()` method for that, and the second part should be parsing the JSON response.
+
+I want you test `getJSON()` by adding a search header and console.log the parsed JSON.
+
+[![prom1-52](../assets/images/prom1-52-small.jpg)](../assets/images/prom1-52.jpg)
+
+When you do so, you should see an object with search data appear in the console.
+
+If there is an error, catch it. Pass 'unknown' as the search header and then `console.log` the error.
+
+[![prom1-53](../assets/images/prom1-53-small.jpg)](../assets/images/prom1-53.jpg)
+
+#### Resources
+
+- [Fetch API Walkthough](https://davidwalsh.name/fetch) by David Walsh
+
+##### Instructions
+1. Checkout the `fetch-start` branch and navigate to `app/scripts/app.js`.
+    ```bash
+    git checkout fetch-start
+    ```
+2. Rewrite `get()` with the Fetch API: [https://davidwalsh.name/fetch](https://davidwalsh.name/fetch)
+3. Finish the `getJSON()` method, which should take a URL and return the parsed JSON response.
+- `getJSON()` needs to return a Promise!
+
+4. Test by logging the response and by passing the query string from `getJSON()` to `addSearchHeader()`.
+5. Handle errors by passing '`unknown`' to `addSearchHeader()` and logging them.
+
+The solution is on the `fetch-solution` branch.
+
+```bash
+git checkout fetch-solution
+```
+
+#### Solution
+So this is how I did it. Inside get I am just using fetch, in fact, this whole object here with method get is totally optional.
+
+[![prom1-54](../assets/images/prom1-54-small.jpg)](../assets/images/prom1-54.jpg)
+
+If there are no options fetch assumes that you're doing a get, so you can just get rid of it.
+
+```js
+function get(url) {
+  return fetch(url);
+}
+```
+
+In `getJSON()`, I simply `.then` off the `get()` and then return `response.json`.
+
+This `response.json` is specific to the fetch API, but it's basically the same as `JSON.parse`.
+
+To test, I'm getting the json and then if it's there, I add the query to the search header and `console.log` the response.
+
+If it's not there, I add '`unknown`' to the search header and `console.log` the error.
+
+[![prom1-55](../assets/images/prom1-55-small.jpg)](../assets/images/prom1-55.jpg)
+
+Let's see if it works.
+
+So far so good, I'm seeing earth-like planets and when I open up the console, I see the response logged out with the query and some more JSON files.
+
+[![prom1-56](../assets/images/prom1-56-small.jpg)](../assets/images/prom1-56.jpg)
+
+That's pretty cool but I want to show you one more trick. I just added another `.then` to output the first json url.
+
+```js
+getJSON('../data/earth-like-results.json')
+  .then(function (response) {
+    addSearchHeader(response.query);
+    console.log(response);
+    return response.results[0];   // <-- here
+  }).then(function(url) {         // <-- here
+    console.log(url);             // <-- here
+  }).catch(function (error) {
+    addSearchHeader('unknown');
+    console.log(error);
+  });
+```
+
+So from the original `.then`, I am returning some results. In fact, this is the first URL in the search results.
+
+Then, in the next `.then`, I am taking the URL and console.logging it. The cool thing here is that I've got `.then` and then another `.then` and then finally a `.catch`, which means I'm chaining promises together.
+
+So now inside the console, after the whole search object, I'm seeing the URL of the first planet in the response.
+
+[![prom1-57](../assets/images/prom1-57-small.jpg)](../assets/images/prom1-57.jpg)
+
+This whole idea of chaining is incredibly important, and that's what you'll be doing next in the course.
+
+Here's the complete code.
+
+```js
+function get(url) {
+  // Use the Fetch API to GET a URL. Return the fetch.
+  return fetch(url);
+}
+
+function getJSON(url) {
+  // Return a Promise that gets a URL and parses the JSON response. Use get().
+  return get(url).then(function(response) {
+    // Handle network errors
+    if (!response.ok) {
+      throw Error(response.statusText ? response.statusText
+        : 'Unknown network error')
+    }
+
+    return response.json();
+  });
+}
+
+window.addEventListener('WebComponentsReady', function() {
+  home = document.querySelector('section[data-route="home"]');
+  // Don't forget to chain with a .then and a .catch!
+  getJSON('../data/earth-like-results.json')
+    .then(function(response) {
+      addSearchHeader(response.query);
+      console.log(response);
+      return response.results[0];
+    }).then(function(url) {
+      console.log(url);
+    })
+    .catch(function(error) {
+      addSearchHeader('unknown');
+      console.log(error);
+    });
+});
+```
+
+### 1.14 What's Next
+So far you've created promises and chained the some work off them.
+
+[![prom1-58](../assets/images/prom1-58-small.jpg)](../assets/images/prom1-58.jpg)
+
+You did so in the last quiz by creating a `get()` function and then using `.then` to do something with the data that you retrieved.
+
+You also included catches to ensure that no error goes unhandled.
+
+With the promise API, `.then`'s also return promises. 
+
+So if you can `.then` off of an initial promise, you can `.then` off of `.then`s because they are also promises.
+
+Developers commonly use the term 'thenable' to describe promises and `.then`s.
+
+- Any method or object that returns a `.then` is 'thenable'
+- Anything 'thenable' can become a part of a chain of asynchronous work
+- Promises are 'thenable' as are `.then`s and `.catch`es.
+
+In fact, other libraries include thenable objects. See below for more information.
+
+When creating a chain of asynchronous work, each subsequent link in the chain receives either the fulfilled value of the previous promise or the return value of the previous `.then`'s function.
+
+In this way, you can pass information collected from one asynchronous method to the next.
+
+Being able to chain thenables is an incredibly powerful technique for simplifying complex sequences of asynchronous work.
+
+You'll be practicing a few chaining strategies in the next lesson.
+
+So this is the end of the first lesson. You have already added a powerful new tool to your toolbox, and you are just getting started.
+
+At the beginning of the next lesson you'll be creating a chain of `.then`s to put thumbnails on the Exoplanet Explorer.
+
+#### Resources
+- ["Thenable" used in the context of promises](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise#Methods) on MDN. This includes:
+  - Promise.all(iterable)
+  - Promise.race(iterable)
+  - Promise.reject(reason)
+  - Promise.resolve(value)
