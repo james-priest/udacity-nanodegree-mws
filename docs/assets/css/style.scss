@@ -84,10 +84,16 @@ section > p, h4, h5, h6 {
 blockquote { 
     font-style: normal;
     margin: 20px 40px;
+    padding: 0 20px;
+    border: 1px solid #ffcc00;
+    background-color: #f0f0f0;
 }
-blockquote > p, blockquote > h4, blockquote > h5 {
+blockquote > p, blockquote > h4, blockquote > h5, blockquote pre {
     margin: 11px 0;
     line-height: 1.2em;
+}
+blockquote > p, blockquote pre {
+    margin: 11px 10px;
 }
 hr { margin: 20px 0; }
 
@@ -149,16 +155,18 @@ code {
     // font-family: Lucida Console,Monaco,Courier,monospace;
     font-size: 0.8em;
 }
-p>code, li>code, blockquote code, h1>code, h2>code, h3>code, h4>code, strong>code, a>code {
+p>code, li>code, blockquote>p>code, h1>code, h2>code, h3>code, h4>code, strong>code, a>code {
     // color: #c7254e;
     color: #ff4675;
-    background-color: #f9f2f4;
-    border-radius: 4px;
+    // background-color: #f9f2f4;
+    background-color: #fff6f9;
+    border-radius: 3px;
     margin: 0 2px;
     padding: 2px;
     font-weight: 400;
     font-size: .785714em; /* 11px/14px */
     text-shadow: none;
+    border: 1px solid #ccc;
 }
 footer {
     position: static;
