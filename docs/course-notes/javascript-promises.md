@@ -1096,9 +1096,28 @@ I've got this first one in case there is an error with the search results and I'
 
 Your error handling strategy may have looked slightly different and that's totally fine.
 
-So the real question is does this code work? It sure does. Very, very cool.
+So the real question is does this code work? It sure does.
 
 [![prom2-5](../assets/images/prom2-5-small.jpg)](../assets/images/prom2-5.jpg)
+
+Here's my completed code.
+
+```js
+getJSON('../data/earth-like-results.json')
+  .then(function (response) {
+    addSearchHeader(response.query);
+    console.log(response);
+    return getJSON(response.results[0]);  // return result for chaining
+  }).catch(function () {                  // catch err in search request
+    throw Error('Search Request Error');
+  }).then(function (planetData) {         // receive result in planetData
+    createPlanetThumb(planetData);
+    console.log(planetData);
+  }).catch(function (error) {             // catch any other error
+    addSearchHeader('unknown');
+    console.log(error);
+  });
+```
 
 Okay, but that's about as far as we can go just by manually chaining `.then`s. It's time to make chains a little bit more interesting.
 
