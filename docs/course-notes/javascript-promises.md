@@ -1043,3 +1043,208 @@ At the beginning of the next lesson you'll be creating a chain of `.then`s to pu
   - Promise.race(iterable)
   - Promise.reject(reason)
   - Promise.resolve(value)
+
+## Lesson 2: Chaining Promises
+### 2.1 Quiz: Fetch & Show First Planet
+Welcome back. In this lesson you'll be experimenting with different techniques for creating chains of asynchronous work.
+
+[![prom2-1](../assets/images/prom2-1-small.jpg)](../assets/images/prom2-1.jpg)
+
+Asynchronous work is rarely isolated, and as such you may have many asynchronous actions that depend on one another.
+
+This is another strong suit of promises.
+
+Rather than creating a pyramid of doom, promises make it straightforward to chain together lots of asynchronous actions. It even works when you're generating those actions programmatically.
+
+To get started, you'll be manually creating a chain of work to load a planet thumbnail in the exoplanet explorer app.
+
+[![prom2-2](../assets/images/prom2-2-small.jpg)](../assets/images/prom2-2.jpg)
+
+#### Resources
+##### Instructions
+1. Checkout the `first-thumb-start` branch and navigate to `app/scripts/app.js`.
+2. Get the planet data and add the search header.
+3. Create the first thumbnail with `createPlanetThumb(data)`.
+4. Handle errors!
+- Pass '`unknown`' to the search header.
+- Log the error.
+
+The solution is on the `first-thumb-solution` branch
+
+```bash
+git checkout first-thumb-solution
+```
+
+#### Solution
+So here's how I did it. This first part should look pretty familiar, but there's one new line right here.
+
+[![prom2-3](../assets/images/prom2-3-small.jpg)](../assets/images/prom2-3.jpg)
+
+I went ahead and returned the response from the second `getJSON()`. This getJSON is getting the URL of the first planet.
+
+By returning it, it will get passed to the next `.then`. When it receives the `planetData`, it then creates a thumbnail with it.
+
+Before we go on, I want to show you a slightly different syntax. Instead of an anonymous function, I can actually just pass the `createPlanetThumb` function.
+
+[![prom2-4](../assets/images/prom2-4-small.jpg)](../assets/images/prom2-4.jpg)
+
+This function will receive the same argument and as the argument that the anonymous function was receiving is the same one that createPlanetThumb was receiving, this works totally fine.
+
+I've also got two `.catch`s.
+
+I've got this first one in case there is an error with the search results and I've got the second in case anything else went wrong.
+
+Your error handling strategy may have looked slightly different and that's totally fine.
+
+So the real question is does this code work? It sure does. Very, very cool.
+
+[![prom2-5](../assets/images/prom2-5-small.jpg)](../assets/images/prom2-5.jpg)
+
+Okay, but that's about as far as we can go just by manually chaining `.then`s. It's time to make chains a little bit more interesting.
+
+### 2.2 Error Handling Strategies
+So far, error handling has come in the form of `.catch`es like this one.
+
+```js
+get('example.json')
+.then(resolveFunc)
+.catch(rejectFunc);
+```
+
+But there are actually other ways. These two chunks of code are actually equivalent.
+
+```js
+get('example.json')
+.then(resolveFunc)
+.catch(rejectFunc);
+```
+
+```js
+get('example.json')
+.then(resolveFunc)
+.then(undefined, rejectFunc);
+```
+
+`.catch` is just shorthand for `.then(undefined, )`, and then a rejection function.
+
+Notice how, this `.then` is actually is taking two arguments. The full function signature for `.then` is actually:
+
+```js
+get('example.json').then(resolveFunc, rejectFunc);
+```
+
+In this form, if any previous promise is rejected, the reject function gets called. If they resolve, then the resolve function gets called.
+
+If there is no resolve function and the promise before this `.then` resolves, then this `.then` gets skipped over and the next `.then` is called.
+
+[![prom2-6](../assets/images/prom2-6-small.jpg)](../assets/images/prom2-6.jpg)
+
+**Note:** In all cases, as soon as a promise rejects, the JavaScript engine skips to the next `reject` function in the chain, whether that's in a `.catch` or a `.then`.
+
+So that means an error in the first promise or error in the second promise, both get caught by the following `.catch`.
+
+[![prom2-8](../assets/images/prom2-8-small.jpg)](../assets/images/prom2-8.jpg)
+
+Both methods `.catch`, and `.then` with two callbacks, work equally well.
+
+[![prom2-7](../assets/images/prom2-7-small.jpg)](../assets/images/prom2-7.jpg)
+
+However, it's actually recommended that you use `.catch` when you can, because `.catch` is just easier to read and write than a second `.then` callback which can be hard to spot.
+
+In fact, you might not have even noticed it above right away.
+
+That being said, there is a major difference in the execution order between `.catch` and a second callback.
+
+Notice that you cannot call both the `resolve` function and the `reject` function if they're part of the same `.then`.
+
+[![prom2-9](../assets/images/prom2-9-small.jpg)](../assets/images/prom2-9.jpg)
+
+Only one or the other, or neither will get called.
+
+If something goes wrong with the `resolve` function, you'll need another `.catch` or another `.then`, farther down the line to catch it.
+
+But if you have `.then` and then a `.catch`, each with their own `resolve` or `reject` function, both of them can possibly get called.
+
+[![prom2-10](../assets/images/prom2-10-small.jpg)](../assets/images/prom2-10.jpg)
+
+And finally, I want to make one more subtle point. It's also worth noting that it isn't necessarily true, that passing a value to `resolve` means that the promise succeeded.
+
+[![prom2-11](../assets/images/prom2-11-small.jpg)](../assets/images/prom2-11.jpg)
+
+If what we pass to `resolve` is `undefined` or  a promise that rejects, the rejection callback will be called.
+
+This is a subtle point, so go see Jake Archibald's blog post for more information.
+
+In the next quiz, you'll be thinking through the flow of a chain of promises using different formats.
+
+#### Resources
+- [Promises: Resolve Is Not the Opposite of Reject](https://jakearchibald.com/2014/resolve-not-opposite-of-reject/) - Jake Archibald
+
+### 2.3 Quiz: Chained Thenables
+There are some subtle differences to error handling strategies that can come back to bite you if you're not careful.
+
+So for this quiz, I want you to think through a few different scenarios with this long chain.
+
+[![prom2-12](../assets/images/prom2-12-small.jpg)](../assets/images/prom2-12.jpg)
+
+Now, you normally wouldn't want to mix and match different syntaxes like I've done here, but I want you to think through some different situations.
+
+In this example, `async` returns a promise, as does `recovery`. The idea is that the `recovery` method gets the chain back on track and continuing to resolve if something goes wrong.
+
+My question for you is, for each of these four lines, what numbers will be logged if an error occurs there?
+
+[![prom2-13](../assets/images/prom2-13-small.jpg)](../assets/images/prom2-13.jpg)
+
+Note that you can assume that no other errors occur.
+
+I'll go ahead and give you the first one. If an error occurs with `async` then the first reject function will get called, which logs a 1.
+
+If the recovery works, which you can assume it does, then the next result function will get called, which puts a 3 on the log.
+
+[![prom2-15](../assets/images/prom2-15-small.jpg)](../assets/images/prom2-15.jpg)
+
+Okay, now it is your turn to finish up the rest.
+
+#### Solution
+For the second problem, if an error occurs here, then the next reject function will get called, which once again, logs out a number is 1.
+
+Then the recovery function happens, and things get back on track. So, the next number is 3. After that, there's no more log in here so that's it.
+
+[![prom2-14](../assets/images/prom2-14-small.jpg)](../assets/images/prom2-14.jpg)
+
+Next problem. If there is an error with this recovery function, now this is an interesting one, because this is only going to get called if there is another error.
+
+So in this case nothing will show up in the log.
+
+For the last one, if something goes wrong with the `async` function, then the next reject function will get called. In that case, the number 4 should end up on the screen.
+
+So, these can be kind of tricky, but just keep in mind that if something goes wrong, the next reject function will get called.
+
+<!-- 
+### 2.4 Quiz: Series vs Parallel Requests
+When you need to perform asynchronous work, the work may not be isolated. You often need to perform multiple asynchronous actions which means you are in the chaining stage of the course.
+
+This is where you will be chaining promises together.
+
+[![prom2-16](../assets/images/prom2-16-small.jpg)](../assets/images/prom2-16.jpg)
+
+There are two main strategies for performing multiple asynchronous actions. 
+
+They are:
+
+- actions in series
+- actions in parallel
+
+[![prom2-17](../assets/images/prom2-17-small.jpg)](../assets/images/prom2-17.jpg)
+
+Action in series occur one after another, like these three cats all waiting their turn for the rocket.
+
+While actions in parallel all occur simultaneously, like each of these cats getting its own rocket to ride.
+
+You could say that synchronous code is always in series but asynchronous code can either be in series or it can also be in parallel.
+
+Neither option, series or parallel, is inherently better than the other, each has its own purposes.
+
+In the quiz where you fetched the list of planet JSONs and then performed a request for an individual planet JSON, you have to perform the two requests in series because one depended on the other.
+
+But if you need to request a lot of planet jsons, as you will soon be doing in a quiz, then you will need to programmatically send out the request.You'll also want to make the request in parallelbecause that will reduce the amount of time it takes to load all of the data.So with that in mind, here's a quiz for you.There's a problem with this code.It appears to be looping over the URLs from the planet search query, butsomething unexpected will happen.What is it?Is it that the requests are being sent in series butthey will return in parallel, causing some kind of collision?Is it that the requests are blocking so that this code will never finish?Is it that the thumbnails will be created in a random order?Or is there just simply nothing wrong with this at all andI just gave you a trick question?I want you to pick one of these four answers. -->
