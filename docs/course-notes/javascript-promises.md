@@ -1239,7 +1239,6 @@ For the last one, if something goes wrong with the `async` function, then the ne
 
 So, these can be kind of tricky, but just keep in mind that if something goes wrong, the next reject function will get called.
 
-<!-- 
 ### 2.4 Quiz: Series vs Parallel Requests
 When you need to perform asynchronous work, the work may not be isolated. You often need to perform multiple asynchronous actions which means you are in the chaining stage of the course.
 
@@ -1247,16 +1246,16 @@ This is where you will be chaining promises together.
 
 [![prom2-16](../assets/images/prom2-16-small.jpg)](../assets/images/prom2-16.jpg)
 
-There are two main strategies for performing multiple asynchronous actions. 
+There are two main strategies for performing multiple asynchronous actions.
 
 They are:
 
 - actions in series
 - actions in parallel
 
-[![prom2-17](../assets/images/prom2-17-small.jpg)](../assets/images/prom2-17.jpg)
-
 Action in series occur one after another, like these three cats all waiting their turn for the rocket.
+
+[![prom2-17](../assets/images/prom2-17-small.jpg)](../assets/images/prom2-17.jpg)
 
 While actions in parallel all occur simultaneously, like each of these cats getting its own rocket to ride.
 
@@ -1264,6 +1263,149 @@ You could say that synchronous code is always in series but asynchronous code ca
 
 Neither option, series or parallel, is inherently better than the other, each has its own purposes.
 
-In the quiz where you fetched the list of planet JSONs and then performed a request for an individual planet JSON, you have to perform the two requests in series because one depended on the other.
+In the quiz where you fetched the list of planet JSONs and then performed a request for an individual planet JSON, you had to perform the two requests in series because one depended on the other.
 
-But if you need to request a lot of planet jsons, as you will soon be doing in a quiz, then you will need to programmatically send out the request.You'll also want to make the request in parallelbecause that will reduce the amount of time it takes to load all of the data.So with that in mind, here's a quiz for you.There's a problem with this code.It appears to be looping over the URLs from the planet search query, butsomething unexpected will happen.What is it?Is it that the requests are being sent in series butthey will return in parallel, causing some kind of collision?Is it that the requests are blocking so that this code will never finish?Is it that the thumbnails will be created in a random order?Or is there just simply nothing wrong with this at all andI just gave you a trick question?I want you to pick one of these four answers. -->
+[![prom2-18](../assets/images/prom2-18-small.jpg)](../assets/images/prom2-18.jpg)
+
+But if you need to request a lot of planet JSONs, as you will soon be doing in a quiz, then you will need to programmatically send out the request.
+
+You'll also want to make the request in parallel because that will reduce the amount of time it takes to load all of the data.
+
+So with that in mind, here's a quiz for you.
+
+There's a problem with this code. It appears to be looping over the URLs from the planet search query, but something unexpected will happen.
+
+[![prom2-19](../assets/images/prom2-19-small.jpg)](../assets/images/prom2-19.jpg)
+
+What is it?
+1. [ ] Is it that the requests are being sent in series but they will return in parallel, causing some kind of collision?
+2. [ ] Is it that the requests are blocking so that this code will never finish?
+3. [ ] Is there simply nothing wrong with this and I just gave you a trick question?
+4. [ ] Is it that the thumbnails will be created in a random order?
+
+I want you to pick one of these four answers.
+
+#### Solution
+I'll start from the first one.
+
+1. [ ] No. The browser is really really good of keeping track of requests. You don't need to worry about a collision. In fact, I just made that up.
+2. [ ] No. Making lots of parallel requests is totally fine for the same reason as I just stated.
+3. [ ] No. I don't like trick questions.
+4. [x] So that must mean that the thumbnails will be created in a random order
+
+Remember, async requests can finish at any time so you cannot predict the order in which requests will return. So you don't know when any of these `getJSON` promises will resolve.
+
+This means that they could resolve in a different order than they were created. In that case, the planet thumbnails will be created in a totally random order.
+
+Now, this isn't necessarily a problem or a bug, but it does lead to the question: Just how do you make the thumbnails appear in the right order?
+
+Keep watching.
+
+### 2.5 Array Methods & Promises
+In the next three quizzes, I'm going to be challenging you to take advantage of array methods, to programmatically create long chains of promises.
+
+[![prom2-1](../assets/images/prom2-1-small.jpg)](../assets/images/prom2-1.jpg)
+
+Keep in mind that you want the thumbnails to appear on the page in the same order as they appear in the search results, but this does not mean that you need to perform the request in series.
+
+There are different strategies for controlling the order that promises resolve, which you'll be trying out soon.
+
+The keystone to all of these strategies is the idea of a sequence. You'll need to create a sequence of promises that are chained, one after another.
+
+### 2.6 Quiz: .forEach Promises
+Does this code look familiar?
+
+[![prom2-19](../assets/images/prom2-19-small.jpg)](../assets/images/prom2-19.jpg)
+
+For this quiz you'll be refactoring it and making it actually work. To do so, you're going to need to create a chain or a sequence of promises.
+
+I want you to loop through the array of URLs that comes in the search results, create a promise foreach one and then use that promise to create a thumbnail once it resolves.
+
+There are probably a few different ways to solve this challenge. You'll know you've done it correctly when the thumbnails show up in the same order on the page as they did in the original URL from the search results.
+
+Also, don't forget to handle errors. I'm going to let you decide what you want to do with them.
+
+When you're done I have a question for you.
+
+How are the requests executed? Are they executed in series or in parallel?
+
+[![prom2-20](../assets/images/prom2-20-small.jpg)](../assets/images/prom2-20.jpg)
+
+Even if you think you know the answer, make sure you check the network panel because you may be surprised.
+
+I'm going to give you some hints to help out. But if you want a challenge, go ahead and skip to the quiz.
+
+I want you to think about a loop that looks like this.
+
+[![prom2-21](../assets/images/prom2-21-small.jpg)](../assets/images/prom2-21.jpg)
+
+For every iteration through the loop, x increases by 1. Before the iteration, x is at 0. Then you add 1 to x and get 1. You add another 1 to x and get 2. Another one, you get 3.
+
+At some point you've chained so many ones together that you've got 10.
+
+[![prom2-22](../assets/images/prom2-22-small.jpg)](../assets/images/prom2-22.jpg)
+
+I want you to treat the sequence similarly, but don't use addition here.
+
+For every iteration through the loop, add another `.then` to the end of the sequence.
+
+[![prom2-23](../assets/images/prom2-23-small.jpg)](../assets/images/prom2-23.jpg)
+
+Remember that for each planet you're going to need two actions.
+
+1. You'll need to get the JSON
+2. You'll need to create a planet thumbnail.
+
+In this way the sequence will grow by one request and one thumbnail for every iteration.
+
+#### Resources
+##### Instructions
+
+1. Checkout the `foreach-start` branch and navigate to `app/scripts/app.js`.
+2. Refactor `.forEach` to create a sequence of Promises that always resolves in the same order it was created.
+    - Fetch each planet's JSON from the array of URLs in the search results.
+    - Call `createPlanetThumb(data)` on each planet's response data to add it to the page.
+3. Use developer tools to determine if the planets are being fetched in series or in parallel.
+
+The solution is on the `foreach-solution` branch.
+
+#### Solution
+Okay so there are different answers to this question depending on how you solve the problem.
+
+[![prom2-20](../assets/images/prom2-20-small.jpg)](../assets/images/prom2-20.jpg)
+
+Let me show you my solution first, and then I'll talk through how you may have come to a different conclusion.
+
+I'm iterating through the URLs and adding two `.thens` for each URL. The first gets the JSON data for the planet and then the second creates the planet thumbnail.
+
+[![prom2-24](../assets/images/prom2-24-small.jpg)](../assets/images/prom2-24.jpg)
+
+As `forEach` iterates through the array of planet data urls, the sequence gets longer by two `.then`s each time.
+
+Each `.then` will need to wait for the promise before it to resolve before it can execute.
+
+There's some good news and some bad news.The good news is that the planet thumbnail show up in the right order. The bad news is that it's happening in series.
+
+You can pretty clearly see that each request depends on the one before it finishing.
+
+[![prom2-25](../assets/images/prom2-25-small.jpg)](../assets/images/prom2-25.jpg)
+
+In order to execute the requests in parallel, your code needs to look something like the following code.
+
+[![prom2-26](../assets/images/prom2-26-small.jpg)](../assets/images/prom2-26.jpg)
+
+Notice that I'm not actually adding to the sequence, rather, I'm simply adding two `.then`s which quickly get overwritten by the next iteration through the loop.
+
+Luckily, these two `.then`s stay attached to one another, and so they continue to execute.
+
+If your code looked like this, then you probably saw the request come in like so.
+
+[![prom2-27](../assets/images/prom2-27-small.jpg)](../assets/images/prom2-27.jpg)
+
+They're in parallel and the problem is that there's no guarantee about the order, and to be honest, for many applications this is completely fine. You can handle ordering in other ways with your front end.
+
+But if the order that promises resolve is important to your app, this kind of code could easily become a subtle source of bugs later.
+
+Browsers can request many resources simultaneously so it makes a lot of sense to run code like this in parallel. But if you want to do so, you probably should where it's really, really obvious that your requests are happening in parallel.
+
+In fact, you'll be doing that in the next quiz.
