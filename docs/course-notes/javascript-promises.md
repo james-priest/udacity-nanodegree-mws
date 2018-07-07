@@ -11,12 +11,21 @@ description: Notes by James Priest
 ---
 
 ### Supporting Links
+#### Course Links
 - Udacity Course - [Javascript Promises](https://www.udacity.com/course/javascript-promises--ud898) by Google
+
+#### Articles
 - Google Web Fundamentals - [JavaScript Promises](https://developers.google.com/web/fundamentals/primers/promises) by Jake Archibald
 - Article on [Fetch API Walkthough](https://davidwalsh.name/fetch) by David Walsh
+
+#### Docs
+- MDN [Using Promises](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises)
+- MDN [Promise constructor](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)
+- MDN [Promise.then()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/then)
 - MDN [Using Fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch)
 - MDN [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API)
 - MDN [Response](https://developer.mozilla.org/en-US/docs/Web/API/Response)
+- MDN [Promise.all()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all)
 
 ## Lesson 1. Creating Promises
 ### 1.1 Course Introduction
@@ -1376,6 +1385,10 @@ Okay so there are different answers to this question depending on how you solve 
 
 Let me show you my solution first, and then I'll talk through how you may have come to a different conclusion.
 
+We first start with `Promise.resolve()`. We then loop through the `url`s adding a set of actions (with `then`s) to the sequence.
+
+[![prom2-24a](../assets/images/prom2-24a-small.jpg)](../assets/images/prom2-24a.jpg)
+
 I'm iterating through the URLs and adding two `.thens` for each URL. The first gets the JSON data for the planet and then the second creates the planet thumbnail.
 
 [![prom2-24](../assets/images/prom2-24-small.jpg)](../assets/images/prom2-24.jpg)
@@ -1409,3 +1422,471 @@ But if the order that promises resolve is important to your app, this kind of co
 Browsers can request many resources simultaneously so it makes a lot of sense to run code like this in parallel. But if you want to do so, you probably should where it's really, really obvious that your requests are happening in parallel.
 
 In fact, you'll be doing that in the next quiz.
+
+### 2.7 Quiz: .map Promises
+`.map` is an array method that accepts a function, represented by the box and a rocket ship, and it returns an array.
+
+[![prom2-28](../assets/images/prom2-28-small.jpg)](../assets/images/prom2-28.jpg)
+
+The array it returns is going to be the result of executing this function against every element in this array.
+
+Here, let me show you what I mean. It starts with the first element. It creates the array and passes this element into the function and executes it immediately.
+
+[![prom2-29](../assets/images/prom2-29-small.jpg)](../assets/images/prom2-29.jpg)
+
+So at this point, this function is running. Then `.map` moves to the next element.
+
+[![prom2-30](../assets/images/prom2-30-small.jpg)](../assets/images/prom2-30.jpg)
+
+Now it's in the array and executing as well.
+
+It goes to the next, and so on until it's created this new array and for each element in the array, the function has already executed.
+
+[![prom2-31](../assets/images/prom2-31-small.jpg)](../assets/images/prom2-31.jpg)
+
+In this case, the array you want to iterate against is the URLs, and you'll want to call `getJSON` and `createPlanetThumb` against each one.
+
+[![prom2-32](../assets/images/prom2-32-small.jpg)](../assets/images/prom2-32.jpg)
+
+Okay, and I lied about sequences earlier. You don't actually need to create a sequence in order to use `.map`, however there is a bonus challenge at the very end of this course.
+
+Your solution to this quiz is going to be the starting point for it.
+
+[![prom2-33](../assets/images/prom2-33-small.jpg)](../assets/images/prom2-33.jpg)
+
+You'll probably find that you'll need a sequence to solve it.
+
+Anyway, you need to map the URLs against the methods you need to load the thumbnails.
+
+When you're done you should see the thumbnails appear on the screen.
+
+[![prom2-34](../assets/images/prom2-34-small.jpg)](../assets/images/prom2-34.jpg)
+
+You should also see the requests go out in parallel.
+
+[![prom2-27](../assets/images/prom2-27-small.jpg)](../assets/images/prom2-27.jpg)
+
+#### Resources
+##### Instructions
+
+1. Checkout the `map-start` branch and navigate to `app/scripts/app.js`.
+2. Use `.map` to fetch all the planets in parallel.
+- Call `.map` on an array and pass it a function.
+- `.map` will execute the function against each element in the array immediately.
+
+You can find the solution by checking out the `map-solution` branch.
+
+#### Solution
+[![prom2-35](../assets/images/prom2-35-small.jpg)](../assets/images/prom2-35.jpg)
+
+So this is how I did it. I'm mapping an anonymous function against every URL in the results array.
+
+[![prom2-36](../assets/images/prom2-36-small.jpg)](../assets/images/prom2-36.jpg)
+
+The function takes the URL and then gets the planet's data. Once it has that it creates the planet thumbnail.
+
+All right.Well, that's pretty simple and there was no need for a sequence here. But remember, there is no guarantee to the order when you're using `.map`.
+
+If order matters, you'll need some additional logic in your app to handle it.
+
+All right, it's time for the final promise method. Let's go to last quiz.
+
+### 2.8 Quiz: All Promises
+Here is one last promise method that you should learn to use. It's `.all`.
+
+[![prom2-37](../assets/images/prom2-37-small.jpg)](../assets/images/prom2-37.jpg)
+
+`.all` takes an array of promises, executes them, and then it returns an array of values in the same order as the original promises.
+
+[![prom2-38](../assets/images/prom2-38-small.jpg)](../assets/images/prom2-38.jpg)
+
+`.all` fails fast, in that it will reject as soon as the first promise rejects, without waiting for the rest of the promises to settle.
+
+[![prom2-39](../assets/images/prom2-39-small.jpg)](../assets/images/prom2-39.jpg)
+
+This means that even if one of the promises rejects, the whole `.all` rejects. But once every promise has resolved, the next `.then` in the chain gets the array of values.
+
+For this quiz, I want you to refactor this code from the previous quiz, using `.all`.
+
+When you do it correctly, of course you should see the thumbnails show up
+
+[![prom2-34](../assets/images/prom2-34-small.jpg)](../assets/images/prom2-34.jpg)
+
+and you should also see parallel network requests.
+
+[![prom2-27](../assets/images/prom2-27-small.jpg)](../assets/images/prom2-27.jpg)
+
+#### Resources
+- Docs for [Promise.all](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all) on MDN
+
+##### Instructions
+
+1. Checkout the `all-start` branch and navigate to `app/scripts/app.js`.
+2. Use `Promise.all()` to refactor the `.map` code by passing `Promise.all()` an array of Promises.
+- Each Promise will be executed in parallel.
+- The return values will be returned in the same order as the Promises were created.
+
+Hint: you'll probably still need to use `.map`.
+
+#### Solution
+[![prom2-40](../assets/images/prom2-40-small.jpg)](../assets/images/prom2-40.jpg)
+
+So this is how I did it.
+
+`.map` returns an array so I create an `arrayOfPromises` by passing all of the URLs to `getJSON`.
+
+[![prom2-41](../assets/images/prom2-41-small.jpg)](../assets/images/prom2-41.jpg)
+
+Now remember at this point, because they've been mapped, this function immediately runs against every URL.
+
+So in reality, I have an `arrayOfPromises` that are basically already executing, and then I simply pass them into `.all`.
+
+Once all of the promises settle, then the next link in the chain runs.
+
+In this case the `.then` receives an `arrayOfPlanetData`, which is in the same order as the `arrayOfPromises` and then for every planet, I create a planet thumbnail.
+
+Incidentally, I could make this section a little bit more terse. Let me show you how.
+
+First off, I don't need this anonymous function.
+
+[![prom2-41](../assets/images/prom2-41-small.jpg)](../assets/images/prom2-41.jpg)
+
+This is because the `getJSON` function will receive the same arguments as the anonymous function.
+
+[![prom2-42](../assets/images/prom2-42-small.jpg)](../assets/images/prom2-42.jpg)
+
+And of course I don't actually need to create a variable. I can simply pass the array created by `.map` straight to `.all`.
+
+[![prom2-43](../assets/images/prom2-43-small.jpg)](../assets/images/prom2-43.jpg)
+
+Anyway, let's see how this looks.
+
+[![prom2-34](../assets/images/prom2-34-small.jpg)](../assets/images/prom2-34.jpg)
+
+All right, the planets are once again there in the correct order, and I'm seeing all of the requests happen in parallel.
+
+[![prom2-27](../assets/images/prom2-27-small.jpg)](../assets/images/prom2-27.jpg)
+
+The cool thing is because `.all` guarantees the order of the resulting array, I know that all the thumbnails will end up on the page in the correct order.
+
+There is one more performance optimization that's possible with this code. Some people may or may not think it's a good idea, but it's definitely a good challenge.
+
+So after this course is over, at the very end of it, there's a bonus challenge for you to optimize this code even further.
+
+#### My Solution
+Here's the code I created as a solution for this challenge.
+
+```js
+getJSON('../data/earth-like-results.json').then(function (response) {
+  addSearchHeader(response.query);
+  return Promise.all(response.results.map(function (url) {
+    return getJSON(url);
+  })).then(function (planetData) {
+    planetData.map(function (planet) {
+      createPlanetThumb(planet);
+    });
+  }).catch(function (err) {
+    console.log('planet error:', err);
+  });
+}).catch(function (err) {
+  console.log('earth-like-results:', err);
+});
+```
+
+Here's the condensed version.
+
+```js
+getJSON('../data/earth-like-results.json').then(function (response) {
+  addSearchHeader(response.query);
+  return Promise.all(response.results.map(getJSON)).then(function (planetData) {
+    planetData.map(createPlanetThumb);
+  }).catch(function (err) {
+    console.log('planet error:', err);
+  });
+}).catch(function (err) {
+  console.log('earth-like-results:', err);
+});
+```
+
+### 2.9 Wrap up
+There are hundreds of billions of planets in the Milky Way, but they're really hard to spot.
+
+Humanity's search for other earths has only yielded a small fraction of the possibilities.
+
+[![prom1-2](../assets/images/prom1-2-small.jpg)](../assets/images/prom1-2.jpg)
+
+If you're interested in learning about exoplanets and the techniques astronomers use to spot them, keep watching after this video.
+
+I hoped you enjoyed learning a little astronomy alongside JavaScript. Of course you came here to learn about Promises, the easiest technique for handling asynchronous work with JavaScript.
+
+Here's what we covered.
+
+- You learned how to wrap asynchronous work in Promises.
+- You chained asynchronous actions together.
+- You practiced error handling.
+- You experimented with sequences of Promises.
+- You tried different strategies to convert lots of asynchronous actions into long chains of manageable promises.
+
+It's been a lot of fun. I want you to go out there and use Promises to simplify your life, and don't forget to look up every once in a while.
+
+### 2.10 Exoplanets 101
+#### What is an exoplanet
+[Exoplanets](https://en.wikipedia.org/wiki/Exoplanet) are planets that exist outside of our Solar System. Most exoplanets orbit other stars. In some cases, they'll orbit two (called a [binary](https://en.wikipedia.org/wiki/Binary_star)) or three stars, and in rare cases they'll float freely through the galaxy without a home star!
+
+Exoplanets take on a huge range of sizes, temperatures, compositions and distances from stars.
+
+It's interesting to wonder if life could exist on different worlds, but to be honest, it's really hard to know with the little bit of data that we get from lightyears away.
+
+The key to finding life, we assume, is finding liquid water. Astronomers get excited about planets in the [habitable zones](https://en.wikipedia.org/wiki/Circumstellar_habitable_zone) around stars, however it's still possible for life to form closer to or farther from their home stars.
+
+For instance, Jupiter's moon Europa and Saturn's moon Enceladus both hold huge oceans of liquid water. Yet, both moons are well outside the Sun's habitable zone. Instead of capturing heat from sunlight, internal geological processes and insulating crusts of ice keep them warm enough for liquid water.
+
+Most exoplanets that have been found so far are huge, which makes sense. The bigger the planet, the easier it is to spot. But astronomers are getting better at spotting smaller and smaller planets. The record now for smallest exoplanet spotted so far is [Kepler-37b](https://classroom.udacity.com/planet/kepler-37b).
+
+#### How are exoplanets found
+##### The Transit Method
+
+Astronomers who use the [transit method](https://en.wikipedia.org/wiki/Methods_of_detecting_exoplanets#Radial_velocity) measure the brightness of a star over time. They look for repeated, predictable dips in a star's brightness. The duration and intensity of the dip reveal the radius of the planet.
+
+##### Radial Velocity and Astrometry Methods
+
+Astronomers who use [radial velocity](https://en.wikipedia.org/wiki/Methods_of_detecting_exoplanets#Radial_velocity) and [astrometry](https://en.wikipedia.org/wiki/Methods_of_detecting_exoplanets#Astrometry) measure the position of a star over time. Just as stars tug on planets, planets tug on stars. If a planet is much smaller or very far away from a star, the tug is difficult to measure. But if a planet is very close or very large, it's tug will make the star wobble back and forth.
+
+Watch [this video](https://www.youtube.com/watch?v=Jpbgg2TRCuw) and pay attention to the atheletes' spinning movement just before they release the hammer. See how it makes them spin around? That's exactly the kind of movement astronomer's try to spot.
+
+The difference between the methods is the difference in the way the motion appears to us. For radial velocity, we're seeing the motion happen from the same plane so it looks side-to-side. For astrometry, we're looking down (or up?) perpendicularly to the planet's orbit so the motion looks circular.
+
+##### Timing Methods
+
+Astronomers who use [timing methods](https://en.wikipedia.org/wiki/Methods_of_detecting_exoplanets#Timing_variations) watch for changes in periodic events. There are a few different periodic events that astronomers have used to find planets.
+
+Pulsars are rapidly rotating stellar cores left behind after supernovas. They emit periodic bursts of radio waves as they rotate that are incredibly regular. Nearby planets will tug on pulsars, minutely changing their periodicity. The first exoplanet,[PSR B1257+12](https://en.wikipedia.org/wiki/PSR_B1257%2B12), was found this way.
+
+Astronomers also use a combination of the transit method with timing methods to determine if there are multiple planets orbiting a star.
+
+##### Gravitational Microlensing
+
+Astronomers who use [gravitational microlensing](https://en.wikipedia.org/wiki/Methods_of_detecting_exoplanets#Gravitational_microlensing) take advantage of [general relativity](https://en.wikipedia.org/wiki/Introduction_to_general_relativity). Light, like normal matter, is affected by gravity. Big objects, like planets, stars and galaxies will actually bend light that passes by. By analyzing the light coming from stars or galaxies *behind* a thing and looking for distortions, astronomers can measure the mass of the thing, which in some cases, is a planet.
+
+##### Direct Imaging
+
+Astronomers who use [direct imaging](https://en.wikipedia.org/wiki/Methods_of_detecting_exoplanets#Direct_imaging) visually spot planets with telescopes. Planets are very, very, very dim compared to stars however, so astronomers have to block out the light of a planet's home star to be able to see it.
+
+### 2.11 Bonus Quiz: Parallel Requests
+This quiz was going to be the last quiz in the course. It's a bit crazy. And it's difficult. And in all reality you'll probably never need to (or want to!) write anything like this in real life.
+
+But! As I was discussing it with Art, our Director of Engineering, he asked me where he could find the code so that he could turn this challenge into an interview question. So I figured, "why not?"
+
+Here it is as a bonus question.
+
+#### Requirements
+I want you to write code that is capable of:
+
+- requesting planet data and creating planet thumbnails using Promises (just like you've done for the whole second lesson).
+- executing the network requests in parallel (similar to the `.map` and `Promise.all()` quizzes).
+- creating the thumbnails in the same order as the Promises were created (similar to the `.forEach` and `Promise.all()` quizzes).
+- **not** waiting for all network requests to settle before creating thumbnails. Thumbnails should be created as soon as all of the Promises before them have settled (a combination of all the array quizzes).
+
+Feel free to change any or all of the helper methods (like `createPlanetThumb`)!
+
+As an example, here's an array of Promises:
+
+```js
+getJSON(url1).then(createPlanetThumb)
+.then(function(){
+  return getJSON(url2).then(createPlanetThumb);
+}
+.then(function(){
+  return getJSON(url3).then(createPlanetThumb);
+}
+.then(function(){
+  return getJSON(url4).then(createPlanetThumb);
+}
+.then(function(){
+  return getJSON(url5).then(createPlanetThumb);
+}
+```
+
+All of the `getJSONs` should execute in parallel. But, if `url3` arrives first, it should wait for `url1` to resolve and `url2` to resolve before creating its thumbnail. The state of `url4` and `url5` don't affect `url3`.
+
+In other words, each `.then` executes as soon as all of the `.then`s before it resolve, yet all of the network requests are executed in parallel.
+
+##### Words of Encouragement and Acknowledgement
+This is a combination of the last few array method quizzes. It's tough but you've already used all of the methods and techniques you'll need to conquer this quiz. You can do it!
+
+I recommend using network throttling too. Use 3G and you'll see some jitter with respect to the order in which requests finish.
+
+Also, I can't say I came up with this quiz on my own. This quiz, and much of this course, was inspired by [this guide to Promises by Jake Archibald](https://developers.google.com/web/fundamentals/primers/promises).
+
+He also reviewed this course and helped me with a few inaccuracies with the first draft of the script. If you scan through the article, you'll find the general strategy for solving this quiz. Don't look if you want a challenge!
+
+Checkout the `bonus-start` branch to get started! Good luck!
+
+The solutions can be found by checking out the `bonus-solution` branch.
+
+#### Solution
+[![prom2-44](../assets/images/prom2-44-small.jpg)](../assets/images/prom2-44.jpg)
+
+Here's my solution! There are a few ways of doing this and I wanted to keep my logic as obvious as possible. I made changes to `createPlanetThumb` (it's now a Promise) and `getJSON` (for testing purposes) as well. And I added some logging to get a clearer picture of the rendering process.
+
+Here are the relevant changes (you can always checkout `bonus-solution` to see it too). Underneath, you'll find a discussion of my overall strategy.
+
+In this method we wrap the action in a Promise which we return. We also make sure to `resolve` the promise once the action completes.  
+
+```js
+/**
+ * Helper function to create a planet thumbnail - Promisified version!
+ * @param  {Object} data - The raw data describing the planet.
+ */
+function createPlanetThumb(data) {
+  return new Promise(function(resolve) {
+    var pT = document.createElement('planet-thumb');
+    for (var d in data) {
+      pT[d] = data[d];
+    }
+    home.appendChild(pT);
+    console.log('rendered: ' + data.pl_name);
+    resolve();
+  });
+}
+```
+
+...
+
+```js
+/**
+ * Performs an XHR for a JSON and returns a parsed JSON response - with a delay!
+ * @param  {String} url - The JSON URL to fetch.
+ * @return {Promise}    - A promise that passes the parsed JSON response.
+ */
+function getJSON(url) {
+  console.log('sent: ' + url);
+  return get(url).then(function(response) {
+    // For testing purposes, I'm making sure that the urls don't return in order
+    if (url === 'data/planets/Kepler-62f.json') {
+      return new Promise(function(resolve) {
+        setTimeout(function() {
+          console.log('received: ' + url);
+          resolve(response.json());
+        }, 500);
+      });
+    } else {
+      console.log('received: ' + url);
+      return response.json();
+    }
+  });
+}
+
+window.addEventListener('WebComponentsReady', function() {
+  home = document.querySelector('section[data-route="home"]');
+
+  getJSON('../data/earth-like-results.json')
+  .then(function(response) {
+    addSearchHeader(response.query);
+    return response;
+  })
+  .then(function(response) {
+    var sequence = Promise.resolve();
+
+    // .map executes all of the network requests immediately.
+    var arrayOfExecutingPromises = response.results.map(function(result) {
+      return getJSON(result);
+    });
+
+    arrayOfExecutingPromises.forEach(function(request) {
+      // Loop through the pending requests that were returned by .map (and are in order) and
+      // turn them into a sequence.
+      // request is a getJSON() that's currently executing.
+      sequence = sequence.then(function() {
+        // Remember that createPlanetThumb is a Promise, so it must resolve before Promises
+        // later in the sequence can execute.
+        return request.then(createPlanetThumb);
+      });
+    });
+  });
+});
+```
+
+Here's how we know it's working:
+
+[![prom2-45](../assets/images/prom2-45-small.jpg)](../assets/images/prom2-45.jpg)
+
+This is a three step process:
+
+1. Create an array of network requests that are executing in parallel.
+2. Attach a Promisified version of `createPlanetThumb` to each request in order to render thumbnails.
+3. Create a sequence of Promises, each of which is a request and thumbnail rendering. I imagine it like this (each '-->' is a `.then`):
+
+[ (request --> render) --> (request --> render) --> (request --> render) --> ... ]
+
+The requests can resolve whenever, but the renders will block the sequence because they're now Promises that resolve only *after* the thumbnail has been created. Each render must wait for all of the renders before it to resolve before executing.
+
+`.map` takes care of the parallel requests part and `.forEach` chains the requests into a sequence.
+
+There are other ways of writing this more succinctly, perhaps using `.reduce`. Either way, this code works and I'm happy. How did your solution compare to mine?
+
+#### My Solution
+`createPlanetThumb` is wrapped in a promise which we return when the action completes. This method also `console.log`s when the output is rendered.
+
+```js
+function createPlanetThumb(data) {
+  return new Promise(function (resolve) {
+    var pT = document.createElement('planet-thumb');
+    for (var d in data) {
+      pT[d] = data[d];
+    }
+    home.appendChild(pT);
+
+    console.log('rendered:', data.pl_name);
+    resolve();
+  });
+}
+```
+
+`getJSON` gets the contents of a json file but has some additional testing code to delay one of the urls so they don't return in order. We also log the order the request is sent and the order it is received.
+
+```js
+function getJSON(url) {
+  console.log('sent:', url);
+  return get(url).then(function(response) {
+    // return response.json();
+
+    // For testing purposes, making sure that the urls don't return in order
+    if (url === 'data/planets/Kepler-62f.json') {
+      return new Promise(function(resolve) {
+        setTimeout(function() {
+          console.log('received: ' + url);
+          resolve(response.json());
+        }, 500);
+      });
+    } else {
+      console.log('received: ' + url);
+      return response.json();
+    }
+  });
+}
+```
+
+This method gets the initial json file and then maps through the array of results calling and rendering each.
+
+```js
+window.addEventListener('WebComponentsReady', function() {
+  home = document.querySelector('section[data-route="home"]');
+  getJSON('../data/earth-like-results.json').then(function (response) {
+    console.log(response);
+    addSearchHeader(response.query);
+    return Promise.all(response.results.map(function (url) {
+      // console.log('sent:', url);
+      return getJSON(url);
+    })).then(function (planetData) {
+      return planetData.map(function (planet) {
+        return createPlanetThumb(planet);
+      });
+    });
+  }).catch(function (e) {
+    console.log('earth-like-results:', e);
+  });
+});
+```
+
+[![prom2-46](../assets/images/prom2-46-small.jpg)](../assets/images/prom2-46.jpg)
