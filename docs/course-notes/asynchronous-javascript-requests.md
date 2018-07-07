@@ -12,7 +12,7 @@ description: Notes by James Priest
 
 ### Supporting Links
 #### Course
-- Udacity's- [Asynchronous JavaScript Requests](http://localhost:4000/course-notes/asynchronous-javascript-requests.html) by Google, AT&T, & GitHub
+- Udacity's- [Asynchronous JavaScript Requests](https://www.udacity.com/course/asynchronous-javascript-requests--ud109) by Google, AT&T, & GitHub
 - Udacity's- [ES6 JavaScript Improved](https://www.udacity.com/course/es6-javascript-improved--ud356) by Google, AT&T, & GitHub
 
 #### APIs
