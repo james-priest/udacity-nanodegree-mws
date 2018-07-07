@@ -11,11 +11,20 @@ description: Notes by James Priest
 ---
 
 ### Supporting Links
+#### Course
+- Udacity's- [Asynchronous JavaScript Requests](http://localhost:4000/course-notes/asynchronous-javascript-requests.html) by Google, AT&T, & GitHub
+- Udacity's- [ES6 JavaScript Improved](https://www.udacity.com/course/es6-javascript-improved--ud356) by Google, AT&T, & GitHub
+
 #### APIs
 - [Google's APIs](https://developers.google.com/apis-explorer/) - All the Google services you can imagine.
 - [Programmable Web's API directory](http://www.programmableweb.com/apis/directory) - A giant database of APIs
 - [Udacity API](https://www.udacity.com/public-api/v1/catalog) - API to access and share the catalog of courses.
 
+#### Docs
+- MDN [fetch()](https://developer.mozilla.org/en-US/docs/Web/API/GlobalFetch/fetch)
+- MDN [Using Fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch)
+- MDN [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API)
+- MDN [Response](https://developer.mozilla.org/en-US/docs/Web/API/Response)
 
 ## Lesson 1. Ajax with XHR
 ### 1.1 Course Intro
@@ -693,7 +702,7 @@ When using the XHR object the answer is yeah. But you don't always have to use t
 
 Check out the next lesson to see how jquery makes async requests.
 
-## Lesson 2: Ajax with jQuery
+## Lesson 2: Ajax w/ jQuery
 ### 2.1 JQuery & Ajax
 Welcome back. So it turns out that the cake I made wasn't the prettiest thing in the world. It should taste great, but it looks kind of awful.
 
@@ -1193,3 +1202,467 @@ In the next lesson, we'll look at the shiny new way to make async requests.
 
 It'll be gluten-free, carb-free and even sugar-free, will it even be a cake at this point?
 Who even knows?
+
+## Lesson 3: Ajax with Fetch
+### 3.1 Fetch Intro
+So we have a couple of cakes already but we'd like to make another cake.
+
+[![ajax1-1](../assets/images/ajax1-1-small.jpg)](../assets/images/ajax1-1.jpg)
+
+But we've learned from lesson one that if I make the cake, it'll be downright ugly.
+
+If I let a professional make it, then it'll look amazing, but it'll be expensive.
+
+This next cake needs the love and care from the first cake and the quality of the second cake.
+
+My friend Miriam is a baker. Asking Miriam to bake a cake for me is just like the new technology we'll be looking at in this lesson.
+
+I'm not doing the work, I just make the request, and I don't have to load some professional library like jQuery because this new tool is provided right in the browser.
+
+So, what is this life-changing tech? It's called Fetch API.
+
+The name may not be all that impressive-sounding, but Fetch really is an amazing tool that will change how you write asynchronous requests. Let's see how it works.
+
+### 3.2 What is Fetch
+Fetch is the new way to make network requests! After looking at all of the manual setup that needs to go into setting up an `XMLHttpRequest`, you might be feeling that a lot of complexity went into making a simple request.
+
+If all I want is an image from Unsplash, why do I need to do all this setup before I can even make the request? I just want an image file, so let me just ask for the file without having to drill through the unnecessarily complicated XHR spec.
+
+Fetch is a new API that was built to make requesting resources (primarily across a network) a whole lot easier. One thing that makes the new Fetch API a lot nicer than the old XHR way of doing things is that Fetch is promise-based!
+
+Hopefully you're sold that Fetch is the way of the future for making requests, so let's see it in action!
+
+> #### ⚠️ Fetch Is Promise-based ⚠️
+> As mentioned above, the new Fetch API utilizes Promises under the hood. If you've got a handle on how Promises work, then give yourself a pat on the back then skip down to the next section.
+>
+> If the word "Promises" makes you feel a little queasy and unsure of your life's future, don't panic! Breathe! Then head over to our [short course on JavaScript Promises](https://www.udacity.com/course/javascript-promises--ud898) to level up your JavaScript muscles.
+
+> #### ⚠️ Might Need A Polyfill ⚠️
+> Check out [http://caniuse.com/#feat=fetch](http://caniuse.com/#feat=fetch) to see if your browser supports this awesome new API!
+>
+>If your browser is not supported(IE or Opera Mini), just add [this polyfill](https://github.com/github/fetch) to your project, so you can start using Fetch even without your browser supporting it!
+
+### 3.3 Fetch Request
+Write The Fetch Request
+Ok, let's look at a sample fetch request, and then we'll make a fetch request for an image from Unsplash.
+
+```js
+fetch('<URL-to-the-resource-that-is-being-requested>');
+```
+
+So yeah...that's it. In it's smallest form, a Fetch request is just the fetch() function and a string to the resource that's being requested. It's just so short and easy to read (*sigh* I think I'm in love!). Let's take a peek at what a real request looks like:
+
+```js
+fetch('https://api.unsplash.com/search/photos?page=1&query=flowers');
+```
+
+fetch('https://api.unsplash.com/search/photos?page=1&query=flowers');
+If you try running this Fetch request on the console, then you should get a Promise returned to you.
+
+[![fetch request](../assets/images/fixed/ud109-l3-fetch-request.gif)](../assets/images/fixed/ud109-l3-fetch-request.gif)
+**A fetch request being run on the console of Unsplash's website. The fetch request returns a Promise.**
+
+> #### 💡 Cross-Origin Issues? 💡
+> Did you just try running the Fetch request and it didn't work? Were you running it on Unsplash's website? If not, make sure you go to [https://unsplash.com/](https://unsplash.com/), open the console, and try running it from there.
+>
+> Just because Fetch is new and awesome and is replacing the XHR object for making asynchronous network requests *doesn't* mean it can bypass the rules for making those network requests. **Fetch requests still need to obey the cross-origin protocol** of how resources are shared.
+>
+> This means that, by default, you can only make requests for assets and data on the same domain as the site that will end up loading the data.
+
+Remember that Unsplash requires an Authorization header to make a request through its API. Check out these links on Fetch's documentation to see how to add an `Authorization` header to the Fetch request.
+
+- MDN [fetch()](https://developer.mozilla.org/en-US/docs/Web/API/GlobalFetch/fetch)
+- MDN [Using Fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch)
+- MDN [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API)
+
+#### Question 1 of 2
+Docs are a dev's best friend! Take a quick look through them and pick the correct way(s) to add a header to a Fetch request from the options below. Also, instead of cheating and guessing, try testing out the code you think is correct in your app or on the console to see how it runs!
+
+- [ ] Option 1
+```js
+fetch.setRequestHeader('Authorization', 'Client_ID abc123');
+fetch(`https://api.unsplash.com/search/photos?page=1&query={queryText}`);
+```
+
+- [x] Option 2
+```js
+fetch(`https://api.unsplash.com/search/photos?page=1&query={queryText}`, {
+    headers: {
+      'Authorization', 'Client_ID abc123'
+    }
+});
+```
+
+- [x] Option 3
+```js
+const requestHeaders = new Headers();
+requestHeaders.append('Authorization', 'Client_ID abc123');
+fetch(`https://api.unsplash.com/search/photos?page=1&query={queryText}`, {
+    headers: requestHeaders
+});
+```
+
+- [ ] Option 4
+```js
+fetch(`https://api.unsplash.com/search/photos?page=1&query={queryText}`)
+.then(function(request) {
+    request.AddHeader('Authorization', 'Client_ID abc123');
+});
+```
+
+##### Solution
+The correct answers are options 2 and 3. The Fetch request takes the URL to the requested resource as the first argument, but the second argument is a configuration object. One of the options to this config object is a `headers` property.
+
+One of the new additions that rode along on the coattails of Fetch is a new `Headers` [constructor function](https://developer.mozilla.org/en-US/docs/Web/API/Headers). The `headers` property of a Fetch request's configuration object can either be a plain object of headers to include, or it can be a `Headers` object that's been built up with headers.
+
+#### Question 2 of 2
+What do you think the default HTTP method is for a Fetch request? Why don't you try running a Fetch request and look in the DevTools to see the HTTP method that is used.
+
+> Check out these links from the specification to find out more:
+>
+> - [https://fetch.spec.whatwg.org/#methods](https://fetch.spec.whatwg.org/#methods)
+> - [https://fetch.spec.whatwg.org/#requests](https://fetch.spec.whatwg.org/#requests)
+
+- [ ] FETCH
+- [ ] fetch
+- [ ] POST
+- [ ] post
+- [x] GET
+- [ ] get
+- [ ] REQUEST
+- [ ] request
+
+#### Changing The HTTP Method
+So the default HTTP method for a Fetch request is the `GET` method. We can choose a different HTTP method by passing a `method` property in the configuration object:
+
+```js
+fetch(`https://api.unsplash.com/search/photos?page=1&query=${queryText}`, {
+  method: 'POST'
+});
+```
+
+This will send the request with the `POST` HTTP header.
+
+Fetch's specification does not limit what HTTP methods can be used, although it does recommend that all methods are written in uppercase for consistency with the HTTP Verbs specification.
+
+### 3.4 Handle the Response
+Handle The Response
+Ok, you've learned about making a Fetch request, and you've sent a few of them off...but nothing happened because we didn't tell our code to handle the response. Let's get our code ready to handle the response.
+
+Remember that Fetch is Promise-based. This means that when we fire of the Fetch request, it will automatically return a promise that we can use to listen for the response.
+
+> #### 💡 Javascript Promises Reminder 💡
+> Dealing with the returned data from a Fetch request is all done with Promises, so if any of this looks confusing or you don't know how `.then()` works or why it's needed, check out our [course on JavaScript Promises](https://www.udacity.com/course/javascript-promises--ud898).
+
+Since a Fetch request returns a Promise, then all you have to do is call `.then()` on that Promise.
+
+```js
+fetch(`https://api.unsplash.com/search/photos?page=1&query=${queryText}`, {
+  headers: {
+    Authorization: 'Client-ID abc123'
+  }
+}).then(function(response) {
+  debugger; // work with the returned response
+});
+```
+
+If you haven't already, put the code above in our JavaScript file and search for something. Because we added a `debugger` line inside the `.then()` function, the code will pause on the `debugger` line when the response is finally returned.
+
+[![fetch request](../assets/images/fixed/ud109-l3-request-object.gif)](../assets/images/fixed/ud109-l3-request-object.gif)
+**Browser showing the app with DevTools loaded. A search for "trees" is made. The browsers pauses at the debugger line. The response is a Response object.**
+
+#### Quiz Question
+We've successfully made the request, and you should be able to see the response in your console. Which property has the actual JSON data of the images?
+
+- [ ] `.data`
+- [ ] `.images`
+- [ ] `.response`
+- [ ] both `.images` and `.data`
+- [x] none of the above
+
+### 3.5 The Response Object
+See how the response returned is of type `Response`? This `Response` object is new with the Fetch API and is what's returned when a Fetch request resolves.
+
+Ok, so that's great and all, but did you notice anything weird about the response object? It didn't have any of the data that we searched for!
+
+That's because a response object has information about the response itself, it doesn't have the data...yet. **To actually get the data, we need to get the "body" of the response.**
+
+Since the Unsplash API we're using will return JSON to us, we just need to call `.json()` on the response variable.
+
+```js
+fetch(`https://api.unsplash.com/search/photos?page=1&query=${queryText}`, {
+  headers: {
+    Authorization: 'Client-ID abc123'
+  }
+}).then(function(response) {
+  return response.json();
+});
+```
+
+The `.json()` method on a Response object returns a Promise, so we need to chain on *another* `.then()` to actually get and start using the returned data. This time, let's call `addImage` to pass it the returned data:
+
+```js
+fetch(`https://api.unsplash.com/search/photos?page=1&query=${queryText}`, {
+  headers: {
+    Authorization: 'Client-ID abc123'
+  }
+}).then(function(response) {
+  return response.json();
+}).then(addImage);
+
+function addImage(data) {
+  debugger;
+}
+```
+
+There are a number of methods on a Response object. Each one will let the code handle different response types.
+
+For example, the `.json()` method that we've looked at will take the response and convert it to JSON. What happens if we requested an image, instead?
+
+#### Quiz Question
+Which of the following methods should be used if you wanted to fetch an image?
+
+> If you get stuck, check out:
+>
+> - MDN [Using Fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch#Making_fetch_requests)
+> - [https://davidwalsh.name/fetch](https://davidwalsh.name/fetch)
+> - MDN [Response](https://developer.mozilla.org/en-US/docs/Web/API/Response)
+
+- [ ] `.arrayBuffer()`
+- [x] `.blob()`
+- [ ] `.formData()`
+- [ ] `.json()`
+- [ ] `.text()`
+
+### 3.6 ES6 Arrow Function
+You might be thinking that this Fetch request is starting to look like a lot of code...and it is. One quick way to shrink the amount of code is to use an ES6 Arrow function!
+
+We can convert the first `.then()` function which gets the response, calls the `.json()` method on it, and returns a Promise, all to a single line with an Arrow function.
+
+This
+
+```js
+}).then(function(response) {
+  return response.json();
+})
+```
+
+becomes this.
+
+```js
+}).then(response => response.json())
+```
+
+So the new request would be:
+
+```js
+fetch(`https://api.unsplash.com/search/photos?page=1&query=${queryText}`, {
+  headers: {
+    Authorization: 'Client-ID abc123'
+  }
+})
+.then(response => response.json())
+.then(addImage);
+
+function addImage(data) {
+  debugger;
+}
+```
+
+If Arrow functions are new to you, check out Udacity's [ES6 course](https://www.udacity.com/course/es6-javascript-improved--ud356)!
+
+[![fetch request](../assets/images/fixed/ud109-l3-request-json-response.gif)](../assets/images/fixed/ud109-l3-request-json-response.gif)
+**Browser showing the app with DevTools loaded. A search for "trees" is made. The browsers pauses at the debugger line within the `addImage` function. The response is a Response object.**
+
+### 3.7 Render & Error Handling
+#### Display The Image On The Page
+We're making our request to Unsplash, it's returning a response that we're then converting to JSON, and now we're seeing the actual JSON data.
+
+Fantastic! All we need to do now is display the image and caption on the page.
+
+Here's the code that I'm using:
+
+```js
+function addImage(data) {
+  let htmlContent = '';
+  const firstImage = data.results[0];
+
+  if (firstImage) {
+    htmlContent = `<figure>
+      <img src="${firstImage.urls.small}" alt="${searchedForText}">
+      <figcaption>${searchedForText} by ${firstImage.user.name}</figcaption>
+    </figure>`;
+  } else {
+    htmlContent = 'Unfortunately, no image was returned for your search.'
+  }
+
+  responseContainer.insertAdjacentHTML('afterbegin', htmlContent);
+}
+```
+
+This code will:
+
+- get the first image that's returned from Unsplash
+- create a `<figure>` tag with the small image
+- creates a `<figcaption>` that displays the text that was searched for along with the first name of the person that took the image
+- if no images were returned, it displays an error message to the user
+
+#### Handling Errors
+Our app is almost done with getting the image from Unsplash!
+
+We're requesting the image and adding it to the page, but this is only one possible outcome. Granted, it's the most likely way that the app will end up, but we're not handling any errors.
+
+What errors could possible happen you ask? A couple I can think of are:
+
+- Issues with the network
+- Issues with the fetch request
+- Unsplash not having an image for the searched term
+
+We're handling this last one in the `addImage` function. For the other two, we can use chain on a `.catch()` method to the Fetch request!
+
+Again, because a Fetch request returns a Promise `.catch()` is available to us from the Promise API.
+
+So let's add a `.catch()` method to handle errors:
+
+```js
+fetch(`https://api.unsplash.com/search/photos?page=1&query=${queryText}`, {
+    headers: {
+        Authorization: 'Client-ID abc123'
+    }
+})
+.then(response => response.json())
+.then(addImage)
+.catch(e => requestError(e, 'image'));
+
+function addImage(data) {
+  debugger;
+}
+
+function requestError(err, part) {
+  console.log(err);
+  responseContainer.insertAdjacentHTML('beforeend',
+    `<p class="network-warning">
+      Oh no! There was an error making a request for the ${part}.
+    </p>`);
+}
+```
+
+This code adds the `requestError` function and adds a `.catch()` request to the end of the Promise chain. 
+
+The `.catch()` function will receive an error object (that we're storing in the `err` variable) and in turn calls `requestError` passing along the error object and the request that failed.
+
+If the Promise rejects anywhere along the line, the `requestError` function will log the error and display a warning message to the user that the request failed for some reason.
+
+### 3.8 NY Times Request
+The app is now able to handle searching for images and displaying images! Woohoo!
+
+Now see if you can follow these same steps to get the New York Times articles to display. When you can perform a search in your app and have both an image and some New York Times articles display, check the checkbox below.
+
+This might seem like a lot, but we looked in detail at how to make a Fetch request and how to handle the response. You're basically going to follow the exact same steps for this request. You'll need to: make the request to the NYTimes API convert the response to JSON loop through the JSON data and add the articles to the page
+
+Bonus points if you use `.catch()` to handle any network errors!
+
+#### Solution
+The first fetch makes a request to unsplash's API for an image search. We pass along the required headers, convert the response to JSON, and then pass the actual JSON data off to the addImage function.
+
+If there's a problem with the request, then the `.catch` will receive the error and call
+the `requestError` function with the error and that it was the image request that failed.
+
+```js
+fetch(`https://api.unsplash.com/search/photos?page=1&query=${queryText}`, {
+  headers: {
+    Authorization: 'Client-ID abc123'
+  }
+})
+.then(response => response.json())
+.then(addImage)
+.catch(err => requestError(err, 'image'));
+
+fetch(`http://api.nytimes.com/svc/search/v2/articlesearch.json?
+    q=${queryText}&api-key=abc123`)
+.then(response => response.json())
+.then(addArticles)
+.catch(err => requestError(err, 'articles'));
+```
+
+This makes a request for the New York Times articles and it's very similar to the fetch request for unsplash. It sends the request to the New York Times API and it converts the response to JSON and passes the JSON data to the `addArticles` function.
+
+If there's a problem with this fetch request, the catch method will also call the `requestError` function, passing it the error and that it was the articles requests that failed.
+
+We looked at the addImage function earlier, so let's get down to the addArticles function.
+
+```js
+function addArticles(data) {
+  let htmlContent = ''
+
+  if (data.response && data.response.docs && data.response.docs.length > 1) {
+    htmlContent = '<ul>' + data.response.docs.map(article => `
+      <li class="article">
+        <h2><a href="${article.web_url}">${article.headline.main}</a></h2>
+        <p>${article.snippet}</p>
+      </li>`
+    ).join('') + '</ul>';
+  } else {
+    htmlContent = '<div class="error-no-articles">No articles available</div>';
+  }
+  responseContainer.insertAdjacentHTML('beforeend', htmlContent);
+}
+```
+
+This code will loop over all of the articles, adding them to an unordered list. If there aren't any articles, then it displays this error message.
+
+And that's basically all there is to our app.
+
+#### My Code Solution
+
+```js
+fetch(`https://api.unsplash.com/search/photos?page=1&query=${queryText}`, {
+  headers: {
+    Authorization: 'Client-ID abc123'
+  }
+}).then(response => {
+  if (response.ok) {
+    return response.json();
+  }
+  console.log(response.status, response.statusText);
+  throw new Error('network error');
+}).then(jsonData => {
+  console.log(jsonData);
+  return jsonData;
+}).then(addImage)
+  .catch(err => requestError(err, 'image'));
+
+fetch(`http://api.nytimes.com/svc/search/v2/articlesearch.json?
+  q=${queryText}&api-key=abc123`
+).then(response => {
+  if (response.ok) {
+    return response.json();
+  }
+  console.log(response.status, response.statusText);
+  throw new Error('network error');
+}).then(jsonData => {
+  console.log(jsonData);
+  return jsonData;
+}).then(addArticles)
+  .catch(err => requestError(err, 'articles'));
+```
+
+### 3.9 Fetch Wrap-up
+We just looked at making requests using the fetch API. The new fetch API is awesome in so many ways.
+
+You can make a complicated request involving custom headers and caching or a simple request using just the URL to the resource.
+
+There are also new headers, requests, and response interfaces. On top of this, Fetch is promise based, so it naturally helps you create easy to write asynchronous calls in your code.
+
+In the past, making asynchronous calls has been somewhat tedious, but thankfully with the new fetch API, things have gotten a whole lot easier.
+
+### 3.10 Course Wrap-up
+Thanks for joining me as we progressed through the different ways to make AJAX requests.
+
+You now have three tools up your sleeve whenever you need to make async requests.
+
+1. You can make requests using the tried and true but cumbersome XHR
+2. You can use the jQuery library to smooth out making async requests
+3. You can use the Fetch API to make promise-based asynchronous requests
+
+Using these tools, you can now make dynamic requests from your Javascript that don't force a web page refresh and provide an overall better experience for your users.
