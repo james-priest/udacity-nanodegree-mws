@@ -42,12 +42,12 @@ Notes contain full text of the lessons along with screenshots, sample code, & li
   - [Responsive Web Design Fundamentals](course-notes/responsive-web-design-fundamentals.html) by Google (Lessons 1-5)
   - [Responsive Images](course-notes/responsive-images.html) by Google (Lessons 6-9)
   - [Web Accessibility](course-notes/web-accessibility.html) by Google (Lessons 10-15)
-  - [Offline Web Applications](https://james-priest.github.io/100-days-of-code-log-r2/Introducing-the-Service-Worker.html) by Google (Lesson 16 & 17)
+  - [Introducing the Service Worker](https://james-priest.github.io/100-days-of-code-log-r2/Introducing-the-Service-Worker.html) by Google (Lesson 16 & 17)
   
 #### Stage 2: Dynamic & Offline Capable Web Apps
   - [Asynchronous JavaScript Requests](course-notes/asynchronous-javascript-requests.html) by Google, AT&T, & GitHub (Lessons 1-3)
-  - ES6 JavaScript Improved by Google, AT&T, & GitHub (Lessons 4-7)
-  - Offline Web Applications by Google (Lesson 8)
+  - [ES6 JavaScript Improved](https://james-priest.github.io/100-days-of-code-log-r2/ES6-Syntax.html) by Google, AT&T, & GitHub (Lessons 4-7)
+  - [IndexedDB and Caching](https://james-priest.github.io/100-days-of-code-log-r2/IndexedDB-and-Caching.html) by Google (Lesson 8)
   - Web Tooling and Automation by Google (Lessons 9-15)
   
 #### Stage 3: Performant Web Apps

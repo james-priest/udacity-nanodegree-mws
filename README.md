@@ -10,13 +10,13 @@ Website: [https://james-priest.github.io/udacity-nanodegree-mws/](https://james-
 ### Stage 1
 - [Responsive Web Design Fundamentals](docs/course-notes/responsive-web-design-fundamentals.md) (Lessons 1-5)
 - [Responsive Images](docs/course-notes/responsive-images.md) (Lessons 6-9)
-- [Web Accessibility](docs/course-notes/web-accessibility.md) (Lessons 16 & 17)
-- [Offline Web Applications](https://github.com/james-priest/100-days-of-code-log-r2/blob/master/Introducing-the-Service-Worker.md) (Lesson 9-15)
+- [Web Accessibility](docs/course-notes/web-accessibility.md) (Lessons 9 -15)
+- [Introducing the Service Worker](https://github.com/james-priest/100-days-of-code-log-r2/blob/master/MWS-TOC.md) (Lesson 16 & 17)
 
 ### Stage 2
-- [Asynchronous JavaScript Requests](docs/course-notes/asynchronous-javascript-requests.md)
-- ES6 JavaScript Improved (Lessons 4-7)
-- Offline Web Applications (Lesson 8)
+- [Asynchronous JavaScript Requests](docs/course-notes/asynchronous-javascript-requests.md) (Lessons 1-3)
+- [ES6 JavaScript Improved](https://github.com/james-priest/100-days-of-code-log-r2/blob/master/MWS-TOC.md) (Lessons 4-7)
+- [IndexedDB and Caching](https://github.com/james-priest/100-days-of-code-log-r2/blob/master/MWS-TOC.md) (Lesson 8)
 - Web Tooling and Automation (Lessons 9-15)
 
 ### Stage 3
