@@ -100,7 +100,7 @@ And finally, you should be careful with any micro optimizations that are just no
 
 If you are doing an optimization of your work flow that takes, say four hours, and cuts a second away from a task you perform once during the day, you need to do it for 40 years to justify the investment.
 
-## Lesson 10. Editor
+## Lesson 10. Editor Config
 ### 10.1 Intro
 In this lesson, you'll learn how to set up your development environment. Namely, your editor.
 
@@ -142,7 +142,7 @@ For free alternatives check out GitHub's Atom editor. It builds on a similar plu
 
 In the end, I won't be offended if you decide to use another editor. As long as you stay away from Notepad. Just make sure it's fast, can be extended with functionality, and is well supported and stable.
 
-### 10.4 Learn you Editor
+### 10.4 Learn Your Editor
 Chances are the relationship between you and your editor will be a long one, and like with any good relationship, you need to work on it and invest early on. If you don't, you'll frustrate each other and things get complicated.
 
 In the first couple of days of using it, try on lots of built-in shortcuts and features, even if they seem overkill.
