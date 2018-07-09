@@ -48,7 +48,7 @@ Notes contain full text of the lessons along with screenshots, sample code, & li
   - [Asynchronous JavaScript Requests](course-notes/asynchronous-javascript-requests.html) by Google, AT&T, & GitHub (Lessons 1-3)
   - [ES6 JavaScript Improved](https://james-priest.github.io/100-days-of-code-log-r2/ES6-Syntax.html) by Google, AT&T, & GitHub (Lessons 4-7)
   - [IndexedDB and Caching](https://james-priest.github.io/100-days-of-code-log-r2/IndexedDB-and-Caching.html) by Google (Lesson 8)
-  - Web Tooling and Automation by Google (Lessons 9-15)
+  - [Web Tooling and Automation](course-notes/web-tooling-and-automation.html) by Google (Lessons 9-15)
   
 #### Stage 3: Performant Web Apps
   - Client Server Communication by Google (Lessons 1-5)
