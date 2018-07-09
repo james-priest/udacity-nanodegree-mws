@@ -2,3 +2,13 @@ theme: jekyll-theme-leap-day
 title: Mobile Web Specialist Nanodegree
 description: Notes & Projects by James Priest
 google_analytics: UA-121627234-2
+
+exclude: [
+  Gemfile,
+  Gemfile.lock,
+  node_modules/,
+  Gruntfile.js,
+  package-lock.json,
+  package.json,
+  src/
+]
