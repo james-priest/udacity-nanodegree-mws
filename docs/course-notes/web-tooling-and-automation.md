@@ -287,3 +287,175 @@ And with that, we're already at the end of the lesson.
 I encourage you to not just experiment with different commands and plugins but try to get even more familiar with the editor.
 
 Take your time and try out lots of plugins from the package control website or see how Sublime feels with code you have already written.
+
+## Lesson 11. Build Automation
+### 11.1 Intro
+This hammer here is a fantastic tool to build stuff. But in order for it to work, it needs my immediate attention of energy. I can't just turn it on and let it do its thing.
+
+In today's affordable tool shed, we've only recently got a few additions that are different. Modern tools like a 3D printer, can be given a task that it then performs autonomously until it's done.
+
+In today's life of a web developer, we're seeing a similar trend, a large collection of tools that you feed tasks to and that then automate and improve many aspects of your workflow.
+
+Let's dive into the world of build tools.
+
+### 11.2 Build Tools
+Build tools aren't a new thing, but web dev specific build tools only became popular a few years ago.
+
+The simplest build tool is just a shell, or bash script. These scripts, with the `.sh` extension, are just a series of terminal commands or functions, and can be executed from the command line.
+
+But working with the dependency graphs, or only updating files that have changed are tricky tasks with just a shell and this is where the original build system, `make`, comes in, adding file management sugar, and more.
+
+After `make` came build tools such as Ant, Maven, and Gradle, all especially popular in the world of Java. All of them have declarative tasks, but you need to use XML to drive them, or in the case of Gradle, a programming language that you might not understand.
+
+But web developers have a burning hate for everything XML, with the only exception of HTML as an accepted flavor. And so came a new set of modern, web development-focused, build tools; tools that would use a language that web developers are already familiar with: JavaScript.
+
+Out of JavaScript are two Node.js-based build tools which have become very popular: Grunt and Gulp.
+
+[![tools1-11](../assets/images/tools1-11-small.jpg)](../assets/images/tools1-11.jpg)
+
+But why are these the popular ones and what should you look for in a build tool? Here are the most important features to look for.
+
+1. Fast
+2. Community-driven
+3. Modular & Extensible
+4. Feature-rich
+
+#### Fast
+A build tool should be fast in execution as there's a need for speed when iterating on a website or app.
+
+We're used to changing a line or reloading a page afterwards to see the changes instantly and disrupting that flow is a no go.
+
+#### Community-driven
+It should also be supported by a healthy community that exchanges plugins that add functionality and answers questions on sites such as Stack Overflow.
+
+With popular build tools such as Grunt, chances are there's already an answer to your problem, and somebody else has had it before.
+
+#### Module & Extensible
+Next, it's very important that even if it comes with a lot of bells and whistles you can extend it with more and custom functionality as you see fit.
+
+#### Feature-rich
+And finally, the tool should already solve a few common problems out of the box for it to be useful.
+
+Grunt, was the most popular tool and fulfills many of these requirements. It has a strong community and a healthy plugin ecosystem. 
+
+Gulp, the new popular kid on the block, has two significant advantages over Grunt. It's built for speed and can execute tasks in parallel, plus converts open files into super fast streams internally.
+
+Gulp's tasks, use code over configuration, which means that you can just use normal JavaScript, and extend or modify tasks that don't work for you.
+
+You might have already guessed it, we're sticking with Gulp for the rest of this course but if your team or company chooses Grunt or a different system instead, fear not. The concepts are quite similar, and many times the plugin exists for both.
+
+Here's a link to stackshare.io which gives stats and compares these three JS Build Tools / JS Task Runners: [Webpack vs. Gulp vs. Grunt](https://stackshare.io/stackups/grunt-vs-gulp-vs-webpack). (Technically, Webpack is a bundler while Gulp & Grunt are JavaScript task runners.)
+
+### 11.3 Quiz: Build Tool Qualities
+What are the core qualities of a good build tool?
+
+- [x] Fast exectution / build time
+
+    Yes. Things need to be fast when you're developing a website or app. If you change a line and reload the page, you want to see those changes instantly. Disrupting that flow is a no-go. So make sure your actual build time never goes beyond a few seconds.
+- [x] Vibrant plugin community
+
+    Yes. Build tools are pretty useless by themselves. You either need to write a lot of custom code or rely on plugins. So make sure to pick one that has the plugins you need.
+- [x] Modular and sharable tasks
+
+    Yes. Individually contained tasks allow you to easily enable and disable certain steps of your build process and their important prerequisite.
+- [ ] Concise and short API
+
+    No. There is no point in saving bytes when writing automation code. The important bit is that you understand what the configuration of your build system does, not how short the notation is.
+
+### 11.4 Gulp vs Grunt
+So what's so special about Gulp? Let's have a closer look.
+
+The main difference between Grunt and Gulp is that Grunt focuses on configuration, while Gulp focuses on code. But what does that even mean in practice?
+
+Have a look at this Grunt configuration file. It's not important that you understand everything it does right away.We'll get to that later.
+
+[![tools1-12](../assets/images/tools1-12-small.jpg)](../assets/images/tools1-12.jpg)
+
+It uses a JavaScript config object, to configure certain tasks, such as concat or uglify.
+
+**To change or extend one of these tasks, you would have to modify the plugins themselves.**
+
+Consider the same functionality in this Gulp config file instead. It looks more like standard JavaScript.
+
+[![tools1-13](../assets/images/tools1-13-small.jpg)](../assets/images/tools1-13.jpg)
+
+At any given point, you can intervene, and type your files into another function before moving on.
+
+The second big argument is all about speed.
+
+Grunt executes tasks in sequence, one after another whereas Gulp, by default, executes tasks in parallel, and finishes when all have finished.
+
+But that's not all that makes Gulp usually come up much faster. Gulp comes with the concept of streams, that cause much less IO, or file system access.
+
+Head to the Gulp installation instructions below, and install Gulp on your system. If you haven't done so already, you also need to install Node.js and NPM.
+
+#### 11.4 Resources
+
+- [Gulp Installation Instructions](https://github.com/gulpjs/gulp/blob/master/docs/getting-started.md)
+
+### 11.5 Install Gulp
+#### Installing Gulp and Course Code
+Note: if you have not installed NodeJS or NPM you will need to install these first before installing Gulp. You can download and install NodeJS and NPM by going to the [Node official site](https://nodejs.org/) and downloading the latest version of NodeJS.
+
+1. Take a few moments and [install Gulp](https://github.com/gulpjs/gulp/blob/master/docs/getting-started.md). The instructions are listed in the link.
+2. Grab the [course code](https://github.com/udacity/ud892) from Github.
+
+### 11.6 Define  Gulp Task
+Every Gulp project starts with a Gulp file. This file sits in the root directory of your project and defines all the tasks that you should execute when running Gulp.
+
+[![tools1-14](../assets/images/tools1-14-small.jpg)](../assets/images/tools1-14.jpg)
+
+There are a few ways to define a task in Gulp but first we need to `require` 'gulp' as a dependency since a gulp file is essentially a node.js script.
+
+```js
+var gulp = require('gulp');
+```
+
+Tasks in Gulp are asynchronous and Gulp uses [async-done](https://www.npmjs.com/package/async-done) to wait for the task's completion.
+
+Tasks are called with a callback parameter which we call to signal completion. Alternatively, Task can return a stream, a promise, a child process or a RxJS observable to signal the end of the task.
+
+> #### Task Examples on stackoverflow 
+> Here's a link that shows each of the five ways we can define a task.
+> - [Define a task in Gulp 4.x (stackoverflow)](https://stackoverflow.com/questions/36897877/gulp-error-the-following-tasks-did-not-complete-did-you-forget-to-signal-async)).
+
+#### Option #1: Call the callback function (easiest)
+This is probably the easiest way.
+
+Gulp automatically passes a callback function to your task as its first argument. Just call that function when you're done:
+
+```js
+var gulp = require('gulp');
+
+gulp.task('default', function(done) {
+  console.log('hello world');
+  done();
+});
+```
+
+#### Option #2: Return a Promise
+An alternative task setup returns a `Promise`.
+
+Note that most of the time you won't have to create the `Promise` object yourself, it will usually be provided by a package (e.g. the frequently used `del` package returns a `Promise`).
+
+```js
+var gulp = require('gulp');
+
+gulp.task('default', function() {
+  return new Promise(function(resolve, reject) {
+    console.log('hello world');
+    resolve();
+  });
+});
+```
+
+#### Run the task
+ You can run it by executing gulp at the command line.
+
+ ```bash
+ gulp
+ ```
+
+<!-- 
+### 11.7 Grunt Tasks vs Gulp Streams
+Before we move on and create more complex tasks,let's talk a bit about the concept of streams in Gulp.Other built systems, like Grunt, have tabbed their copierfiles to a temporary place where they make some change on them.As a result, every task incurs a penalty for I/O in file system operations.Gulp on the other hand, converts your input files into an in memory stream.So the I/O is only done initially, and at the very end of all tasks.This is what gives Gulp such a great speed increase in many situations. -->
