@@ -11,6 +11,22 @@ description: Notes by James Priest
 ---
 
 ### Supporting Links
+#### Grunt & Gulp
+- [Gulp vs Grunt - Beyond the Numbers](https://jaysoo.ca/2014/01/27/gruntjs-vs-gulpjs/) (1-2014)
+- [Gulp vs Grunt - Comparing Both Automation Tools](https://www.keycdn.com/blog/gulp-vs-grunt/) (3-2017)
+- [Grunt Vs Gulp: Battle Of The Build Tools](https://deliciousbrains.com/grunt-vs-gulp-battle-build-tools/) (10-2017)
+- [The Basics of Node.js Streams](https://www.sitepoint.com/basics-node-js-streams/) (11-2014)
+- [Define a task in Gulp 4.x (stackoverflow)](https://stackoverflow.com/questions/36897877/gulp-error-the-following-tasks-did-not-complete-did-you-forget-to-signal-async) (7-2016)
+
+#### Sass & Autoprefixer
+- [Sass](https://sass-lang.com/)
+- [Autoprefixer](https://autoprefixer.github.io/)
+
+#### Packages & Primers
+- [Node Glob Primer](https://github.com/isaacs/node-glob)
+- [gulp-sass](https://www.npmjs.com/package/gulp-sass) npm package
+- [gulp-autoprefixer](https://www.npmjs.com/package/gulp-autoprefixer) npm package
+
 
 ## Lesson 9. Tools & Automation
 ### 9.1 Course Intro
@@ -393,7 +409,7 @@ Head to the Gulp installation instructions below, and install Gulp on your syste
 
 - [Gulp Installation Instructions](https://github.com/gulpjs/gulp/blob/master/docs/getting-started.md)
 
-### 11.5 Install Gulp
+### 11.5 Installing Gulp
 #### Installing Gulp and Course Code
 Note: if you have not installed NodeJS or NPM you will need to install these first before installing Gulp. You can download and install NodeJS and NPM by going to the [Node official site](https://nodejs.org/) and downloading the latest version of NodeJS.
 
@@ -417,7 +433,7 @@ Tasks are called with a callback parameter which we call to signal completion. A
 
 > #### Task Examples on stackoverflow 
 > Here's a link that shows each of the five ways we can define a task.
-> - [Define a task in Gulp 4.x (stackoverflow)](https://stackoverflow.com/questions/36897877/gulp-error-the-following-tasks-did-not-complete-did-you-forget-to-signal-async)).
+> - [Define a task in Gulp 4.x (stackoverflow)](https://stackoverflow.com/questions/36897877/gulp-error-the-following-tasks-did-not-complete-did-you-forget-to-signal-async).
 
 #### Option #1: Call the callback function (easiest)
 This is probably the easiest way.
@@ -456,6 +472,243 @@ gulp.task('default', function() {
  gulp
  ```
 
-<!-- 
-### 11.7 Grunt Tasks vs Gulp Streams
-Before we move on and create more complex tasks,let's talk a bit about the concept of streams in Gulp.Other built systems, like Grunt, have tabbed their copierfiles to a temporary place where they make some change on them.As a result, every task incurs a penalty for I/O in file system operations.Gulp on the other hand, converts your input files into an in memory stream.So the I/O is only done initially, and at the very end of all tasks.This is what gives Gulp such a great speed increase in many situations. -->
+### 11.7 Gulp Streams vs Grunt Tasks
+Before we move on and create more complex tasks, let's talk a bit about the concept of streams in Gulp.
+
+Build systems like Grunt have tasks that make changes to files and then save those changes to a temporary location before the next task takes over to make the next set of changes.
+
+As a result, every task incurs a penalty for I/O in file system operations.
+
+[![tools1-16](../assets/images/tools1-16-small.jpg)](../assets/images/tools1-16.jpg)
+
+Gulp on the other hand, converts your input files into an in memory stream. So the I/O is only done initially, and at the very end of all tasks.
+
+This is what gives Gulp such a great speed increase in many situations.
+
+#### 11.7 Resources
+##### Comparison Articles
+- [Gulp vs Grunt - Beyond the Numbers](https://jaysoo.ca/2014/01/27/gruntjs-vs-gulpjs/) (1-2014)
+- [Gulp vs Grunt - Comparing Both Automation Tools](https://www.keycdn.com/blog/gulp-vs-grunt/) (3-2017)
+- [Grunt Vs Gulp: Battle Of The Build Tools](https://deliciousbrains.com/grunt-vs-gulp-battle-build-tools/) (10-2017)
+
+##### Supporting Articles
+- [The Basics of Node.js Streams](https://www.sitepoint.com/basics-node-js-streams/) (11-2014)
+- [Define a task in Gulp 4.x (stackoverflow)](https://stackoverflow.com/questions/36897877/gulp-error-the-following-tasks-did-not-complete-did-you-forget-to-signal-async) (7-2016)
+
+### 11.8 Sass & Autoprefixer
+We'll start with a common task for many web developers. That task is to make CSS work across the board on the most current subset of browsers in use.
+
+[![tools1-17](../assets/images/tools1-17-small.jpg)](../assets/images/tools1-17.jpg)
+
+Prefixes, obscure syntax, and the inability to nest or use variables, all make working with CSS a pretty trying part of being a web developer.
+
+That said, we can rewrite our style sheet in Sass, a super set of CSS that gets rid of many of CSS annoyances, and compile it to pure CSS. Then, instead of prefixing CSS properties manually, we automate that task with Autoprefixer.
+
+If you've never used Sass before, check out [this Sass link](http://sass-lang.com/) to learn more about it.
+
+#### 11.8 Resources
+
+- [Sass](https://sass-lang.com/)
+- [Autoprefixer](https://autoprefixer.github.io/)
+
+### 11.9 Gulp Task: Sass
+#### Install Sass NPM Dependencies
+Both Sass and Autoprefixer have existing gulp plugins that we can use. So, let's start with installing `gulp-sass` as a project dependency.
+
+```bash
+$ npm install --save-dev gulp-sass
+
++ gulp-sass@4.0.1
+added 140 packages from 121 contributors...
+```
+
+
+This will install the plugin so we can use it in our gulp file. Now we have to change the folder structure slightly to account for the generated CSS output files.
+
+#### Folder Setup
+Create a new folder in your project directory and call it 'sass'. Then move the files `main.css` and `extra.css` from the CSS folder into the sass folder and rename the extension to `.scss`.
+
+By changing the extension, we just turned these into Sass files that soon get complied into CSS files with our new task.
+
+The 'css' directory should now be empty.
+
+#### Create 'styles' Task
+Now before we can use the `gulp-sass` plugin, we need to make it available to gulp by using a `require` directive.
+
+```js
+var gulp = require('gulp');
+var sass = require('gulp-sass');
+```
+
+Next we create a new task and name it 'styles', which is assigned to the first argument of the `task` method.
+
+The second argument is a function that's executed when the task is invoked.
+
+```js
+gulp.task('styles', function () {
+
+});
+```
+
+Now we need to tell gulp which files we want it to work with. For that, gulp has a special command called `src` on the `gulp` object.
+
+The `src` method takes a [glob pattern](https://github.com/isaacs/node-glob) to determine which files it's going to operate on. In this case we use the the following line.
+
+```js
+gulp.task('styles', function() {
+  gulp.src('sass/**/*.scss');
+});
+```
+
+This looks for files with the `.scss` extension in a `sass` folder with any potential sub-directories in-between.
+
+Now that we have the files, we pipe them to Sass.
+
+The `pipe` function on the stream of files we just created, takes the destination that the plugin provides, so we call sass right here.
+
+```js
+gulp.task('styles', function() {
+  gulp.src('sass/**/*.scss')
+    .pipe(sass());
+});
+```
+
+So now we've converted our files from Sass to proper CSS, but we still need to save then out.
+
+We do this by using `pipe` again into which we pass `gulp.dest('./css')` to specify our final destination folder.
+
+Here's the completed code.
+
+```js
+var gulp = require('gulp');
+var sass = require('gulp-sass');
+
+gulp.task('styles', function() {
+  gulp.src('sass/**/*.scss')
+    .pipe(sass())
+    .pipe(gulp.dest('./css'));
+});
+```
+
+But by default, the whole build will stop and error out when Sass discovers an error.
+
+This can be tested by dropping in some bad characters in 'main.scss' such as an opening & no closing curly brace: `abc {`.
+
+That's not always what you want. Very often, it's better to finish an action and output the error. Many plugins such like `gulp-sass` emit events for this scenario.
+
+Listening to the `error` event on a Sass object and inserting the `sass.logError` function changes the default behavior. Instead of killing the whole build, it tells Gulp to simply log the error and go on as usual.
+
+```js
+var gulp = require('gulp');
+var sass = require('gulp-sass');
+
+gulp.task('styles', function() {
+  gulp.src('sass/**/*.scss')
+    .pipe(sass().on('error', sass.logError))
+    .pipe(gulp.dest('./css'));
+});
+```
+
+This looks much better. Now, we can run Gulp in the terminal.
+
+```bash
+gulp styles
+```
+
+This generates new CSS files from the original Sass files.
+
+Now's a great time to get familiar with Sass if you haven't already done so.
+
+#### 11.9 Resources
+
+- [Node Glob Primer](https://github.com/isaacs/node-glob)
+- [gulp-sass](https://www.npmjs.com/package/gulp-sass) npm package
+
+### 11.10 Gulp Task: Autoprefixer
+Now you now know the basics of finding, installing and enabling a plugin.
+
+Here's a link to the [gulp-autoprefixer plugin](https://www.npmjs.com/package/gulp-autoprefixer).
+
+Note that searching for 'autoprefixer' plus 'gulp' on Google will also return a link to the NPM plugin as well.
+
+[![tools1-18](../assets/images/tools1-18-small.jpg)](../assets/images/tools1-18.jpg)
+
+The NPM page gives the installer command that should be run in the terminal.
+
+```bash
+$ npm install --save-dev gulp-autoprefixer
+
++ gulp-autoprefixer@5.0.0
+added 10 packages from 190 contributors...
+```
+
+Now we go ahead and `require` the plugin at the top of our gulpfile.js
+
+```js
+var gulp = require('gulp');
+var sass = require('gulp-sass');
+var autoprefixer = require('gulp-autoprefixer');
+```
+
+The autoprefixer object is just another receiver of a pipe stream and since we already have a pipe coming from Sass, we simply add a new line right before we specify the file's destination.
+
+```js
+gulp.task('styles', function(done) {
+  gulp.src('sass/**/*.scss')
+    .pipe(sass().on('error', sass.logError))
+    .pipe(autoprefixer(
+
+    ))
+    .pipe(gulp.dest('./css'));
+  done();
+});
+```
+
+Lastly, we insert a configuration object to specify the browser's option of Autoprefixer, which tells Autoprefixer for which browser versions to prefix.
+
+In this case, we'll just instruct it to use the last two versions of every popular browser.
+
+```js
+gulp.task('styles', function(done) {
+  gulp.src('sass/**/*.scss')
+    .pipe(sass().on('error', sass.logError))
+    .pipe(autoprefixer(
+      browsers: ['last 2 versions']
+    ))
+    .pipe(gulp.dest('./css'));
+  done();
+});
+```
+
+Now when we rerun `gulp styles` in the terminal, we see that the original `main.scss` file here:
+
+#### main.scss
+```css
+img {
+  position: absolute;
+  top: 0;
+  left: 60px;
+  width: 100px;
+  transform: translate(0, -100%);
+  filter: invert(1);
+}
+```
+
+now becomes the updated `main.css`
+
+#### main.css
+```css
+div.main aside img {
+  position: absolute;
+  top: 0;
+  left: 60px;
+  width: 100px;
+  -webkit-transform: translate(0, -100%);
+          transform: translate(0, -100%);
+  -webkit-filter: invert(1);
+          filter: invert(1); }
+```
+
+#### 11.10 Resources
+
+- [gulp-autoprefixer](https://www.npmjs.com/package/gulp-autoprefixer) npm package
