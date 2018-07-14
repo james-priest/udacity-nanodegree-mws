@@ -11,10 +11,13 @@ description: Notes by James Priest
 ---
 
 ### Supporting Links
-#### Grunt & Gulp
+#### Grunt vs Gulp
 - [Gulp vs Grunt - Beyond the Numbers](https://jaysoo.ca/2014/01/27/gruntjs-vs-gulpjs/) (1-2014)
 - [Gulp vs Grunt - Comparing Both Automation Tools](https://www.keycdn.com/blog/gulp-vs-grunt/) (3-2017)
 - [Grunt Vs Gulp: Battle Of The Build Tools](https://deliciousbrains.com/grunt-vs-gulp-battle-build-tools/) (10-2017)
+
+#### Gulp
+- [Gulp](https://gulpjs.com/)
 - [The Basics of Node.js Streams](https://www.sitepoint.com/basics-node-js-streams/) (11-2014)
 - [Define a task in Gulp 4.x (stackoverflow)](https://stackoverflow.com/questions/36897877/gulp-error-the-following-tasks-did-not-complete-did-you-forget-to-signal-async) (7-2016)
 
@@ -26,6 +29,7 @@ description: Notes by James Priest
 - [Node Glob Primer](https://github.com/isaacs/node-glob)
 - [gulp-sass](https://www.npmjs.com/package/gulp-sass) npm package
 - [gulp-autoprefixer](https://www.npmjs.com/package/gulp-autoprefixer) npm package
+- [Browsersync](https://www.browsersync.io/docs/gulp)
 
 
 ## Lesson 9. Tools & Automation
@@ -694,7 +698,7 @@ img {
 }
 ```
 
-now becomes the updated `main.css`
+now becomes the updated `main.css` with all the right prefixes.
 
 #### main.css
 ```css
@@ -712,3 +716,162 @@ div.main aside img {
 #### 11.10 Resources
 
 - [gulp-autoprefixer](https://www.npmjs.com/package/gulp-autoprefixer) npm package
+
+### 11.11 Quiz: Gulp Autoprefixer
+Replicate the functionality we just covered.
+
+1. Install `gulp-autoprefixer`
+2. Add an autoprefixer pipe to your styles task
+3. Specify you want to prefix the last two versions of all browsers.
+4. Remove -webkit- from the filter property in main.scss
+
+### 11.12 Using Gulp
+It's starting to look like we actually got some work done, right? I told you all the Gulp work would pay off. In fact, I have a final piece that would make a lot more sense now that we have our first task written down.
+
+Gulp comes with a killer feature called watch. Think of it as an automatic trigger that waits for something to change.
+
+Consider what you currently have to do. If you make any changes to your Sass file you need to switch to the terminal, re-enter `gulp styles`, execute it, switch to the browser, and reload.
+
+A proper watcher relieves you of ever having to switch to terminal again.
+
+### 11.13 Watch for SCSS Files
+Write the code to set the `default` task to watch for changes in SCSS files.
+
+```js
+gulp.task('default', function() {
+  gulp.watch('sass/**/*.scss', ['styles']);
+});
+```
+
+### 11.14 Wrap-up
+This lesson covered the importance of build tools and what they're used for. We discussed Gulp in particular and also detailed the process of writing tasks.
+
+## Lesson 12. Browser Sync
+### 12.1 Intro
+Let me tell you about the wonderful benefits of live editing.
+
+Say your job is to construct shelves. Imagine how difficult this would be with simply a screwdriver to do the job. It works if you're just constructing a shelf for yourself once a year, but a power drill would save you a tremendous amount of time and energy. It would give you great optimization.
+
+The same goes for the world of web development.
+
+You make a change to your code, save, rebuild (if you need to), switch to the browser, and reload the page.
+
+[![tools1-19](../assets/images/tools1-19-small.jpg)](../assets/images/tools1-19.jpg)
+
+These small and repetitive context switches might seem harmless, but you're doing this thousands of times each day.
+
+Live Editing solves exactly that problem. It works by having a watcher in your editor or build process that's connected to a similar watcher in the browser.
+
+When you save a file, these two communicate, and the website is reloaded or patched on the fly without you having to intervene.
+
+That means fewer context switches since you can now have your editor right next to your browser window and see changes happen as you code.
+
+In the next hands-on step, we'll show you how to set up Live Editing in three different ways.
+
+1. On **every keystroke** in Sublime
+2. On **every save** via Gulp
+3. All **in the browser** (This skips the editor altogether)
+
+In the end, we prefer option #2, the build tool version and in the next lesson we'll tell you why.
+
+### 12.2 Quiz: Live Editing Advantage
+Which of these are advantages of Live Editing?
+
+- [x] Fewer context switches
+
+  With the editor and browser side-by-side, you'll need to do a lot less context switching
+
+- [x] Less clicks and keystrokes when changing code
+
+  Usually you'll need to reload the page manually and trigger the build process again after you've made some changes to the source code. If your build system is doing this for you, you can save a lot of time.
+
+- [x] Quicker previews of changes
+
+  While the actual time of the rebuild or reload of your page doesn't change, the reload is done automatically. So, by the time you focus on the output,you've saved a couple of seconds of contact switching.
+
+- [ ] Faster build times
+
+  Even though it might feel faster due to the automatic reloads, the build process actually isn't sped up. It's your brain.
+
+### 12.3 Live Editing Options
+One way of setting up live editing is within your browser.
+
+#### Brackets.io
+Some editors, like Brackets, come with live editing built in. In Brackets, you press a button that will launch a new instance of your browser with your updates already live.
+
+#### Takana Sublime Plugin
+Sublime Text doesn't have it built in, but the Takana plugin gets pretty close. It supports CSS and SCSS live editing, but not HTML however.
+
+#### Chrome Workspaces
+Chrome DevTools has a relatively little known feature called Workspaces that allows you to ditch the editor altogether and work directly in the browser.
+
+You can make changes to your CSS right in the Styles panel, and have them persist. The same goes for JavaScript. There's a link below listing the steps necessary to set up Workspaces on your computer.
+
+The fundamental flaw with live editing in your editor is that it isn't aware of your build process. So be mindful of that.
+
+#### Browser Sync
+Browser Sync allows us to have live editing that is assisted by our build tool, improving upon the two methods we showed you before.
+
+For this to work, we can reuse something we've already learned about, and that's the watch task that currently watches our Sass for changes and compiles them into CSS.
+
+Browser Sync works by creating or proxying a local web server which serves and tracks your files for changes. Best of all, it's free, open source, and is compatible with most Node.JS-based build tools including Gulp.
+
+So let's go ahead and set it up.
+
+#### Resources
+
+- [Takana](https://packagecontrol.io/packages/Takana) Sublime plugin on PackageControl
+- [Chrome Dev Tools Workspaces](https://developers.google.com/web/tools/chrome-devtools/workspaces/)
+- [Browser Sync](http://www.browsersync.io/)
+
+### 12.4 Using Browser Sync
+
+1. Install browser-sync.
+2. Create a browser-sync object and initialize the server.
+
+    ```js
+    var browserSync = require('browser-sync').create();
+
+    browserSync.init({
+        server: "./"
+    });
+    browserSync.stream();
+    ```
+
+3. Run gulp in Terminal, see how browser opens with the page open.
+
+Final Browser Sync code.
+
+```js
+var gulp = require('gulp');
+var sass = require('gulp-sass');
+var autoprefixer = require('gulp-autoprefixer');
+var browserSync = require('browser-sync').create();
+
+gulp.task('default', ['styles'], function(done) {
+  gulp.watch('sass/**/*.scss', ['styles']);
+
+  browserSync.init({
+    server: './'
+  });
+  done();
+});
+
+gulp.task('styles', function(done) {
+  gulp.src('sass/**/*.scss')
+    .pipe(sass().on('error', sass.logError))
+    .pipe(autoprefixer({
+      browsers: ['last 2 versions']
+    }))
+    .pipe(gulp.dest('./css'))
+    .pipe(browserSync.stream());
+  done();
+});
+```
+
+This will only refresh the page for css updates.
+
+### 12.5 Wrap-up
+And there you have it. A seemingly complex chain of events, running nicely together to dramatically accelerate your work flow.
+
+Keep going for awhile and modify the styles of your sample page to get a feel for how this impacts your productivity.
