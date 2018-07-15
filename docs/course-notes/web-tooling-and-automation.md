@@ -31,6 +31,9 @@ description: Notes by James Priest
 - [gulp-autoprefixer](https://www.npmjs.com/package/gulp-autoprefixer) npm package
 - [Browsersync](https://www.browsersync.io/docs/gulp)
 
+#### Linting
+- [Comparison of JavaScript linting tools](http://www.sitepoint.com/comparison-javascript-linting-tools/) by SitePoint
+- [ESLint](http://eslint.org/)
 
 ## Lesson 9. Tools & Automation
 ### 9.1 Course Intro
@@ -436,7 +439,7 @@ Tasks in Gulp are asynchronous and Gulp uses [async-done](https://www.npmjs.com/
 Tasks are called with a callback parameter which we call to signal completion. Alternatively, Task can return a stream, a promise, a child process or a RxJS observable to signal the end of the task.
 
 > #### Task Examples on stackoverflow 
-> Here's a link that shows each of the five ways we can define a task.
+> The examples use Gulp 3.9.1 but here's a link that shows each of the five ways we can define a task in Gulp 4.0.
 > - [Define a task in Gulp 4.x (stackoverflow)](https://stackoverflow.com/questions/36897877/gulp-error-the-following-tasks-did-not-complete-did-you-forget-to-signal-async).
 
 #### Option #1: Call the callback function (easiest)
@@ -850,6 +853,7 @@ var browserSync = require('browser-sync').create();
 
 gulp.task('default', ['styles'], function(done) {
   gulp.watch('sass/**/*.scss', ['styles']);
+  gulp.watch('index.html').on('change', browserSync.reload);
 
   browserSync.init({
     server: './'
@@ -875,3 +879,265 @@ This will only refresh the page for css updates.
 And there you have it. A seemingly complex chain of events, running nicely together to dramatically accelerate your work flow.
 
 Keep going for awhile and modify the styles of your sample page to get a feel for how this impacts your productivity.
+
+## Lesson 13. Lint & Test
+### 13.1 Intro
+Now that we've set up Gulp to do our CSS preprocessing & Live Editing, we can continue to use Gulp to automate linting and unit testing to make our lives easier.
+
+In this lesson, you will learn how to prevent cross-browser issues in your CSS and catch JavaScript errors.
+
+### 13.2 Why Rely on Build Tools
+When I need to build something and am going to be working with materials I shouldn't be breathing in, I naturally put on a dust mask and safety goggles.
+
+In the same way our build tools can protect us from disaster.
+
+Now, of course, you can't accidentally amputate a finger from bad JavaScript, but you can make mistakes that can result in your site being unusable for a lot of users.
+
+Here's the thing: tools aren't perfect either, but they are consistent. Meaning, they never get tired, never lack concentration, and don't have an ego.
+
+By utilizing your build and editor tools, you can quite heavily improve the quality of your code.
+
+### 13.3 Linting
+Linting is a way to automatically check your JavaScript code for errors.
+
+It can be done at various stages during development via your editor, your build process, or your pre-commit hook in version control.
+
+[![tools1-20](../assets/images/tools1-20-small.jpg)](../assets/images/tools1-20.jpg)
+
+There's not always a right or wrong way in linting. A lot of it is heavily opinionated so you should choose the configuration that fits your coding style and project.
+
+There's also the difference of code style linting versus syntax or structural linting.
+
+[![tools1-21](../assets/images/tools1-21-small.jpg)](../assets/images/tools1-21.jpg)
+
+Syntax or structural linting is what most people refer to when they say linting. These rules check for JavaScript anti-patterns, such as unreachable statements or forgetting to do a strict comparison against null.
+
+On the other hand, code style linting can complain about things such as variables that aren't properly camel cased, or a particular way of placing braces for a function.
+
+So if linting ensures your code looks sexy and checks for all these potential errors, does that mean your code will always run if the linter is happy?
+
+Nope. The linter only checks for potential errors. It doesn't actually have any idea what you're trying to accomplish.
+
+So now that you're familiar with the concept of linting, let's talk solutions.
+
+There are three popular JavaScript linters out there that developers use: JSHint, JSCS, and ESLint.
+
+[![tools1-22](../assets/images/tools1-22-small.jpg)](../assets/images/tools1-22.jpg)
+
+You'll find a link in the notes that details the differences, but to cut it short, we'll stick with ESLint as it supports modern ES6 code,can be extended, and has output that's really easy to understand.
+
+#### 13.3 Resources
+
+- [Comparison of JavaScript linting tools](http://www.sitepoint.com/comparison-javascript-linting-tools/) by SitePoint
+- [ESLint](http://eslint.org/)
+
+### 13.4 Quiz: Linting Benefits
+How does linting help your code?
+
+- [x] Helps uncover code style problems
+
+    The first one here is correct. Having a linting configuration for your project helps with code sharing and development with multiple team members.
+- [x] Helps eliminate dead code or variables
+
+    Linting certainly does help with all these and more. Some dead code is easily forgotten and can mess up your app in many obscure ways and linting will help find many of these patterns.
+
+- [ ] Helps identify slow functions
+    Linting does not help identify slow functions. Linting works purely by analyzing the actual source code. In order to find out how long a function takes to execute, it needs to run in the browser.
+
+- [ ] Identifies incorrect return types
+    A linter also doesn't help with this last one. Given the dynamic nature of JavaScript, often the type information is not known.
+
+### 13.5 Setting up ESLint
+To make the linter most effective, you want to have it run in your editor at every keystroke.
+
+This effectively lints as you code. That way you're notified of potential problems as early as possible.
+
+[![tools1-23](../assets/images/tools1-23-small.jpg)](../assets/images/tools1-23.jpg)
+
+#### Install ESLint
+In order for this to work, you'll need to install ESlint first via npm. Make sure to use the '-g' option to install it globally.
+
+```bash
+npm install eslint -g
+```
+
+#### Install Editor Plugins
+if you are running Sublime, you'll need to install two different Sublime plugins.
+
+- `SublimeLinter` is a framework around linting, but doesn't come with specific language linters.
+- `SublimeLinter-contrib-eslint` is the wrapper code that connects ESLint to `SublimeLinter`.
+
+When you're done, restart your editor.
+
+If you are running VSCode you can install the ESLint Extension from the Extensions side panel by clicking the Extensions icon from the Activity Bar.
+
+Now look at the `main.js` file in the js folder. Notice that the linter doesn't do anything yet.
+
+[![tools1-24](../assets/images/tools1-24-small.jpg)](../assets/images/tools1-24.jpg)
+
+It might seem that something didn't work during installation but all is fine.
+
+It's just that ESLint, by default, doesn't do anything unless you configure it. Luckily it's simple to generate a basic configuration.
+
+#### Configure ESLint
+Switch back to your terminal, where you should still be in a sample directory, and run eslint init.
+
+```bash
+eslint --init
+```
+
+This will bring up this nifty prompt that asks you a few questions, then generates an eslintrc file for you.
+
+[![tools1-25](../assets/images/tools1-25-small.jpg)](../assets/images/tools1-25.jpg)
+
+If you now open that file in Sublime, you'll notice a few style rules from the prompts you just answered but the key is the `extends` block at the bottom.
+
+[![tools1-26](../assets/images/tools1-26-small.jpg)](../assets/images/tools1-26.jpg)
+
+This tells ESLint to run with its recommended set, and anything you add on top will overwrite or add to it.
+
+That's super useful as a starting point. 
+
+Here's ESLint in action. See the foo variable, the red dot next to the line numbers? 
+
+Sublime highlights it with a red border. To know which error occurred, just click on `foo` and look at status bar at the bottom.
+
+[![tools1-30](../assets/images/tools1-30-small.jpg)](../assets/images/tools1-30.jpg)
+
+In this simple example, it's obvious that we're missing a `var`.
+
+When we fix it `foo` still shows as red. Why is that? We actually fixed a previous error and are now looking at a new one.
+
+Foo is now defined but never used in your code. So it's fair that ESLint complains about it.
+
+[![tools1-27](../assets/images/tools1-27-small.jpg)](../assets/images/tools1-27.jpg)
+
+Let's add a return statement to actually use `foo` in some way.
+
+```js
+(function () {
+
+  var foo = 1;
+  return foo;
+
+})();
+```
+
+Just as I stop typing, the red vanished and thus, all errors went away.
+
+If you open your gulpfile.js, though, you'll notice a lot of red around the `require` blocks
+
+[![tools1-28](../assets/images/tools1-28-small.jpg)](../assets/images/tools1-28.jpg)
+
+That's because ESLint thinks that files run in the browser and the browser has no `require` function.
+
+We want ESLint to turn off Node.js warnings but only in this file. Luckily, we can do that.
+
+[![tools1-29](../assets/images/tools1-29-small.jpg)](../assets/images/tools1-29.jpg)
+
+This special type of comment works just like a configuration, but it's local to the current file.
+
+```js
+/*eslint-env node */
+
+var gulp = require('gulp');
+var sass = require('gulp-sass');
+var autoprefixer = require('gulp-autoprefixer');
+var browserSync = require('browser-sync').create();
+```
+
+Before we move on to learn how to integrate ESLint into your build, keep in mind that the amazing SublimeLinter plugin also supports dozens of other linters.
+
+So if you'd like your CSS, HTML, or even PHP linted, there's certainly a plugin for that.  The same holds true for VSCode extensions.
+
+#### 13.5 Resources
+
+- [Sublime Linter](http://www.sublimelinter.com/en/latest/)
+- [gulp-eslint](https://www.npmjs.com/package/gulp-eslint) on npm
+
+### 13.6 ESLint in Gulp
+If you're collaborating or working on another computer, the other party might not have the linter configured.
+
+Since your colleague needs to run the build to work with the site anyway, why not have the build run the linter, and complain when something goes wrong?
+
+Install the gulp-eslint package from the command line.
+
+```bash
+$ npm install gulp-eslint --save-dev
+
++ gulp-eslint@5.0.0
+added 116 packages from 145 contributors...
+```
+
+Then require it in the head of your `gulpfile.js`.
+
+```js
+/*eslint-env node */
+
+var gulp = require('gulp');
+var sass = require('gulp-sass');
+var autoprefixer = require('gulp-autoprefixer');
+var browserSync = require('browser-sync').create();
+var eslint = require('gulp-eslint');
+```
+
+We then can navigate to the [gulp-eslint](https://www.npmjs.com/package/gulp-eslint) npm package.
+
+[![tools1-31](../assets/images/tools1-31-small.jpg)](../assets/images/tools1-31.jpg)
+
+Turns out the basic example on the `gulp-eslint` readme works well for us.
+
+So, I'm just going to copy it and paste it into my gulp file.
+
+[![tools1-32](../assets/images/tools1-32-small.jpg)](../assets/images/tools1-32.jpg)
+
+As you'll notice, this task looks very familiar. It has the `gulp.src` call, but this time it matches js files, then uses pipes to do a few things with eslint.
+
+```js
+gulp.task('lint', function () {
+  return gulp.src(['js/**/*.js'])
+    // eslint() attaches the lint output to the eslint property
+    // of the file object so it can be used by other modules.
+    .pipe(eslint())
+    // eslint.format() outputs the lint results to the console.
+    // Alternatively use eslint.formatEach() (see Docs).
+    .pipe(eslint.format())
+    // To have the process exit with an error code (1) on
+    // lint error, return the stream and pipe to failOnError last.
+    .pipe(eslint.failOnError());
+});
+```
+
+1. The first pipe executes eslint and all files matched.
+2. The second line outputs the errors to the console, so we actually see what happened.
+3. The third pipe ensures that gulp exits with an error code and fails.
+
+Without the third line, gulp would show the errors but would proceed with everything else.
+
+Now we could execute the task manually but let's integrate it into our default task.
+
+```js
+gulp.task('default', ['styles', 'lint'], function () {  // <-- here
+  gulp.watch('sass/**/*.scss', ['styles']);
+  gulp.watch('index.html').on('change', browserSync.reload);
+  gulp.watch('js/**/*.js', ['lint']);   // <-- here
+
+  browserSync.init({
+    server: './'
+  });
+});
+```
+
+First, we add `lint` to the second argument array after `styles` so it runs right after running Gulp in the terminal.
+
+Then we add a new line after the first `gulp.watch` to add a new `gulp.watch`. This time watching the `.js` files and calling `lint`, instead of `styles`.
+
+The best thing is that we can later reuse this new watcher to do even more great things to our js.
+
+Try running Gulp in the terminal and makes some changes through your `.js` to see linting appear on your terminal after every save.
+
+To wrap things up, there's a third almost desperate way of forcing eslint on your project collaborators.
+
+With a pre-commit hook, you can require that code successfully lints properly or the commit will not go through.
+
+You can find out more about this in the Udacity [How to Use Git and GitHub](https://www.udacity.com/course/ud775) course.
