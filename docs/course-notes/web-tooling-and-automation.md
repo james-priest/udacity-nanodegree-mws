@@ -21,19 +21,22 @@ description: Notes by James Priest
 - [The Basics of Node.js Streams](https://www.sitepoint.com/basics-node-js-streams/) (11-2014)
 - [Define a task in Gulp 4.x (stackoverflow)](https://stackoverflow.com/questions/36897877/gulp-error-the-following-tasks-did-not-complete-did-you-forget-to-signal-async) (7-2016)
 
-#### Sass & Autoprefixer
+#### Sass. Autoprefixer, & BrowserSync
 - [Sass](https://sass-lang.com/)
 - [Autoprefixer](https://autoprefixer.github.io/)
-
-#### Packages & Primers
 - [Node Glob Primer](https://github.com/isaacs/node-glob)
 - [gulp-sass](https://www.npmjs.com/package/gulp-sass) npm package
 - [gulp-autoprefixer](https://www.npmjs.com/package/gulp-autoprefixer) npm package
-- [Browsersync](https://www.browsersync.io/docs/gulp)
+- [BrowserSync](https://www.browsersync.io/docs/gulp)
 
 #### Linting
 - [Comparison of JavaScript linting tools](http://www.sitepoint.com/comparison-javascript-linting-tools/) by SitePoint
 - [ESLint](http://eslint.org/)
+
+#### Testing
+- [PhantomJS Download](http://phantomjs.org/download.html)
+- [Jasmine Test Framework](https://jasmine.github.io/index.html)
+- [gulp-jasmine-phantom](https://www.npmjs.com/package/gulp-jasmine-phantom) npm package
 
 ## Lesson 9. Tools & Automation
 ### 9.1 Course Intro
@@ -1141,3 +1144,136 @@ To wrap things up, there's a third almost desperate way of forcing eslint on you
 With a pre-commit hook, you can require that code successfully lints properly or the commit will not go through.
 
 You can find out more about this in the Udacity [How to Use Git and GitHub](https://www.udacity.com/course/ud775) course.
+
+### 13.7 Unit Testing in Gulp
+You've just learned how to protect yourself from syntax and coding style issues but as you know, this doesn't ensure your code does what it's supposed to do.
+
+In order to test the functionality of your code, you should create unit tests.
+
+Unit tests are essentially JavaScript functions that pragmatically test an API or aspect of your project code.
+
+If this topic is new to you, I encourage you to check out Udacity's [JavaScript Testing](https://www.udacity.com/course/javascript-testing--ud549) course.
+
+For the purpose of this course, we'll assume you either already know the basics of javaScript unit testing or will learn them at a later point in time.
+
+Thus we just provide a sample test suite to integrate as part of our build process.
+
+Unit tests, like Linting, are here to prevent mistakes. Wouldn't it be cool if you could automate running them just like everything else was set up so far with our built?
+
+Well there's one issue with that. The unit test for your front end only makes sense if they run in a browser.
+
+Thus, running them from the terminal environment won't do any good, but this doesn't mean it's impossible, it's just slightly more tricky.
+
+Here's how it works.
+
+#### 13.7 Resources
+- Udacity's [JavaScript Testing](https://www.udacity.com/course/javascript-testing--ud549) course
+
+### 13.8 Jasmine & PhantomJS
+Jasmine is a popular unit test framework for testing both your browser and Node.js JavaScript code. Here is the description from their homepage.
+
+> #### What is Jasmine
+> Jasmine is a behavior-driven development framework for testing JavaScript code.
+> 
+> It does not depend on any other JavaScript frameworks. It does not require a DOM. And it has a clean, obvious syntax so that you can easily write tests.
+
+The key to make Jasmine work with our build, is to use a headless browser instance that we can execute from the command line because that's what gulp can deal with.
+
+Luckily, such a browser exists. It's called PhantomJS, and it's basically a headless version of Webkit.
+
+[![tools1-33](../assets/images/tools1-33-small.jpg)](../assets/images/tools1-33.jpg)
+
+You don't need to know much more about it right now, just that the `gulp-jasmine-phantom` plugin uses PhantomJS to actually run your tests in a headless browser environment (browser without a UI).
+
+First install PhantomJS through Terminal using the following (Linux & WSL).
+
+```bash
+sudo apt update
+sudo apt install phantomjs
+```
+
+For WSL need to add the following to end of `~/.bashrc`.
+
+```bash
+export QT_QPA_PLATFORM=offscreen
+```
+
+Then install `gulp-jasmine-phantom` via npm in your project directory.
+
+```bash
+$ npm install gulp-jasmine-phantom --save-dev
+
++ gulp-jasmine-phantom@3.0.0
+added 116 packages from 145 contributors...
+```
+
+Then add a require to your gulp file, like so.
+
+```js
+/*eslint-env node */
+
+var gulp = require('gulp');
+var sass = require('gulp-sass');
+var autoprefixer = require('gulp-autoprefixer');
+var browserSync = require('browser-sync').create();
+var eslint = require('gulp-eslint');
+var jasmine = require('gulp-jasmine-phantom');  // <-- here
+```
+
+Now all we need to do is to create a new task called `tests`. Use `gulp.src` to find the correct test file we want to run, then use a `require` with Jasmine.
+
+```js
+gulp.task('tests', function () {
+  gulp.src('tests/spec/extraSpec.js')
+    .pipe(jasmine({
+      integration: true,
+      vendor: 'js/**/*.js'
+    }));
+});
+```
+
+The `integration` setting tells Jasmine to use PhantomJS. If it's set to `false`, it runs in a Node.js environment instead which you'd only want if you're testing Node.js code.
+
+Finally the `vendor` setting needs to point to our JavaScript source files, as this plugin constructs its own `specrunner.html` with those.
+
+Now head back to your terminal and run the following to see Phantom JS and Jasmine in action.
+
+```bash
+gulp tests
+```
+
+#### 13.8 Resources
+
+- [PhantomJS Download](http://phantomjs.org/download.html)
+- [Jasmine Test Framework](https://jasmine.github.io/index.html)
+- [gulp-jasmine-phantom](https://www.npmjs.com/package/gulp-jasmine-phantom) npm package
+
+### 13.9 Unit Test Limits
+All right. I'm sure you were thinking we now add `tests` to the default task, and then to the JavaScript watcher.
+
+Well, you're half right, that's what we would ideally do but running complex unit tests, especially in a headless browser, can get really.
+
+So adding into our watch process would kill our Live Editing workflow.
+
+In order to solve this problem, smart people invented Continuous Integration (CI) in the Cloud.
+
+### 13.10 Continuous Integration
+Continuous integration is the idea that you're always making sure your code integrates properly with the remote repository.
+
+So across a team, you'll always have a stable build. Now we won't go into detail on CI, as much of it is already covered in the dev ops udacity course [Intro to DevOps](https://www.udacity.com/course/intro-to-devops--ud611).
+
+A key lesson here is that CI in the cloud provides a great place for your time intensive tasks. In particular, your unit tests.
+
+A cloud solution like Jenkins will watch the commits going into your repository and trigger any terminal commands you feed it.
+
+So if you take the Gulp test task that we've just created and hook it up in the cloud, it means that the test suite will run after every commit.
+
+If one of these tests now fails, you've got a email and can fix it in your next commit.
+
+We'll leave our task as is for now, but do go and check out the dev ops Udacity course when you're finished with ours.
+
+### 13.11 Wrap-up
+With the right solutions in place, namely our linters and the unit test suite, you'll feel a lot safer and can iterate new changes without worrying too much.
+
+Linting and Continuous Integration can help you find errors in your code when they're easily fixable, before they become a catastrophic.
+
