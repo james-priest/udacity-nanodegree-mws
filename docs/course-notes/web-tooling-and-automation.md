@@ -1277,3 +1277,156 @@ With the right solutions in place, namely our linters and the unit test suite, y
 
 Linting and Continuous Integration can help you find errors in your code when they're easily fixable, before they become a catastrophic.
 
+## Lesson 14. Optimizations
+### 14.1 Intro
+We've optimized the development workflow but that's about it. Now think about all the things you should do after you finishing coding and planning a release.
+
+These are things like unifying and concatenating your source files and optimizing your images.
+
+In today's mobile world, you see hundreds of different device, browser, and screen combinations that use your app or site. In some cases, it's simply impossible to optimize by hand.
+
+This is where your build process steps in.
+
+We'll use it to optimize things that you can't fix by hand, or simply take too long. By doing this we'll make your build more powerful, so that it takes a raw source code and polishes it for production.
+
+### 14.2 Dev vs Prod Modes
+Before we go and optimize it's important to understand that these optimizations are only meant for production.
+
+Sure you could execute them all the time, but it would dramatically slowdown your iterative build time, and thus make live editing a lot less powerful.
+
+Instead I recommend you split your tasks into **development** and **production**.
+
+Development tasks contain things you really need no matter what. Sass processing, for example, and tasks that only make sense through encoding, for instance, live editing.
+
+However, keep in mind that while developing, this means you'll be using a different version of your app than your users. It's going to look and feel mostly the same, but sometimes performance issues or bugs only manifest with a specific optimization technique. So make sure to always test the production version from time to time.
+
+In our next couple of instructions, we'll be creating more generated assets. Previously, the only generated files we were producing were the CSS files but now we need to create a structure to hold production and development files separately.
+
+### 14.3 Dev & Prod Tasks
+To get started, let's create a `dist` folder that holds all generated files separate from the source files.
+
+```bash
+mkdir dist
+```
+
+This wasn't a problem with sass as we generated the CSS into a separate high-level CSS folder but it would be with JavaScript because we don't want our source and distribution files to co-mingle.
+
+[![tools1-34](../assets/images/tools1-34-small.jpg)](../assets/images/tools1-34.jpg)
+
+The process is pretty simple.
+
+1. We first copy our index.html into the `dist` folder
+2. Then generate our css into `dist/css`,
+3. We generate our combined JavaScript file into `dist/js`.
+
+Since we've already got our CSS set up, let's change what's needed in our styles task.
+
+Here's our styles task in the grunt file. And we can see our destination is set to just the CSS directory.
+
+[![tools1-35](../assets/images/tools1-35-small.jpg)](../assets/images/tools1-35.jpg)
+
+To make it show up under this `dist` directory, we just change the destination to `dist/css`.
+
+[![tools1-36](../assets/images/tools1-36-small.jpg)](../assets/images/tools1-36.jpg)
+
+And, when we run `gulp styles`, we can see that the files have been generated and dropped in the correct folder.
+
+[![tools1-37](../assets/images/tools1-37-small.jpg)](../assets/images/tools1-37.jpg)
+
+Next, let's copy the `index.html` and `images` to the `dist` folder.
+
+We simply set up two new tasks and call them something like `copy-html` and `copy-images`.
+
+[![tools1-38](../assets/images/tools1-38-small.jpg)](../assets/images/tools1-38.jpg)
+
+In the `copy-html` task, we grab the `index.html` file with `gulp.src` and just pipe it to the destination in the `dist` folder.
+
+For the `copy-images` task, we do the same thing, but instead of copying a file or grabbing a locator to a file, we're grabbing all the files in a specific directory and piping them to our new destination location.
+
+You'll want to set up a new `gulp.watch` next to the others that will watch the original index file.
+
+[![tools1-39](../assets/images/tools1-39-small.jpg)](../assets/images/tools1-39.jpg)
+
+You could do the same with the images, but they don't change that often.
+
+And don't forget to add the two new tasks to the array that's passed as part of the `default` task,otherwise the files don't get copied over the first time we run gulp.
+
+[![tools1-40](../assets/images/tools1-40-small.jpg)](../assets/images/tools1-40.jpg)
+
+Just a final fix before we can see our page run again minus the JavaScript which will come in a bit.
+
+You'll need to modify the `browserSync.init` function call and make it point to the `dist` directory.
+
+[![tools1-41](../assets/images/tools1-41-small.jpg)](../assets/images/tools1-41.jpg)
+
+### 14.4 Quiz: BrowserSync
+Okay, now it's your turn. Set up the build folder in commands to assemble its contents.
+
+Did you notice that browser-sync isn't listening for changes in the index.html file?
+
+Do you have an idea how we could fix that? Go ahead and type your code here.
+
+#### 14.4 Solution
+If you search for a solution, it's very likely that you found more than one. But here's one that was easiest, shortest and worked the best for me.
+
+I just setup another `gulp.watch`, but this time it isn't watching the original `index.html`, but the copied one.
+
+Every time that the copy operation is done, we can now execute `browserSync.reload` to reload the whole page.
+
+```js
+gulp.watch('./build/index.html').on('change', browserSync.reload);
+```
+
+Make sure this works for you. Then we can move on with the JavaScript processing.
+
+Here is our updated `default` task.
+
+```js
+gulp.task('default', ['copy-html', 'copy-images', 'styles', 'lint', 'scripts'], function() {
+  gulp.watch('sass/**/*.scss', ['styles']);
+  gulp.watch('js/**/*.js', ['lint']);
+  gulp.watch('/index.html', ['copy-html']);
+  gulp.watch('./dist/index.html').on('change', browserSync.reload);
+
+  browserSync.init({
+    server: './dist'
+  });
+});
+```
+
+### 14.5 CSS Concatenation
+The first optimizations we do are easy to implement and make our code load faster.
+
+We first glue our CSS and JavaScript files together through concatenation, then crunch them with a mini-file.
+
+In previous lessons, we applied a couple tasks to our CSS but this time it's mostly about JavaScript.
+
+I say mostly because these topics still apply to CSS but Sass does both concatenation and minification for you.
+
+Manual concatenation isn't necessary, because you can simply include a single Sass file in your HTML then use the `@import` directive in your Sass to input other files into your base file.
+
+When the Sass compiler processes the Sass into CSS, it will automatically inline those `@imports` and generate one big CSS file.
+
+A minification just requires an additional optional.
+
+Just modify the Sass pipe slightly and add `outputStyle: 'compressed'` which will produce a nicely compressed file.
+
+```js
+.pipe(sass({outputStyle: 'compressed'}))
+```
+
+Here is our updated `styles` task.
+
+```js
+gulp.task('styles', function() {
+  gulp.src('sass/**/*.scss')
+    .pipe(sass({
+      outputStyle: 'compressed'
+    }).on('error', sass.logError))
+    .pipe(autoprefixer({
+      browsers: ['last 2 versions']
+    }))
+    .pipe(gulp.dest('dist/css'))
+    .pipe(browserSync.stream());
+});
+```
