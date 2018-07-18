@@ -1430,3 +1430,66 @@ gulp.task('styles', function() {
     .pipe(browserSync.stream());
 });
 ```
+
+### 14.6 JS Concatenation
+Onto the world of JavaScript concatenation. Concatenation here solves two problems at once.
+
+First and foremost, it reduces the number of HTTP requests needed to load your page in production.
+
+This is a big deal, especially if you're on a mobile connection with up to 300 milliseconds of latency per request.
+
+Secondly, it's the most basic form of dependency management.
+
+You put all your script into a folder and instead of having to add script blocks in the HTML to load them one by one, you simply add a single script block that points to the generated, concatenated output file.
+
+I say most basic form because it obviously isn't smart enough to detect dependency chains and a required load order. Solving for this is a much more involved task. So let's keep it simple for now.
+
+### 14.7 JS Concat Hands On
+To get started, we should first create a `scripts` task.
+
+However, since we want to do slightly different things in development and production mode, we add another task called `scripts-dist`, which will be used when we want to distribute our files for production.
+
+[![tools1-42](../assets/images/tools1-42-small.jpg)](../assets/images/tools1-42.jpg)
+
+In the first step, both of these tasks will look the same. We `gulp.src` the files we need, in this case, our JavaScript files.
+
+Then pipe them to the correct destination, in our case, the `dist/js` folder.
+
+[![tools1-43](../assets/images/tools1-43-small.jpg)](../assets/images/tools1-43.jpg)
+
+Now install the `gulp-concat` plug-in via npm.
+
+```bash
+$ npm install gulp-concat --save-dev
+
++ gulp-uglify@3.0.0
+added 5 packages from 40 contributors ...
+```
+
+Next require it in the gulpfile.js
+
+```js
+/*eslint-env node */
+
+var gulp = require('gulp');
+var sass = require('gulp-sass');
+var autoprefixer = require('gulp-autoprefixer');
+var browserSync = require('browser-sync').create();
+var eslint = require('gulp-eslint');
+var jasmine = require('gulp-jasmine-phantom');
+var concat = require('gulp-concat');  // <- here
+```
+
+Then add a new pipe to both tasks with `concat('all.js')` before the destination pipe.
+
+[![tools1-44](../assets/images/tools1-44-small.jpg)](../assets/images/tools1-44.jpg)
+
+This plugin takes the files in the stream, and combines them into a single file named whatever you provide as the argument.
+
+Try running one of those task in your terminal, to make sure the concatenated `all.js` ends up in the correct folder.
+
+Now we're missing only one last thing. We need to change the references to the individual js files in our index HTML to point to the single js file, at `js/all.js`.
+
+[![tools1-45](../assets/images/tools1-45-small.jpg)](../assets/images/tools1-45.jpg)
+
+And now your page should run fine again.
