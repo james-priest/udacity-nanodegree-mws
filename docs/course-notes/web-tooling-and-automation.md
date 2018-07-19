@@ -1382,14 +1382,15 @@ Make sure this works for you. Then we can move on with the JavaScript processing
 Here is our updated `default` task.
 
 ```js
-gulp.task('default', ['copy-html', 'copy-images', 'styles', 'lint', 'scripts'], function() {
-  gulp.watch('sass/**/*.scss', ['styles']);
-  gulp.watch('js/**/*.js', ['lint']);
-  gulp.watch('/index.html', ['copy-html']);
-  gulp.watch('./dist/index.html').on('change', browserSync.reload);
+gulp.task('default', ['copy-html', 'copy-images', 'styles', 'lint', 'scripts'],
+  function() {
+    gulp.watch('sass/**/*.scss', ['styles']);
+    gulp.watch('js/**/*.js', ['lint']);
+    gulp.watch('/index.html', ['copy-html']);
+    gulp.watch('./dist/index.html').on('change', browserSync.reload);
 
-  browserSync.init({
-    server: './dist'
+    browserSync.init({
+      server: './dist'
   });
 });
 ```
@@ -1493,3 +1494,407 @@ Now we're missing only one last thing. We need to change the references to the i
 [![tools1-45](../assets/images/tools1-45-small.jpg)](../assets/images/tools1-45.jpg)
 
 And now your page should run fine again.
+
+Here are the updates to `gulpfile.js`.
+
+```js
+gulp.task('scripts', function() {
+  gulp.src('js/**/*.js')
+    .pipe(concat('all.js'))
+    .pipe(gulp.dest('dist/js'));
+});
+
+gulp.task('scripts-dist', function() {
+  gulp.src('js/**/*.js')
+    .pipe(concat('all.js'))
+    .pipe(gulp.dest('dist/js'));
+});
+```
+
+### 14.8 Minification
+After concatenation, it's now time for minification to shrink the file size of our JavaScript.
+
+The most popular minifier today is `uglify.js` which does some heavy but safe optimizations to squeeze every last bit out of your raw source code.
+
+As before, we install the gulp-uglify plug-in with npm.
+
+```bash
+$ npm install gulp-uglify --save-dev
+
++ gulp-uglify@3.0.0
+added 5 packages from 40 contributors...
+```
+
+Then we include it at the top of our gulp file.
+
+```js
+/*eslint-env node */
+
+var gulp = require('gulp');
+var sass = require('gulp-sass');
+var autoprefixer = require('gulp-autoprefixer');
+var browserSync = require('browser-sync').create();
+var eslint = require('gulp-eslint');
+var jasmine = require('gulp-jasmine-phantom');
+var concat = require('gulp-concat');
+var uglify = require('gulp-uglify');
+```
+
+Now this is where our `scripts` and `scripts-dist` tasks are starting to become slightly different since JavaScript minification is a very time-intensive task.
+
+Therefore, it makes no sense to do this while live-editing code.
+
+So, we add the missing pipe to the `scripts-dist` task right after the `concat` pipe. In it we call `uglify()`.
+
+
+```js
+gulp.task('scripts', function() {
+  gulp.src('js/**/*.js')
+    .pipe(concat('all.js'))
+    .pipe(gulp.dest('dist/js'));
+});
+
+gulp.task('scripts-dist', function() {
+  gulp.src('js/**/*.js')
+    .pipe(concat('all.js'))
+    .pipe(uglify())   // <-- here
+    .pipe(gulp.dest('dist/js'));
+});
+```
+
+That's all you need and calling this task now will produce nicely concatenated and minified JavaScript.
+
+```bash
+$ gulp scripts-dist
+Starting 'scripts-dist'...
+Finished 'scripts-dist' after 12 ms
+```
+
+### 14.9 Production Task
+To produce a production ready version of our site, we can skip the whole live editing and watching, and include the scripts distribution task instead.
+
+We call the new task `dist` and include the following tasks in this order.
+
+1. 'copy-html'
+2. 'copy-images'
+3. 'styles'
+4. 'lint'
+5. 'scripts-dist'
+
+Here's the code.
+
+```js
+gulp.task('dist', [
+  'copy-html',
+  'copy-images',
+  'styles',
+  'lint',
+  'scripts-dist'
+]);
+```
+
+Try running the tasks by using:
+
+```bash
+gulp scripts-dist
+```
+
+If gulp takes slightly longer, and exits without opening the browser, then you're all set, and have a production ready distribution in your `dist` folder.
+
+Before we continue, one word of advice regarding minification.
+
+Minification on its own is great, but GZIP is even more affective. GZIP compresses the file before it gets in, and out to the browser,and the browser deflates it.
+
+All of this happens transparently in the background and usually only requires a small server configuration change.
+
+Read more about it in: [The difference Between Minification and GZipping](https://css-tricks.com/the-difference-between-minification-and-gzipping/).
+
+### 14.10 Babel & ES6
+There's another very worthwhile optimization we can do to our JavaScript, and it's quite similar to how we use Sass instead of CSS.
+
+[![tools1-46](../assets/images/tools1-46-small.jpg)](../assets/images/tools1-46.jpg)
+
+Turns out there is a way of running the very latest spec of JavaScript, ECMAScript 2015 (or ES6), even though some features are not natively supported by all browsers.
+
+What we need is a transpiler, which takes one programming language, and converts it into another.
+
+Sometimes transpilers stay very close to ECMAScript syntax, adding in a few features here and there. In other cases, they are full implementations of languages you don't typically find in purely front end web development.
+
+We'll stick to the former category. Our transpiler of choice is BabelJS. It's very popular, feature rich, and well supported by the community.
+
+Now of course this step is purely optional. If you're happy with today's JavaScript and don't need all the fanciness, great. But if you're curious to try out arrow functions, generators and classes, now is the perfect time.
+
+And sure enough, getting this into our code is as simple as everything else.
+
+First install the npm package.
+
+```bash
+$ npm install gulp-babel babel-core babel-preset-env --save-dev
+
++ gulp-babel@7.0.1
+added 2 packages from 2 contributors...
++ babel-core@6.26.3
+added 25 packages from 10 contributors...
++ babel-preset-env@1.7.0
+added 48 packages from 6 contributors...
+```
+
+Then update your `.eslintrc` file to allow ES6.
+
+```json
+"env": {
+  "browser": true,
+  "es6": true
+}
+```
+
+Next add a `.babelrc` file to your project root that tells babel what you want to transpile.
+
+```json
+{
+  "presets": [
+    ["env", {
+      "targets": {
+        "browsers": ["last 2 versions", "safari >= 7"]
+      }
+    }]
+  ]
+}
+```
+
+Next grab the `gulp-babel` plugin and require it in your gulp file.
+
+[![tools1-47](../assets/images/tools1-47-small.jpg)](../assets/images/tools1-47.jpg)
+
+And in both script task, pipe it after the `gulp.src`, but before the concatenation.
+
+[![tools1-48](../assets/images/tools1-48-small.jpg)](../assets/images/tools1-48.jpg)
+
+You won't see any difference right away, as you're not actually using any ES6 magic in your current code. 
+
+In order to test you can add some ES6 code to `main.js`.
+
+```js
+const test1 = () => 'my es6';
+```
+
+Babel will transpile this to
+
+```js
+"use strict"
+
+var test1 = function test1() {
+  return 'my es6';
+};
+```
+
+You can check this in DevTools. 
+
+So head over to Babel's ES6 learning page and get familiar with some of the concepts.
+
+Here's part of the final code.
+
+```js
+/*eslint-env node */
+
+var gulp = require('gulp');
+var sass = require('gulp-sass');
+var autoprefixer = require('gulp-autoprefixer');
+var browserSync = require('browser-sync').create();
+var eslint = require('gulp-eslint');
+var jasmine = require('gulp-jasmine-phantom');
+var concat = require('gulp-concat');
+var uglify = require('gulp-uglify');
+var babel = require('gulp-babel');
+
+gulp.task('default', ['copy-html', 'copy-images', 'styles', 'lint', 'scripts'],
+  function () {
+    gulp.watch('sass/**/*.scss', ['styles']);
+    gulp.watch('js/**/*.js', ['lint']);
+    gulp.watch('./index.html', ['copy-html']);
+    gulp.watch('./dist/index.html').on('change', browserSync.reload);
+
+    browserSync.init({
+      server: './dist'
+});
+});
+
+gulp.task('dist', [
+  'copy-html',
+  'copy-images',
+  'styles',
+  'lint',
+'scripts-dist'
+]);
+
+gulp.task('scripts', function() {
+  gulp.src('js/**/*.js')
+    .pipe(babel())
+    .pipe(concat('all.js'))
+    .pipe(gulp.dest('dist/js'))
+    .pipe(browserSync.stream());
+});
+
+gulp.task('scripts-dist', function() {
+  gulp.src('js/**/*.js')
+    .pipe(babel())
+    .pipe(concat('all.js'))
+    .pipe(uglify())
+    .pipe(gulp.dest('dist/js'));
+});
+// more code...
+```
+
+### 14.12 Source Maps
+Imagine you’re running your page now and there’s a bug in your JavaScript. so you head over to the Sources panel to set a breakpoint, only to realize you’re looking at Spaghetti instead of source code.
+
+After all the optimizations, none of your code is particularly readable anymore.
+
+That's a major rationale for source maps.
+
+Source maps are files that associate line numbers from the processed file to the original. This way the browser can lookup the current line number in the sourcemap and open the right source file at the correct line when debugging. In Chrome for instance, the DevTools support source maps both for CSS and JavaScript.
+
+You can read a bit more about the source map specification here: [Source Map Revision 3 Proposal](https://docs.google.com/document/d/1U1RGAehQwRypUTovF1KRlpiOFze0b-_2gc6fAH0KY0k/edit).
+
+#### 14.12 Setup
+Source maps in gulp are easy to setup. It’s a use case where pipes really shine.
+
+1. Install the `gulp-sourcemaps` [plugin](https://www.npmjs.com/package/gulp-sourcemaps).
+2. Require the `gulp-sourcemaps` plugin and in your `scripts-dist` or `scripts` (or `styles`) task, add a pipe to `sourcemaps.init()` after you get the source but before you send the source files through any pipes that transform them materially.
+
+    After all plugins and pipes have been applied but before you save to the destination, pipe through `sourcemaps.write()` with an optional location parameter if you don't want the source maps to be inlined.
+
+    ```js
+    var sourcemaps = require('gulp-sourcemaps');
+
+    gulp.task('scripts-dist', function() {
+      gulp.src('js/**/*.js')
+        .pipe(sourcemaps.init())
+        .pipe(concat('all.js'))
+        .pipe(uglify())
+        .pipe(sourcemaps.write())
+        .pipe(gulp.dest('dist/js'));
+    });
+    ```
+
+All of the pipes between init and write must have support. Check the list [here](https://github.com/floridoo/gulp-sourcemaps/wiki/Plugins-with-gulp-sourcemaps-support) to verify. In the developer console, the output of app should automatically link errors in the generated code to their line numbers in the original source.
+
+Source map Support for other languages
+In addition to things like concatenation and minification, source maps also support some languages/extensions that transpile to JavaScript like Typescript, CoffeeScript and ES6 / JSX.
+
+You can read more some of the technical aspects of Source Maps on [HTML5Rocks](http://www.html5rocks.com/en/tutorials/developertools/sourcemaps/).
+
+### 14.13 Image Optimization
+What would the Internet be without images?
+
+In all honesty, though, images don't just spice up the web, they also make websites huge. In fact, the HTTP archive found that 63% of an average website's bytes are comprised of images.
+
+### 14.14 Optimization Courses
+Here are some additional Udacity optimization courses.
+
+- [Browser Rendering Optimization](https://www.udacity.com/course/browser-rendering-optimization--ud860)
+- [Web Performance Optimization](https://www.udacity.com/course/website-performance-optimization--ud884)
+- [Responsive Web Design](https://www.udacity.com/course/responsive-web-design-fundamentals--ud893)
+- [Responsive Images](https://www.udacity.com/course/responsive-images--ud882)
+
+### 14.15 Image Compression
+Our build can help us optimize our images in many different ways, the most obvious of which is for file size. I’ve gone ahead and created a task that copies images to our distribution directory. We’re then piping that output into our optimization plugins. We can compress images with either lossless or lossy compression algorithms. Lossless compression reduces a file in such a way that the original can be recreated from the compressed version. You can think of it as reducing the file size but not throwing away any information.
+
+#### Imagemin
+[gulp-imagemin](https://www.npmjs.com/package/gulp-imagemin) can losslessly compress JPEGs, GIFS, PNGs and SVGs out of the box. Lossless means that even though the file size will end up being smaller, special care is taken to not cause any visual changes whatsoever, meaning that original visual information stays exactly the same.
+
+After you’ve grabbed the plugin you can simply add a pipe between the new crunch-images task and call `imagemin()` in there. There are a few extra options such as generating progressive images, but even without any configuration this will take all of your images and do any safe optimizations.
+
+#### Lossy Compression
+Lossy compression, on the other hand, can only recreate an approximation of the original. Lossy compression can give you really small file sizes at the expense of image quality. But there are a few lossy optimizations that are truly smart, and PNG quantization is one of them. PNG quantization takes images with or without alpha transparency and converts them to 256 or less colored 8-bit pngs. Now if you do this manually and just convert a 16-bit image to a 8-bit image, you won’t like the results. It’ll end up...well..like a crappy gif, with unnatural, limited colors.
+
+#### PNG Quantization
+PNG quantization benefits from the fact that there are colors that our vision and brain perceives as very similar, even though they’re technically completely different. The quantization algorithm aims to understand which colors actually matter and remaps them to new, optimized colors.
+
+A cool thing about pngquant, the plugin we’re going to use, is that it automatically exits and will not save if a certain quality threshold isn’t passed.
+
+##### Let's Try It
+1. Download and require the [imagemin-pngquant](https://www.npmjs.com/package/imagemin-pngquant) plugin in addition to `gulp-imagemin`.
+2. Create a config object for imagemin. These are the directives that imagemin will use when you pipe images to it. The following snippet instructs imagemin to use progressive rendering for JPEG images and PNG quant for well, PNGs.
+
+    ```js
+    gulp.task('default', function() {
+        return gulp.src('src/images/*')
+            .pipe(imagemin({
+                progressive: true,
+                use: [pngquant()]
+            }))
+            .pipe(gulp.dest('dist/images'));
+    });
+    ```
+
+Progressive rendering loads an image in layers where each layer makes the image more detailed. It can make a page feel faster than typical rendering line by line. If you like, you can now configure pngquant as well by adding quality or speed options. Read more about these on the plugin homepage.
+
+Now you’ve got automatic image crunching in place and working for you but pro-tip, for anything important, take the time to see what will work, even if that means putting in a bit of elbow grease and checking things manually.
+
+#### Even better compression options
+Smaller images can tolerate more aggressive lossy compression. You might want to try other things like converting images to SVG where applicable. SVG stands for Scalable Vector Graphics and uses a XML-based format to describe an image and can in most cases be scaled infinitely without any increase in file size or loss of image quality. If you’d like to further explore techniques to work with your images, head to the notes for a few advanced topics. This includes stuff such as automatically resizing your images to become responsive and fit retina and non-retina screens, or inlining your images into your CSS or into a sprite to save a couple more HTTP requests.
+
+### 14.16 Quiz: Compression
+How should we compress each of the following?
+
+| | Lossy | Lossless | SVG |
+| --- | --- | --- | --- |
+| Hamburger Menu | [ ] | [ ] | [ ] |
+| Hero Image | [ ] | [ ] | [ ] |
+| Image thumbnails | [ ] | [ ] | [ ] |
+
+#### 14.16 Solution
+
+| | Lossy | Lossless | SVG |
+| --- | --- | --- | --- |
+| Hamburger Menu | [x] | [ ] | [x] |
+| Hero Image | [ ] | [x] | [ ] |
+| Image thumbnails | [x] | [ ] | [ ] |
+
+Here are the reasons behind each.
+
+1. Hamburgers are generally small in dimension and have a limited palette. So you can get sufficient improvement by either using a lossy compression algorithm or converting it to SVG.
+2. Your hero image needs to have crisp quality to show that it's large and in charge. You should use lossless compression on it.
+3. Lastly, image thumbnails don't need to be pixel perfect and we want them to load fast. So applying a lossy compression algorithm works well for our needs.
+
+## Lesson 15. Scaffolding
+### 15.1 Intro
+Now that you've learned all about editing, building, and optimizing your workflow, we have one final thing to cover
+
+That is to forget everything you just learned, and just use a scaffolding tool.
+
+I'm exaggerating. This was all important stuff to learn and understand but, if you set up plenty of projects going forward, you might want to automate the automation.
+
+Okay, here's how it works.
+
+### 15.2 Scaffolding Options
+Scaffolding is a way of creating a starting point structure for your project based on a couple of assumptions that you control.
+
+If say, all you do is create single page movie promotions during your work hours, your gulp file might look very similar every time.
+
+In that case, writing it from scratch over and over is inefficient and it's very likely that you've already done the most basic form of scaffolding plenty of times, copy and paste.
+
+To be fair, that's a perfectly valid way of doing things but it's not the most elegant in the world of web development.
+
+Let's take a look at some premade scaffolding tools. 
+
+If you're just starting out, HTML5 Boilerplate is a nice scaffolding starting point. All it does is give you a decent basis for your CSS, HTML and JavaScript.
+
+It makes sure your HTML is well formed, that fall backs are provided and that your CSS is normalized.
+
+On top, it ships convenient stuff like JQuery. It has a simple build script to combine and minify files, but doesn't come with Gulp or any other advanced build tool.
+
+For an intermediate solution, check out the Web Starter Kit. It's an opinionated starting point that we've built at Google that already includes a built configuration with live editing and so on, but it won't fit every project out there.
+
+And finally, Yeoman for the advanced users, to which I'm counting you now that you've reached almost the end of our course.
+
+Yeoman is the most flexible solution of the bunch. Use it together with so called generators that fit the job.
+
+After calling Yeoman with the generator, in this case the web app one, Yeoman asks you a few questions about what you need, then creates an empty project template based on your preferences.
+
+It's basically a much fancier version of copy and paste.
+
+Okay, why talk about this now, at the end of the course?There's no point in letting a scaffolding tool generate a project and build template that you have no idea how to use and modify.
+
+Now that you know all the basics, you'll be much more confident trying out various Yeoman tasks.
