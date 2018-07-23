@@ -1877,7 +1877,7 @@ In that case, writing it from scratch over and over is inefficient and it's very
 
 To be fair, that's a perfectly valid way of doing things but it's not the most elegant in the world of web development.
 
-Let's take a look at some premade scaffolding tools. 
+Let's take a look at some pre-made scaffolding tools.
 
 If you're just starting out, HTML5 Boilerplate is a nice scaffolding starting point. All it does is give you a decent basis for your CSS, HTML and JavaScript.
 
