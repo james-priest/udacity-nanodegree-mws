@@ -173,15 +173,15 @@ Which temporalities does the impairment **broken arm** fit into? (check all that
 ### 10.5 Quiz: Blindness
 #### Question 1 of 2
 Which categories does the impairment **blindness** fit into? (check all that apply)
-- [ ] Visual
-- [x] Motor
+- [x] Visual
+- [ ] Motor
 - [ ] Hearing
 - [ ] Cognitive
 
 #### Question 2 of 2
 Which temporalities does the impairment **blindness** fit into? (check all that apply)
-- [x] Temporary
-- [ ] Permanent
+- [ ] Temporary
+- [x] Permanent
 - [ ] Situational
 
 ### 10.6 Quiz: Audio
