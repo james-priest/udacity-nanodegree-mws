@@ -1879,15 +1879,15 @@ To be fair, that's a perfectly valid way of doing things but it's not the most e
 
 Let's take a look at some pre-made scaffolding tools.
 
-If you're just starting out, HTML5 Boilerplate is a nice scaffolding starting point. All it does is give you a decent basis for your CSS, HTML and JavaScript.
+If you're just starting out, [HTML5 Boilerplate](https://html5boilerplate.com/) is a nice scaffolding starting point. All it does is give you a decent basis for your CSS, HTML and JavaScript.
 
 It makes sure your HTML is well formed, that fall backs are provided and that your CSS is normalized.
 
 On top, it ships convenient stuff like JQuery. It has a simple build script to combine and minify files, but doesn't come with Gulp or any other advanced build tool.
 
-For an intermediate solution, check out the Web Starter Kit. It's an opinionated starting point that we've built at Google that already includes a built configuration with live editing and so on, but it won't fit every project out there.
+For an intermediate solution, check out the [Web Starter Kit](https://developers.google.com/web/tools/starter-kit/). It's an opinionated starting point that we've built at Google that already includes a built configuration with live editing and so on, but it won't fit every project out there.
 
-And finally, Yeoman for the advanced users, to which I'm counting you now that you've reached almost the end of our course.
+And finally, [Yeoman](http://yeoman.io) for the advanced users, to which I'm counting you now that you've reached almost the end of our course.
 
 Yeoman is the most flexible solution of the bunch. Use it together with so called generators that fit the job.
 
@@ -1898,3 +1898,9 @@ It's basically a much fancier version of copy and paste.
 Okay, why talk about this now, at the end of the course?There's no point in letting a scaffolding tool generate a project and build template that you have no idea how to use and modify.
 
 Now that you know all the basics, you'll be much more confident trying out various Yeoman tasks.
+
+#### 15.2 Resources
+
+- [HTML5 Boilerplate](https://html5boilerplate.com/)
+- [Web Starter Kit](https://developers.google.com/web/tools/starter-kit/) by Google
+- [Yeoman](http://yeoman.io)
