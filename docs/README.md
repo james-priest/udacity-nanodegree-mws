@@ -84,12 +84,12 @@ Notes contain full text of the lessons along with screenshots, sample code, & li
 ## Projects
 
 ### Restaurant App Stage 1
-- [Restaurant Reviews App - Stage 1](https://github.com/james-priest/mws-restaurant-stage-1)
-  - [Code Log & Project Notes](https://james-priest.github.io/mws-restaurant-stage-1/)
-
+- [Restaurant Reviews App - Stage 1](https://github.com/james-priest/mws-restaurant-stage-1/tree/stage-1)
+  - [Code Log & Project Notes for Stage 1](https://james-priest.github.io/mws-restaurant-stage-1/stage1.html)
 
 ### Restaurant App Stage 2
-- Restaurant Reviews App - Stage 2
+- [Restaurant Reviews App - Stage 2](https://github.com/james-priest/mws-restaurant-stage-1/tree/stage-2)
+  - [Code Log & Project Notes for Stage 2](https://james-priest.github.io/mws-restaurant-stage-1/stage2.html)
 
 ### Restaurant App Stage 3
 - Restaurant Reviews App - Stage 3
