@@ -51,7 +51,7 @@ Notes contain full text of the lessons along with screenshots, sample code, & li
   - [Web Tooling and Automation](course-notes/web-tooling-and-automation.html) by Google (Lessons 9-15)
   
 #### Stage 3: Performant Web Apps
-  - Client Server Communication by Google (Lessons 1-5)
+  - [Client Server Communication](course-notes/client-server-communication.html) by Google (Lessons 1-5)
   - Requests, Responses, & Real World HTTP (Lessons 6-8)
   - Browser Rendering Optimization by Google (Lessons 9-14)
 
