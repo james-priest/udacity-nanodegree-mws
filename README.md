@@ -20,7 +20,7 @@ Website: [https://james-priest.github.io/udacity-nanodegree-mws/](https://james-
 - [Web Tooling and Automation](docs/course-notes/web-tooling-and-automation.md) (Lessons 9-15)
 
 ### Stage 3
-- Client Server Communication (Lessons 1-5)
+- [Client Server Communication](docs/course-notes/client-server-communication.md) (Lessons 1-5)
 - Requests, Responses, & Real World HTTP (Lessons 6-8)
 - Browser Rendering Optimization (Lessons 9-14)
 
