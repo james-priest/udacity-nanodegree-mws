@@ -12,7 +12,7 @@ description: Notes by James Priest
 
 ### Supporting Links
 
-## 1. HTTP's Req/Res Cycle
+## 1. HTTP's Req/Resp Cycle
 ### 1.1 Course Intro
 
 Welcome to Client Server Communications, a course about the web.
@@ -340,3 +340,310 @@ We have looked at the request and response cycle of HTTP, so now you have a soli
 You know how metadata is attached to both requests and responses, and you know how to request additional documents using JavaScript.
 
 Next we'll take a closer look at the HTTP protocol and the actual bytes that are being sent back and forth between the server and the browser.
+
+## 2. HTTP/1
+### 2.1 HTTP Intro
+As developers, both you and I use HTTP everyday.
+
+We issue GET and POST requests when using Firebase's JavaScript SDK, or just when using the browser on our tablet's or mobile phones to look at web sites.
+
+[![cs2-1](../assets/images/cs2-1-small.jpg)](../assets/images/cs2-1.jpg)
+
+To be a good front-end engineer creating web apps, merely using HTTP is not enough.
+
+You will need a deeper understanding to see why certain techniques are being used and why others either don't work, or aren't recommended.
+
+In this lesson, we'll start with a look at the first version of HTTP.
+
+We'll examine the GET and the POST methods and a few other useful methods you might not be as familiar with.
+
+We'll look at a variety of headers and how APIs are designed to work well with the web.
+
+By the end of this lesson, you'll be able to debug HTTP request response pairs on the wire, and will understand what a RESTful API is.
+
+### 2.2 The Netcat Command
+#### Netcat
+Throughout this lesson we'll be using the [Netcat](https://en.wikipedia.org/wiki/Netcat) command. Netcat is a utility that's used for sending and receiving messages over a network connection.
+
+Netcat is known as the Swiss Army knife of networking tools, and we'll be using it to communicate directly with a server.
+
+#### Netcat command
+There are many variations of Netcat, and the one I'll be using is accessed with the `nc` command. 
+
+Here I'm using Netcat to connect to Google on port 80 (the default port for HTTP connections).
+
+[![cs2-2](../assets/images/cs2-2-small.jpg)](../assets/images/cs2-2.jpg)
+
+The prompt waits for us to enter the details of the HTTP request. To send a GET request, enter:
+
+```bash
+GET / HTTP/1.1
+```
+
+...then make sure you press the enter button twice (once to get to a new line, and one more to indicate that you're finished entering the request's headers).
+
+And you'll get something similar to:
+
+[![cs2-3](../assets/images/cs2-3-small.jpg)](../assets/images/cs2-3.jpg)
+
+### 2.3 HTTP Verbs
+Take a look at these. This one is an image of a flamingo. This one is a request to get this image.
+
+Do you notice anything different between them, though?
+
+[![cs2-4](../assets/images/cs2-4-small.jpg)](../assets/images/cs2-4.jpg)
+
+HTTP has been around for such a long time that the protocol still does something that you will rarely find in any Modern protocol. It's regular text and can be read by a human.
+
+The bytes being pushed back and forth on the network are plain, old regular text, and can be read by our human brains.
+
+HTTP simplicity also means that we can directly interact with a protocol without a third party library doing any extra work for us.
+
+Every HTTP request begins with a unique verb called a method and serves a specific purpose.
+
+We already know GET and POST, and although these are the most common methods, there are other methods you will encounter regularly.
+
+[![cs2-5](../assets/images/cs2-5-small.jpg)](../assets/images/cs2-5.jpg)
+
+The common set of methods consist of GET, POST, PUT,DELETE, HEAD, and OPTIONS. We will talk more about these methods when we talk about REST APIs.
+
+### 2.4 HTTP Verbs 2
+Remember that a request starts off with an HTTP method, the path, and the version of the HTTP protocol to use.
+
+This request is using the HEAD method. 
+
+[![cs2-6](../assets/images/cs2-6-small.jpg)](../assets/images/cs2-6.jpg)
+
+HEAD is an interesting method as it allows you to get the headers of a file without having to receive the entire file itself.
+
+This let's you check if there's enough space to store the response or if the cached version of that page is still up to date.
+
+This way the browser can avoid re-downloading a file if it already has the most recent version in its cache.
+
+Looking at the Network tab in DevTools, you probably won't see any HEAD requests when visiting websites.
+
+The problem with using HEAD for cache validation is that you're doing twice the work--you send a HEAD request and then possibly a GET request right afterwards.
+
+[![cs2-7](../assets/images/cs2-7-small.jpg)](../assets/images/cs2-7.jpg)
+
+Every request-response pair is called a round trip and they take a lot of time to complete.
+
+With the sheer number of assets that web sites have nowadays, having to send a HEAD request before the potential GET request would slow down the loading of the website considerably.
+
+There are ways to mitigate the cost of these round trips and we'll talk about them later, but for now it is just important to know that we want our sites to have as few round trips as possible and that means reducing the number of requests as best as we can.
+
+The last of the common methods is OPTIONS.
+
+OPTIONS is supposed to give you a list of methods that are accepted on the current URL, but not every server supports this.
+
+[![cs2-8](../assets/images/cs2-8-small.jpg)](../assets/images/cs2-8.jpg)
+
+The OPTIONS method might seem odd at first, but becomes very important when we start talking about CORS, which you will cover later.
+
+### 2.5 Quiz: HTTP Verbs
+The HTTP verb that's used in a request tells the server what the client wants done. For example, retrieving a resource with a GET requestor, retrieving the resource headers with a head request, and so on.
+
+Here's a list of activities, and here's some HTTP verbs.
+
+[![cs2-9](../assets/images/cs2-9-small.jpg)](../assets/images/cs2-9.jpg)
+
+Enter the number of the verb best suited for each task.
+
+#### 2.5 Solution
+OK, let's go through this case by case.
+
+[![cs2-10](../assets/images/cs2-10-small.jpg)](../assets/images/cs2-10.jpg)
+
+- For this first one, the client wants to check when logo.png was last modified. We know that the last modified header has that information. Since the client is not interested in the actual content of the file, a head request is appropriate here.
+- Forms only allow two methods--GET and POST. Since we are sending data, we need to use POST as the method here.
+- Whenever you want to retrieve the contents of the file, you need to use GET. All of the verbs use the response body for something else or not at all.
+- Finding out which verbs are supported on an endpoint is exactly what OPTIONS method is designed for. So that is the correct answer here.
+- Again, we are retrieving content here. So the only method that makes sense is GET.
+
+As you can see, there are many different ways to send a request. For the server to respond correctly,it's important that we're using the right verb for the job.
+
+### 2.6 Common Response Headers
+Both requests and responses have a section for headers. Remember that headers contain additional data about a request or a response.
+
+[![cs2-11](../assets/images/cs2-11-small.jpg)](../assets/images/cs2-11.jpg)
+
+We've already looked at some of the common request headers. Take a look below at the most important headers a response can have.
+
+#### Response Headers
+Headers contain additional data about requests or responses. These are some of the important ones:
+
+`Content-Length` is a header that must be contained in every response and tells the browser the size of the body in the response. This way the browser knows how many bytes it can expect to receive after the header section and can show you a meaningful progress bar when downloading a file.
+
+`Content-Type` is also a non-optional header and tells you what type the document has. This way the browser knows which parsing engine to spin up. If it's an image/jpeg, show the image. It’s text/html? Let’s parse it and fire off the necessary, additional HTTP requests. And so on.
+
+`Last-Modified` is a header that contains the date when the document was last changed. It turned out that the Last-Modified date is not very reliable when trying to figure out if a document has been changed. Sometimes developers will uploaded all files to the server after fixing something, resetting the Last-Modified date on all files even though the contents only changed on a subset. To accommodate this, most servers also send out an ETag. ETag stands for entity tag, and is a unique identifier that changes solely depending on the content of the file. Most servers actually use a hash function like SHA256 to calculate the ETag.
+
+`Cache-Control` is exactly what it sounds like. It allows the server to control how and for how long the client will cache the response it received. Cache-Control is a complex beast and has a lot of built-in features. 99% of the time, you only need the “cacheability“ and the “max-age”.
+
+`If-Modified-Since` permits the server to skip sending the actual content of the document if it hasn’t been changed since the date provided in that header. Is there something similar for ETags? Yes there is! The header is called If-None-Match and does exactly that. If the ETag for the document is still matching the ETag sent in the If-None-Match header, the server won’t send the actual document. Both If-None-Match and If-Modified-Since can be present in the same request, but the ETag takes precedence over the If-Modified-Since, as it is considered more accurate.
+
+There are a lot more headers and a lot to explore. If you want to know more, check out the following information on HTTP headers:
+
+- [list of HTTP headers](https://www.google.com/url?q=https://en.wikipedia.org/wiki/List_of_HTTP_header_fields&sa=D&ust=1460140076629000&usg=AFQjCNHMTe05Wkomeyd8bB9GvVrUyuC1Dg)
+
+### 2.7 Quiz: Request Headers
+We've been learning about HTTP verbs and headers, and now it's your turn to send off an HTTP request to a server.
+
+In this exercise, you need to handcraft an HTTP request using either Netcat or Telnet.
+
+[![cs2-12](../assets/images/cs2-12-small.jpg)](../assets/images/cs2-12.jpg)
+
+So you need to launch the correct server for your platform, and then the terminal will display the URL and port you'll need to connect to.
+
+In another terminal, use Netcat to connect to the server you just launched. Once connected, you'll need to send an HTTP request with the following information.
+
+- You need to send a Udacity request--not a head, get, or post request. You can probably tell that this isn't a real HTTP verb, but since we created this server, we set it up to handle this special verb.
+- In the request, make sure to include the host header, since this is required in HTTP1.
+- Include the header `X-Udacity-Exercise-Header` with some non-empty value.
+- finally, add the Date header, and make sure it uses the value shown exactly.
+
+The Netcat command I'm using is `nc SERVER PORT`.
+
+#### 2.7 Solution
+[![cs2-13](../assets/images/cs2-13-small.jpg)](../assets/images/cs2-13.jpg)
+
+### 2.8 REST
+When writing web apps, you'll encounter a lot of APIs you'll have to talk to. Some of them might be JavaScript APIs that don't involve much more than calling a function in JavaScript. Other APIs as are provided by third parties and require you to make HTTP requests yourself.
+
+A RESTful API is one that follows a design called REST that works especially well with HTTP.
+
+[![cs2-14](../assets/images/cs2-14-small.jpg)](../assets/images/cs2-14.jpg)
+
+REST stands for Representational State Transfer. But let's be honest, that isn't really a very descriptive name. Not all APIs follow the rest pattern, but many do. So let's take a look at the underlying concept.
+
+The basic entities are collections and objects inside those collections. The general pattern to retrieve items from collections is using a GET request with both the collection name and the unique item name in that collection.
+
+[![cs2-15](../assets/images/cs2-15-small.jpg)](../assets/images/cs2-15.jpg)
+
+For example, if I want to look up Richard, I'd send this request, and the server would get the record containing the data about Richard.
+
+[![cs2-16](../assets/images/cs2-16-small.jpg)](../assets/images/cs2-16.jpg)
+
+If I wanted to update the data in that record, I'd use a PUT request and append the updated information to the request.
+
+[![cs2-17](../assets/images/cs2-17-small.jpg)](../assets/images/cs2-17.jpg)
+
+Every subsequent GET request should now yield the updated record.
+
+A POST request is used very similar to PUT. But instead of updating existing records, you use it to create new records.
+
+[![cs2-18](../assets/images/cs2-18-small.jpg)](../assets/images/cs2-18.jpg)
+
+Notice that you usually do not provide the name under which the new record will be created but let the server make that choice for you.
+
+The response to that POST request is usually a redirect to the newly created record.
+
+And lastly, DELETE is just what you think it is. It removes items from the collection.
+
+[![cs2-19](../assets/images/cs2-19-small.jpg)](../assets/images/cs2-19.jpg)
+
+### 2.9 Quiz: REST
+The zoo is looking to add a new whale to the list of animals on its website.
+Over here is a list of available headers and paths.
+
+[![cs2-20](../assets/images/cs2-20-small.jpg)](../assets/images/cs2-20.jpg)
+
+Enter the letters to construct the correct REST request that will create a new whale.
+
+#### 2.9 Solution
+We want to create a new whale, meaning we want to add something to a collection.
+
+This tells us we want to use the post method, so A goes into this first slot.
+
+The website has a list of animals, which tells us that the collection we're working on is called animals, so D goes into the second slot.
+
+Now, the new item in that collection is supposed to be a whale, so adding a slash and whale to the path does the trick. So the last two slots are filled with F and G.
+
+[![cs2-21](../assets/images/cs2-21-small.jpg)](../assets/images/cs2-21.jpg)
+
+### 2.10 Performance Basics
+We have manually written our own request directly to the wire and received a response from the server just as the server send it. It feels raw, close to the bare metal ,doesn't it, like there's almost no software between us and the bytes being sent. And yet there's still so much happening that we can't directly see, and it actually has a big impact on how fast the entire request response process is.
+
+If you are a little familiar with networking architecture, you might know that HTTP is not the entire story, that's merely the protocol. For a more complete picture, we are using HTTP on top of TCP on top of IP on top of ethernet--probably, mostly, maybe.
+
+[![cs2-22](../assets/images/cs2-22-small.jpg)](../assets/images/cs2-22.jpg)
+
+The point is we don't need to understand each of these layers, but TCP in particular has a big impact on how we should structure our requests to have them perform well, and it warrants a close look.
+
+The internet protocol allows us to talk to other machines on the internet, while TCP allows us to have multiple, independent streams of data between these two machines.
+
+These streams are distinguished by port numbers.The TCP protocol also ensures that no packages get lost and that they arrive in the right order.
+
+[![cs2-23](../assets/images/cs2-23-small.jpg)](../assets/images/cs2-23.jpg)
+
+All of this requires precautions that cost time and resources. Opening a new connection is especially costly, as the TCP handshake, which makes sure both machines are aware of the newly created communication channel, has to be executed that requires two round trips.
+
+[![cs2-24](../assets/images/cs2-24-small.jpg)](../assets/images/cs2-24.jpg)
+
+If you're using HTTPS, the additional TLS handshake has to be executed as well. If HTTPS and TLS are new to you, stick around, and we'll talk about them in the next lesson.
+
+Once all that is done, the actual HTTP protocol can finally take over. Head-of-line blocking is a huge bottleneck to website performance. Browsers being able to open up six parallel connections helps, but it's not great. Later we'll see how HTTP2 fixes issues with head-of-line blocking.
+
+### 2.11 Performance Details
+But even then, we have to fight the sheer nature of the web and network architecture.
+
+In this example, over 50% of the time from pressing Enter in the address bar to the page being displayed is spent waiting for the answer. This waiting period is called Time To First Byte, or TTFB.
+
+[![cs2-25](../assets/images/cs2-25-small.jpg)](../assets/images/cs2-25.jpg)
+
+If this website needed to grab additional resources, we would have to wait for the response of our first request before we could send out a second request.
+
+[![cs2-26](../assets/images/cs2-26-small.jpg)](../assets/images/cs2-26.jpg)
+
+That in turn means that we have another period of time waiting that is not being used effectively.
+This problem is called head-of-line blocking.
+
+Let's see an example of what head-of-line blocking is and how it is bad for the user experience.
+
+With HTTP, a connection is like a queue. While the first request is being handled, all other requests have to wait until it is their turn. A lot of time is being wasted here.
+
+[![cs2-27](../assets/images/cs2-27-small.jpg)](../assets/images/cs2-27.jpg)
+
+While Richard's drink is being prepared, the other customers are left waiting even though their request would be much faster to make.
+
+The head-of-line is blocking the rest of the customers.
+
+To counteract the limitation a little bit, browsers open up to six parallel connections--or in our coffee shop comparison, they hire another barista.
+
+So while the first connection is waiting for its first byte,a second request can already be sent on the second connection and so on.
+
+Of course, hiring a new barista takes a lot of time and training. In the browser, opening all these connections is also quite costly because of the TCP handshakes necessary.
+
+[![cs2-28](../assets/images/cs2-28-small.jpg)](../assets/images/cs2-28.jpg)
+
+The six parallel connections browsers can make is still only a band-aid for the head-of-line blocking. If you have a lot of resources on your page, you will spend most of your time waiting--or staring at the cashier.
+
+Head-of-line blocking is a huge bottleneck to website performance. Browsers being able to open up six parallel connections help, but it's not great.
+
+Later we'll see how HTTP/2 fixes issues with head-of-line blocking.
+
+### 2.12 Performance Details 2
+Every time the browser connects to a server to make a request, it has to go through the TCP handshake process. This three-way handshake is very time consuming.
+
+To counteract the cost of these handshakes, HTTP/1.1 introduced the concept of keep-alive.
+
+[![cs2-29](../assets/images/cs2-29-small.jpg)](../assets/images/cs2-29.jpg)
+
+If the client sets the connection keep-alive header, the server will not close the connection after successfully delivering the response, but allows the client to reuse the already established connection for additional requests.
+
+[![cs2-30](../assets/images/cs2-30-small.jpg)](../assets/images/cs2-30.jpg)
+
+Keep in mind though that you still can send requests before the response for the last request has been fully transferred. All in all, this forces web developers to keep the number of additional resources as low as possible, making the best possible use of their six connections.
+
+This is why JavaScript and CSS files are commonly concatenated into bundles and why images are put together into sprites.
+
+[![cs2-31](../assets/images/cs2-31-small.jpg)](../assets/images/cs2-31.jpg)
+
+The bundles can be obtained in just one request.
+
+### 2.13 Outro
+So how do you feel? HTTP is weird, isn't it? But it is the foundation of the web as we know it. And the knowledge you just gained is invaluable and will help you understand why things behave the way they do.
+
+Before we dive into HTTP/2, though,we should talk about encryption in HTTPS. It is a highly misunderstood topic and has a reputation of being only for enterprise organizations and e-commerce sites.
+
+That is definitely not correct. So grab a drink. It's much simpler than it sounds.
