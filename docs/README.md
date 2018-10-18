@@ -34,7 +34,7 @@ The program is divided into three stages each taking approximately 2 months to c
 - Browser Rendering Optimization (Lessons 9-14) -->
 
 ---
-## Study Notes
+## Course Notes
 ### Core Curriculum
 Notes contain full text of the lessons along with screenshots, sample code, & links.
 
@@ -92,7 +92,8 @@ Notes contain full text of the lessons along with screenshots, sample code, & li
   - [Code Log & Project Notes for Stage 2](https://james-priest.github.io/mws-restaurant-stage-1/stage2.html)
 
 ### Restaurant App Stage 3
-- Restaurant Reviews App - Stage 3
+- [Restaurant Reviews App - Stage 3](https://github.com/james-priest/mws-restaurant-stage-1)
+  - [Code Log & Project Notes for Stage 3](https://james-priest.github.io/mws-restaurant-stage-1/stage3.html)
 
 ---
 

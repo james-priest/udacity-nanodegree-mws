@@ -1,12 +1,10 @@
 <!-- markdownlint-disable MD022 MD032 -->
 # Mobile Web Specialist Nanodegree
-This site contains my notes and project submissions related to the Google Udacity Mobile Web Specialist Nanodegree program.
+This site contains my code notes and project submissions for the 6-month Google [Mobile Web Specialist Nanodegree](https://www.udacity.com/course/mobile-web-specialist-nanodegree--nd024) by Udacity.
 
-[![abc](docs/assets/images/mws-site.png)](https://james-priest.github.io/udacity-nanodegree-mws/)
+[![Code Notes Homepage](docs/assets/images/fixed/MWS-Nanodegree-cert.png)](docs/assets/images/fixed/MWS-Nanodegree-cert.png)
 
-Website: [https://james-priest.github.io/udacity-nanodegree-mws/](https://james-priest.github.io/udacity-nanodegree-mws/)
-
-## Study Notes
+## Course Notes
 ### Stage 1
 - [Responsive Web Design Fundamentals](docs/course-notes/responsive-web-design-fundamentals.md) (Lessons 1-5)
 - [Responsive Images](docs/course-notes/responsive-images.md) (Lessons 6-9)
@@ -32,4 +30,10 @@ Website: [https://james-priest.github.io/udacity-nanodegree-mws/](https://james-
   - [Code Log & Project Notes for Stage 1](https://james-priest.github.io/mws-restaurant-stage-1/)
 - [Restaurant Reviews App - Stage 2](https://github.com/james-priest/mws-restaurant-stage-1/tree/stage-2)
   - [Code Log & Project Notes for Stage 2](https://james-priest.github.io/mws-restaurant-stage-1/stage2.html)
-- Restaurant Reviews App - Stage 3
+- [Restaurant Reviews App - Stage 3](https://github.com/james-priest/mws-restaurant-stage-1)
+  - [Code Log & Project Notes for Stage 3](https://james-priest.github.io/mws-restaurant-stage-1/stage3.html)
+
+## My Project Website
+[![Code Notes Homepage](docs/assets/images/fixed/MWS-Notes-homepage.jpg)](https://james-priest.github.io/udacity-nanodegree-mws/)
+
+Website: [https://james-priest.github.io/udacity-nanodegree-mws/](https://james-priest.github.io/udacity-nanodegree-mws/)
