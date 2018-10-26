@@ -230,7 +230,7 @@ So count the number of requests and the total amount of data in kilobytes being 
 
 One quick note: to avoid incorrect results from plugins, extensions, and the browser caching the results, make sure to run this in an incognito window.And make sure disable cache is selected.
 
-#### Solution
+#### 1.8 Solution
 I've opened up DevTools, and am on the Network tab.
 
 Here, we see an overview of the whole page as it's being loaded.
@@ -317,7 +317,7 @@ If the fetch request is set up correctly,it will return the password. Enter that
 
 If you want an extra challenge, try coding the fetch request from scratch instead of using the fetch builder form. Good luck.
 
-#### Solution
+#### 1.11 Solution
 Here's the solution using the form.
 
 [![cs1-30](../assets/images/cs1-30-small.jpg)](../assets/images/cs1-30.jpg)
@@ -647,3 +647,335 @@ So how do you feel? HTTP is weird, isn't it? But it is the foundation of the web
 Before we dive into HTTP/2, though,we should talk about encryption in HTTPS. It is a highly misunderstood topic and has a reputation of being only for enterprise organizations and e-commerce sites.
 
 That is definitely not correct. So grab a drink. It's much simpler than it sounds.
+
+## 3. HTTPS
+### 3.1 HTTPS Intro
+Have you ever thought about how naive it is to just use the free Wi-Fi at cafes and similar public places? You are trusting the store owner to not do anything dodgy. And you're trusting that every other person currently using the Wi-Fi hotspot is a good person.
+
+[![cs3-1](../assets/images/cs3-1-small.jpg)](../assets/images/cs3-1.jpg)
+
+Not only can they listen to your traffic--you are broadcasting over radio waves, after all--but they could also tamper with the data you receive.
+
+What if you wanted to check your bank account on a public Wi-Fi? Think about every other person being able to read or change your data. We definitely don't want that.
+
+HTTPS is a way to protect you and your users from malicious cafe owners and visitors. As a web developer, HTTPS is even more important since all modern browsers API's are only available if your website is secured with HTTPS.
+
+To exploit the full potential of the web, you need to start using HTTPS, and not just for the log-in page, but every single page.
+
+Knowing a web page is using HTTPS will give your users peace of mind in these kinds of public places.
+
+How can you tell if a website is using HTTPS, and how can you tell if a website is using HTTPS correctly, and how can you use HTTPS on your own website? That's what this lesson is about.
+
+### 3.2 Securing HTTP
+At this point, we are painfully aware that HTTP is very easy to read, even for humans. You can almost literally watch requests fly by on a console and still understand what is going on.
+
+So I think we can agree that if someone manages to somehow eavesdrop on an open HTTP connection, the eavesdropper can read all the requests and responses and extract all the data they need.
+
+But how easy is it to eavesdrop on a connection? As I mentioned in the introduction,Wi-Fi makes it much easier as you're literally broadcasting your connection over radio waves.
+
+[![cs3-2](../assets/images/cs3-2-small.jpg)](../assets/images/cs3-2.jpg)
+
+So all someone needs to do is listen and with the special listening software it gets even easier. Look in the instructor notes for more information about this. Encrypting the Wi-Fi will help, but you have no control over the settings of the Wi-Fi at a cafe and old encryptions are easily breakable.
+
+That's why one feature of HTTPS is encryption. It will make your browser encrypt requests in a way that only the server you're connected to can decrypt them.
+
+Neither the store owner nor the malicious eavesdropper at your local cafe will be able to read your data stream.
+
+But what if you think you're connected to the right server when you're not?
+
+In a man-in-the-middle attack, or MITM for short, the attacker gets between you and the server you are trying to connect to. When this happens, your browser will make an encrypted connection to their server instead of the server you thought you were trying to connect to, like Facebook.
+
+[![cs3-3](../assets/images/cs3-3-small.jpg)](../assets/images/cs3-3.jpg)
+
+The attacker will decrypt your data, read all of your private information,re-encrypt it, and forward it to Facebook's server and vice versa. Neither Facebook nor you would know that they are sitting in the middle.
+
+To remedy this, HTTPS's other feature besides encryption is authentication. The server will have to identify itself in a way only the real server could so you can be sure that you are talking to the right server.
+
+### 3.3 Quiz: MITM
+For this exercise, you'll set up a proxy on your system, load a website through the proxy, and examine the result.
+
+[![cs3-4](../assets/images/cs3-4-small.jpg)](../assets/images/cs3-4.jpg)
+
+A proxy is a legitimate man-in-the-middle and has many benefits, like saving bandwidth by adding additional compression, down sampling images, and doing aggressive caching.
+
+The proxy you'll be using is just going to--well, that's what you need to figure out.
+
+For this quiz, pick a non HTTPS website to test out. You'll get a chance to try out an HTTPS site in the next quiz.
+
+- Does the text of the website disappear?
+- Are the site's images flipped upside down?
+- Do the colors of the site get inverted?
+- Is the site unreachable?
+- Or does nothing visibly change, and the site looks completely normal?
+
+Remember that you should run this in an incognito window to prevent caching. Don't forget that you'll need to run the proxy on your own machine.
+
+#### 3.3 Solution
+Here's the answer.
+
+[![cs3-5](../assets/images/cs3-5-small.jpg)](../assets/images/cs3-5.jpg)
+
+### 3.4 Quiz: MITM 2
+What happens when we navigate to a site using HTTPS?
+
+[![cs3-6](../assets/images/cs3-6-small.jpg)](../assets/images/cs3-6.jpg)
+
+### 3.5 TLS & Cert Authority
+When we talk about HTTPS, we are actually talking about two different concepts--HTTP and TLS, formerly known as SSL.
+
+We already know about HTTP and TLS stands or Transport Layer Security.
+
+[![cs3-7](../assets/images/cs3-7-small.jpg)](../assets/images/cs3-7.jpg)
+
+TLS is not specific to HTTP, but any protocol can use it. For example, there is FTPS, which is FTP with TLS to transfer files securely.
+
+TLS encrypts communication in a way that can't be read by anyone else other than the intended recipients. In practice, it is impossible to break a TLS encryption.
+
+To ensure that you're talking to the server you intend to talk to, TLS utilizes something called the chain of trust. A server identifies itself with a certificate that contains both a little metadata about itself and the fingerprint of an encryption key.
+
+These certificates are issued by one of a handful of certificate authorities. If that certificate is signed by such an authority, you know that if the key you are using matches that fingerprint, then you're talking to the correct server.
+
+The list of certificate authorities can actually be found in the browser. You could even add your very own authority if you wanted to.
+
+What you see in the list are mostly companies that you can buy certificates from. They cost money as they not only validate your server, but also validate your identity as the owner of that server.
+
+Since not every developer can or wants to pay money for a certificate to offer basic security to the users, [Let's Encrypt](https://letsencrypt.org/) has come into the market and offers certificates for free.
+
+[![cs3-8](../assets/images/cs3-8-small.jpg)](../assets/images/cs3-8.jpg)
+
+Let's take a closer look at how certificates work and the security they provide.
+
+### 3.6 TLS: Cryptography Primer
+TLS has two important cryptographic building blocks--encryption and hashing.
+
+When people think about encryption, they probably think about symmetric encryption. You encrypt some data and give the encrypted data to someone else. The recipient needs the same key to decrypt the data he got, or otherwise, it will be inaccessible to him.
+
+With a few mathematical tricks, the browser can utilize encryption algorithms that use one key for encryption and another one for decryption.
+
+[![cs3-9](../assets/images/cs3-9-small.jpg)](../assets/images/cs3-9.jpg)
+
+Mostly, the key for encrypting messages is made public so that anyone that wants to send a message can just go ahead and encrypt with that key.
+
+They, or anybody else, won't be able to decrypt the message with the same key. Only you, who has the decryption key, will be able to decrypt it.
+
+Due to the math that is going on under the hood, both keys can actually be used for encryption and decryption. What one key encrypts can only be decrypted by the other. That's why it makes more sense to talk about a public key that is available to anyone and a private key that is only available to the owner and should be stored securely.
+
+[![cs3-10](../assets/images/cs3-10-small.jpg)](../assets/images/cs3-10.jpg)
+
+That's why asymmetric encryption is also called public key encryption.
+
+### 3.7 TLS: Hashing
+So we have a look at encryption, but remember that TLS is made up of two parts--encryption and hashing.
+
+Hashing is the process of transforming data into a short representation of the original data.
+
+[![cs3-11](../assets/images/cs3-11-small.jpg)](../assets/images/cs3-11.jpg)
+
+The smallest change in the original data will have enormous changes in the hash.
+
+[![cs3-12](../assets/images/cs3-12-small.jpg)](../assets/images/cs3-12.jpg)
+
+If two documents yield the same hash value, they are very very likely to be the same document.
+
+There are a couple of things we care about with hashing functions.
+
+1. It should be impossible to revert the conversion process.
+  Meaning once data has been converted into a hash, it can be unconverted back into the original data.<br>
+  [![cs3-13](../assets/images/cs3-13-small.jpg)](../assets/images/cs3-13.jpg)
+2. It should be just as impossible to find a different document yielding an identical hash value.<br>
+  [![cs3-14](../assets/images/cs3-14-small.jpg)](../assets/images/cs3-14.jpg)
+
+One of the most common hashing functions is SHA, which exists in multiple flavors like SHA-256, or SHA-512, where the number says how big the output of the hash is, in bits.
+
+No matter how big the document is, if you pass in, you will always get 256 bits as output when you are using SHA-256.
+
+### 3.8 Quiz: Hashing Quiz
+You just saw Surma playing with this cool little hashing project. For this quiz, you're going to use the same project to get some hands-on experience with different hashing functions.
+
+[![cs3-15](../assets/images/cs3-15-small.jpg)](../assets/images/cs3-15.jpg)
+
+After launching the provided server and loading the URL it provides, you should see the project. Then type out some text to see what the different hashing functions produce. When you've typed out your text, enter the hashes in the provided text boxes.
+
+[![cs3-16](../assets/images/cs3-16-small.jpg)](../assets/images/cs3-16.jpg)
+
+For example, paste the result from the SHA256hashing function here.Once you've entered the hash for each one of these functions,alter the text a little, and paste the new SHA256 hash here.
+
+#### 3.8 Solution
+With this text, the SHA1 hashing function gave me this. SHA256 resulted in this, and here's what SHA512 produced.
+
+[![cs3-17](../assets/images/cs3-17-small.jpg)](../assets/images/cs3-17.jpg)
+
+Each one of these hashing functions started with the same text, but the hashes that were produced are completely different.
+
+Removing just one character produced entirely different hashes.
+
+[![cs3-18](../assets/images/cs3-18-small.jpg)](../assets/images/cs3-18.jpg)
+
+As you can see, if anyone tries to tamper with even one character, they'll end up changing the entire hash, so it's easy for browsers and servers to see this difference and know that the data has been altered.
+
+### 3.9 Cert Authority Signatures
+Now that we have a good grasp on TLS, let's talk about signatures. I mentioned certificate authorities earlier and the job is to sign certificates. But what does it mean? And why would anyone want a signed certificate?
+
+When we say someone has signed a document, we mean that the certificate authority has reviewed and verified the contents of that document.
+
+The purpose is to have some kind of proof that the document was seen, or even created by that entity. Just like signing your name on a document is legal proof that you saw that document, a server can do the same thing with a digital signature.
+
+When a server signs a document and encrypts it with their private key, they give that back as a signed document. Since only the holder of the private key is able to encrypt documents, you know the document you received is exactly the same as the one the server sent.
+
+[![cs3-19](../assets/images/cs3-19-small.jpg)](../assets/images/cs3-19.jpg)
+
+However, documents can become fairly large. Think of DVD images, for example. And encrypting and decrypting takes a long time with asymmetric cyphers. That's why instead of encrypting the entire document itself, just the hash of the document is encrypted.
+
+[![cs3-20](../assets/images/cs3-20-small.jpg)](../assets/images/cs3-20.jpg)
+
+If you want to check if the signature is valid, you would decrypt the signature and hash the document yourself to see if those two values match. This way we know that the document we received is exactly the same as when the server sent it. If the document was changed mid-flight, the hash would not match the one provided by the server as a signature. This is called an invalid signature.
+
+### 3.10 The TSL Handshake
+We now have the tools to encrypt data asymmetrically and to assign data. I've said these are the building blocks of TLS and now I will prove it to you.
+
+Let's go through the process of browser users to set up a TLS-encrypted connection step by step. I will still cut a few corners for simplicity, but nothing integral to the concept.
+
+The first step is having the server send you a certificate. The certificate contains the public key of the server, some additional information like the domain the certificate is for and the signature by a certificate authority.
+
+[![cs3-21](../assets/images/cs3-21-small.jpg)](../assets/images/cs3-21.jpg)
+
+The client checks if the domain is correct and also checks if the authority signature is valid.
+
+As we already explored earlier, all browsers have a collection of certificate authorities including their public keys saved locally, so it is trivial to check if the signature is valid.
+
+[![cs3-22](../assets/images/cs3-22-small.jpg)](../assets/images/cs3-22.jpg)
+
+Now the client generates a random key for symmetric encryption to be used from here on in.
+
+[![cs3-23](../assets/images/cs3-23-small.jpg)](../assets/images/cs3-23.jpg)
+
+The browser encrypts the random key with a server's public key and sends it over.
+
+[![cs3-24](../assets/images/cs3-24-small.jpg)](../assets/images/cs3-24.jpg)
+
+This has two benefits. Symmetric encryption is 
+
+- much faster
+- more efficient
+- scales better to big data compared to asymmetric encryption.
+
+But more importantly, the server will only be able to continue communicating if it is truly in possession of the private key and can decrypt the new random key.
+
+[![cs3-25](../assets/images/cs3-25-small.jpg)](../assets/images/cs3-25.jpg)
+
+This effectively validates the server's identity.
+
+If all of this succeeds, if your last connection has successfully been established then the HTTP protocol can take over.
+
+At this point, you will get the green padlock symbol in your browser's URL bar.
+
+### 3.11 Quiz: SSL Error
+In the previous scenario, only two things could have gone wrong. Either the certificate authority's signature on the certificate turns out to be invalid or the server wasn't able to communicate after switching to symetric encryption.
+
+[![cs3-26](../assets/images/cs3-26-small.jpg)](../assets/images/cs3-26.jpg)
+
+In reality, there's a whole lot more that can go wrong. Certificates have an expiration date, so they can go bad. They prescribe the set of hash and symmetric encryption functions they support, some of which have been proved to be weak over the years.
+
+[![cs3-27](../assets/images/cs3-27-small.jpg)](../assets/images/cs3-27.jpg)
+
+Sometimes the certificate is valid. But the rest of the server setup is not.
+
+A great site to see how the browser behaves when the TLS connection has some issues is badssl.com.
+
+[![cs3-28](../assets/images/cs3-28-small.jpg)](../assets/images/cs3-28.jpg)
+
+Bad SSL has its own valid certificate but it also has intentionally invalid certificates and invalid setups so we can see what the browser does in different situations.
+
+Let's check out sha1-2016. Oh no, we've lost our green lock. Clicking this icon gives us more information about the connection. Clicking the link gives us specific details about the certificate being used.
+
+[![cs3-29](../assets/images/cs3-29-small.jpg)](../assets/images/cs3-29.jpg)
+
+For this quiz, I want you to use the bad SSL website to figure out which setups cause Chrome to deny access to the web site.
+
+Will it happen with:
+
+- an expired certificate?
+- a certificate from another host?
+- mixed content?
+- incomplete chain?
+- SHA246?
+
+#### 3.11 Solution
+Each link's background color kind of indicates what will happen.
+
+[![cs3-28](../assets/images/cs3-28-small.jpg)](../assets/images/cs3-28.jpg)
+
+Red means it won't work. Green means it will, and other colors, like orange, give questionable results.
+
+- A certificate that has expired or one for a wrong host both deny access.
+- Mixed content, incomplete chain, and Sha256 all allow the user through, but not all of these actually give you the green lock.
+ 
+So these are the correct answers.
+
+[![cs3-30](../assets/images/cs3-30-small.jpg)](../assets/images/cs3-30.jpg)
+
+### 3.12 Mixed Content
+If our index document is served over HTTPS, great. But what about the site's assets? Are they served over HTTPS as well?
+
+[![cs3-31](../assets/images/cs3-31-small.jpg)](../assets/images/cs3-31.jpg)
+
+A fast way to break that beautiful green lock is having your assets served over regular HTTP. When this happens, the site ends up in a state called mixed content.
+
+[![cs3-32](../assets/images/cs3-32-small.jpg)](../assets/images/cs3-32.jpg)
+
+Mixed content occurs when you opena website that is supposed to be delivered over HTTPS, but includes resources from non-TLS secured origins like:
+
+- images
+- iframes
+- style sheets
+- scripts
+
+A popular mistake is pulling in jQuery from a non-TLS enabled CDN.
+
+[![cs3-33](../assets/images/cs3-33-small.jpg)](../assets/images/cs3-33.jpg)
+
+Depending on the type of research that is being included over a non-secure channel, the consequences might differ.
+
+1. It might cost you your green padlock, but still remain functional.
+2. The resource might get blocked or break your page
+3. It might even get the horrible red padlock of shame.
+
+The behavior differs across different browsers so you should definitely avoid it and check a website for mixed content.
+
+In fact, Google recommends that you surf all your assets over HTTPS. This way you'll avoid mixed content warnings and your site and its assets will be transferred securely.
+
+### 3.13 Quiz: Mixed Content
+When working locally, developers often resort to using self-signed certificates. These certificates refer to themselves as their own certificate authority since
+they are self signed. They don't provide any kind of authentication and your browser will visibly complain. It will give you a red padlock but it will let you test if your website has mixed content.
+
+So you need to launch the binary for this project and load the URL it provides in your browser.
+
+You might notice that when you launch this server it automatically generates a
+self-signed certificate for you. Since this is a self-signed certificate you might see an error page. It's safe to proceed so click on advanced and then click on the proceed link down at the bottom.
+
+You'll see the Udacity logo has been split up into multiple tiles. Are there any  mixed content violations? And if so, which tile is causing the problem?
+
+#### 3.13 Solution
+So while the page itself is loaded over HTTPS, there's a tile that's being loaded over HTTP, which causes a mixed content warning.
+
+There are actually a couple of ways to solve this problem. The easiest way is to check the console. The tile in question is x 10 y 3.
+
+Another way is to check out the security pane.
+
+[![cs3-34](../assets/images/cs3-34-small.jpg)](../assets/images/cs3-34.jpg)
+
+Down here is the mixed content warning. This link switches us to the network pane and adds the mixed content filter.
+
+Using DevTools, it's incredibly easy to diagnose mixed content issues. If you're developing anything on the web, you should always have the DevTools open.
+
+### 3.14 Outro
+Security is an important but sometimes intimidating aspect of web development. If you didn't know what HTTPS was before this lesson, you should feel much more comfortable with it now.
+
+Most hosting services and CDNs have support for TLS nowadays. And with more and more browser APIs being enabled for HTTPS websites only, you should always use HTTPS for your users' and your own sake.
+
+In the next lesson, we'll take a look at the new HTTP/2 standard and what that means for you and your project's build steps.
+
+<!-- 
+## 4. HTTP/2
+### 4.1 HTTP/2 Intro
+HTTP has been around since the early '90s. Between just 2010 and 2015 the amountof data transferred for a single web page has tripled.The number of requests necessary to get all the datais on a steady rise as well.HTTP is used for things and in conditionsthat are very different from what it was designed for.Design choice that made complete sense back thenare now becoming a burden both in termsof development and performance.Some current best practices like concatenatingall your JavaScript into a single filesolely exist to work around the shortcomings of HTTP/1.This is where HTTP/2 comes in.While also being backwards compatible,it solves the biggest issues HTTP/1 has.We will learn how HTTP/2 is different from HTTP/1and how these differences help make your apps better. -->

@@ -27,7 +27,7 @@ This site contains my code notes and project submissions for the 6-month Google 
 
 ## Projects
 - [Restaurant Reviews App - Stage 1](https://github.com/james-priest/mws-restaurant-stage-1/tree/stage-1)
-  - [Code Log & Project Notes for Stage 1](https://james-priest.github.io/mws-restaurant-stage-1/)
+  - [Code Log & Project Notes for Stage 1](https://james-priest.github.io/mws-restaurant-stage-1/stage1.html)
 - [Restaurant Reviews App - Stage 2](https://github.com/james-priest/mws-restaurant-stage-1/tree/stage-2)
   - [Code Log & Project Notes for Stage 2](https://james-priest.github.io/mws-restaurant-stage-1/stage2.html)
 - [Restaurant Reviews App - Stage 3](https://github.com/james-priest/mws-restaurant-stage-1)
