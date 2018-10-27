@@ -136,7 +136,7 @@ As of today HTTP/1.1 is the most common and widely supported version, however HT
 
 More on this later. Surma is now going to show you the different kinds of headers an HTTP request can have.
 
-### 1.5 Fetching a single ref 2
+### 1.5 Fetching a single req 2
 This part of the request is called the header section, as it contains the headers.
 
 [![cs1-13](../assets/images/cs1-13-small.jpg)](../assets/images/cs1-13.jpg)
@@ -975,7 +975,240 @@ Most hosting services and CDNs have support for TLS nowadays. And with more and 
 
 In the next lesson, we'll take a look at the new HTTP/2 standard and what that means for you and your project's build steps.
 
-<!-- 
 ## 4. HTTP/2
 ### 4.1 HTTP/2 Intro
-HTTP has been around since the early '90s. Between just 2010 and 2015 the amountof data transferred for a single web page has tripled.The number of requests necessary to get all the datais on a steady rise as well.HTTP is used for things and in conditionsthat are very different from what it was designed for.Design choice that made complete sense back thenare now becoming a burden both in termsof development and performance.Some current best practices like concatenatingall your JavaScript into a single filesolely exist to work around the shortcomings of HTTP/1.This is where HTTP/2 comes in.While also being backwards compatible,it solves the biggest issues HTTP/1 has.We will learn how HTTP/2 is different from HTTP/1and how these differences help make your apps better. -->
+HTTP has been around since the early '90s.
+
+[![cs1-25](../assets/images/cs1-25-small.jpg)](../assets/images/cs1-25.jpg)
+
+Between just 2010 and 2015 the amount of data transferred for a single web page has tripled. The number of requests necessary to get all the data is on a steady rise as well.
+
+HTTP is used for things and in conditions that are very different from what it was designed for. Design choices that made complete sense back then are now becoming a burden both in terms of development and performance.
+
+Some current best practices like concatenating all your JavaScript into a single file solely exist to work around the shortcomings of HTTP/1.
+
+This is where HTTP/2 comes in. While also being backwards compatible, it solves the biggest issues HTTP/1 has.
+
+We will learn how HTTP/2 is different from HTTP/1 and how these differences help make your apps better.
+
+### 4.2 HTTP/1 Issue: Blocking
+The average number of requests needed to properly display a website rises constantly and has recently risen over 100.
+
+[![cs4-1](../assets/images/cs4-1-small.jpg)](../assets/images/cs4-1.jpg)
+
+That means on average, a website requires over 100 requests to display correctly. Things are getting a little crazy.
+
+Remember that HTTP/1 does not work well with lots of requests. Fortunately, HTTP/2 too has come to the rescue. We'll look at some problems of HTTP/1 and how HTTP/2 is solving them.
+
+One of the reasons we have so many requests is because of **head-of-line blocking**. We talked about this earlier, but it's so important let's briefly go over it again.
+
+[![cs4-2](../assets/images/cs4-2-small.jpg)](../assets/images/cs4-2.jpg)
+
+Head-of-line blocking is when one request is blocking others from completing.
+
+A browser will open at most six connections to the same server. That means at most six requests can be in flight simultaneously.
+
+[![cs4-3](../assets/images/cs4-3-small.jpg)](../assets/images/cs4-3.jpg)
+
+At the very least, you'll have to wait for the request to be sent and then the response to be sent back. These two together are called the round trip and the round trip time can take between 20 to 50 milliseconds on a good connection.
+
+[![cs4-4](../assets/images/cs4-4-small.jpg)](../assets/images/cs4-4.jpg)
+
+Let's do some quick math. Let's say a site needs to send 100 requests to load completely. We can handle six requests in parallel, which means ideally each connection will need to make 17 requests to download all 100 requests.
+
+[![cs4-5](../assets/images/cs4-5-small.jpg)](../assets/images/cs4-5.jpg)
+
+With each request having a round trip time averaging roughly 35 milliseconds, this yields 525 milliseconds. About half a second of waiting--of doing nothing. And this assumes that actually transferring the requested file doesn't take any time at all. If the file being transferred is large,then this number will become a lot bigger.
+
+[![cs4-6](../assets/images/cs4-6-small.jpg)](../assets/images/cs4-6.jpg)
+
+This round trip time is an average.If there's an unstable or slow internet connection, things only get worse.
+
+Head-of-line blocking is a disaster to good loading performance of a website. With HTTP/2, we don't have to worry about head-of-line blocking.
+
+### 4.3 HTTP/1 Issue: Uncompressed Headers
+To reduce the time it takes to send data, a lot of websites compress their assets with gzip or other compression algorithms that work on the web.
+
+The [HTML 5 boilerplate](https://github.com/h5bp/html5-boilerplate) project uses the gzip compression.
+
+[![cs4-7](../assets/images/cs4-7-small.jpg)](../assets/images/cs4-7.jpg)
+
+Compression of the data is great, but the request and response headers are still being sent uncompressed. When you think about it, that doesn't make a lot of sense.
+
+They are plain text, which makes them highly compressible. 
+
+[![cs4-8](../assets/images/cs4-8-small.jpg)](../assets/images/cs4-8.jpg)
+
+Also, they repeat a lot across requests. The host header's always the same, the cookies are the same, and so are some other headers.
+
+[![cs4-9](../assets/images/cs4-9-small.jpg)](../assets/images/cs4-9.jpg)
+
+In Google's research paper, they state that on average header stake up about 800 bytes. Let's look at the potential savings we could have.
+
+If a site made 100 requests, roughly 80 kilobytes of data would be taken up by the headers, and most of that would be redundant.
+
+[![cs4-10](../assets/images/cs4-10-small.jpg)](../assets/images/cs4-10.jpg)
+
+We'd save a lot of space if we could compress the headers. Unfortunately, we can't do that with HTTP1, but with HTTP2, we can.
+
+### 4.4 HTTP/1 Issue: Security
+A completely different aspect that HTTP/2 tackles is security.
+
+E-commerce has become the norm and so has handling sensitive data like credit cards and contracts. It's fair to call it gross negligence if websites handled this kind of data without TLS.
+
+That's why TLS is a required part of the specification for HTTP/2.
+
+There is an unencrypted version of HTTP/2, but all major browsers have opted out of supporting it. We've talked about TLS before and you'll be glad to hear that nothing's changed when using TLS with HTTP/2.
+
+But how does HTTP/2 solve the other problems, how does it resolve head-of-line blocking, and how does header compression work in HTTP/2?
+
+Let's find out.
+
+### 4.5 HTTP/2 Improvements
+You just saw some of the flaws with HTTP/1, and were told that HTTP/2 would solve them. But how does it do it?
+
+Well, take out your note-taking pencil, because I'm about to show you the wonders of HTTP/2.
+
+Remember the human readability of requests and response headers? Well, that's got to go.
+
+[![cs4-11](../assets/images/cs4-11-small.jpg)](../assets/images/cs4-11.jpg)
+
+It's the first step to improve performance with HTTP/2. It was nice while it lasted, but nobody is really benefiting from the plain text approach that HTTP/1 took. We are wasting precious bytes by spelling things out in text form when a single bit is sufficient.
+
+Don't worry, though. Tools like Wireshark or DevTools will still let you see headers, even with HTTP/2.
+
+The second big problem HTTP/2 solvesis head-of-line blocking. It does this through a technique called multiplexing.
+
+Multiplexing is a fancy sounding term that means combining multiple signals into a new single signal.
+
+> **multiplexing** - a system or signal involving simultaneous transmission of several messages along a single channel of communication
+
+With HTTP/2, we now have one connection instead of six. That seems like a terrible step backwards at first, but we are using the single connection differently than HTTP/1 would have.
+
+[![cs4-12](../assets/images/cs4-12-small.jpg)](../assets/images/cs4-12.jpg)
+
+What used to be a dedicated connection in HTTP/1 is now called a stream, and all streams share that single connection. 
+
+[![cs4-13](../assets/images/cs4-13-small.jpg)](../assets/images/cs4-13.jpg)
+
+These streams are split up into frames and are being multiplexed onto that single connection.
+
+[![cs4-14](../assets/images/cs4-14-small.jpg)](../assets/images/cs4-14.jpg)
+
+When one stream is blocked, another stream can take over the connection and make good use of what would have been idle time.
+
+Head-of-line blocking is gone.
+
+Lastly, HTTP/2 takes care of header data being uncompressed. With HTTP/2, headers are not just being compressed with GZip, but the engineers came up with an HTTP/2 compression that is tailored towards the specific structure of headers and the multiplexing feature of HTTP/2.
+
+[![cs4-15](../assets/images/cs4-15-small.jpg)](../assets/images/cs4-15.jpg)
+
+All streams not only share the connection, but also the compressor.
+
+This means a header never has to be sent twice, since the compressor recognizes that it's been sent before, and sends a reference instead.
+
+[![cs4-16](../assets/images/cs4-16-small.jpg)](../assets/images/cs4-16.jpg)
+
+For example, cookies are really long headers. So it is an enormous advantage to insert the same cookie header as three requests ag, instead of the actual value.
+
+I won't go into the intricacies of this compression algorithm but if you're interested in how it works, you can check it out below.
+
+- [HPACK - Header Compression for HTTP/2](https://http2.github.io/http2-spec/compression.html)
+
+### 4.6 Quiz: HTTP/1 vs HTTP/2
+In this exercise, I want you to see the difference between loading a site over HTTP/1 versus loading it over HTTP/2.
+
+You'll find the binary [here](http://video.udacity-data.com.s3.amazonaws.com/topher/2016/December/58406627_ud897-l4-http2-binary/ud897-l4-http2-binary.zip).
+
+Download it, and start it using the console. It will start both an HTTP/1 server, as well as an HTTP/2 server.
+
+Both servers actually host the exact same web site. Use dev tools to figure out the reduction in total bytes transferred. Enter the percentage difference then figure out how much the load time increased and enter that percentage.
+
+#### 4.6 Solution
+This is the result for the HTTP/1 server, and next to it is the result for the HTTP/2 server.
+
+[![cs4-17](../assets/images/cs4-17-small.jpg)](../assets/images/cs4-17.jpg)
+
+The HTTP/1 server transferred 336 kilobytes, while the HTTP/2 server transferred only 177 kilobytes. That's roughly a 47% reduction in transferred bytes.
+
+That's almost half the number of bytes!
+
+Not surprisingly, the HTTP/2 server also loaded the site a lot faster. It loaded the site, and all its assets, in 911 milliseconds. The HTTP/1 server took a total of 2.86 seconds. That's roughly a 68% increase in speed.
+
+So the HTTP/2 server is a lot faster and also transfers less information.
+
+### 4.7 HTTP/2 in Practice
+HTTP/2 brings a lot of changes. But how do we transition from HTTP/1 to this amazing HTTP/2 world? What do we have to do to cater to all the users out there in the best possible manner?
+
+Requests are now cheap with head-of-line-blocking gone and new header compression in HTTP/2.
+
+So things like concatenating your JavaScript or CSS are not necessary anymore and in actuality can make things worse.
+
+Think about updating a cached file. If you fix a typo in a JavaScript file, like a missing curly brace, you would force your users to re-download the entire concatenated blob of JavaScript instead of just the fragment that actually changed.
+
+[![cs4-18](../assets/images/cs4-18-small.jpg)](../assets/images/cs4-18.jpg)
+
+If each JavaScript file was separate, you would only invalidate the cache for that single file.
+
+Another advantage is the new header compression becoming more effective the more requests are sent. The more requests are sent, the more headers can be re-used.
+
+[![cs4-16](../assets/images/cs4-16-small.jpg)](../assets/images/cs4-16.jpg)
+
+That means that having multiple connections to different servers is actually bad for your performance.
+
+That being said, minifying and compressing your JavaScript, CSS, and images is still a good idea. A byte saved is a byte saved. And especially in developing countries, that means saved money.
+
+Additionally, all the advice given for rendering performance like deferring a JavaScript or inlining styles is still valid. And so is investing time in building proper offline support with service workers.
+
+Most importantly, HTTP/2 is backwards compatible. All servers that speak HTTP/2 will be able to speak HTTP/1. A client that can't speak HTTP/2 will just fall back to HTTP/1 and keep working as before. And those clients are becoming exceedingly rare.
+
+So don't be scared of working with HTTP/2. As of October 2018, 83% of the global traffic supports HTTP/2 and 91% of US traffic supports it as well.
+
+So it is fair to say that you can optimize your web for HTTP/2 without paying much attention to HTTP/1 anymore as this number will only grow.
+
+#### HTTP/2 Do
+- Do minify & compress
+  - JavaScript
+  - CSS
+  - Images
+- Do defer & async js where appropriate
+- Do inline scripts or styles where necessary
+- Do use Service Worker for caching and offline content
+
+#### HTTP/2 Don't
+- Don't concatenate scripts & styles into a bundle. Keep files separate.
+
+### 4.8 Quiz: HTTP/2 Dev Techniques
+With all of the changes and improvements that HTTP/2 brings, we need to change the way we develop our sites.
+
+Which of the following techniques should be used to in developing for HTTP/2?
+
+- Should you minify your JavaScript?
+- What about concatenating it?
+- Should you minify or concatenate your CSS?
+- Should you still use image spriting techniques?
+- What about a content delivery network?
+- Should you shard your assets?
+- Should you minify your markup?
+
+#### 4.8 Solution
+Here are the answers for this quiz.
+
+[![cs4-19](../assets/images/cs4-19-small.jpg)](../assets/images/cs4-19.jpg)
+
+### 4.9 Conclusion
+As far as we are concerned, HTTP/2 works the exact same way HTTP/1 does. What changes is the performance and the precautions you have to take.
+
+You should start building a web app with HTTP/2 in mind since the number of browsers that don't support HTTP/2 is getting smaller and smaller.
+
+If you're running your own server or trying to figure out where to host your web yourself, make sure to enable HTTP/2 there too.
+
+In the next lesson, we'll take a look at more security measures like cross-origin resource sharing, same-origin policy, and cross-site scripting.
+
+You might even get the chance to do some hacking yourself.
+
+<!-- 
+## 5. Security
+### 5.1 Security Intro
+Thanks for coming back.Now you might be asking yourself,why are we talking about security again?I mean, we've already talked about TLS and its use in HTTPS.HTTPS as covers many angles of attackfor things like eavesdropping on your traffic,or just impersonating the web server as a whole.However, the most secure front door in the worldwill not be worth anything if there'sa letter to the first floor window.The letter being your web app.HTTP contains some very subtle security risks.On top of that, the history and backwards compatibilityof the HTTP protocol carries a lot of baggagefrom a time where security wasn't as big of a topicas it is now.In this lesson, we are going to learnhow certain design choices could have allowed an attackerto steal sensitive data, and how you as a web developercan protect you web app against such attacks.
+ -->
