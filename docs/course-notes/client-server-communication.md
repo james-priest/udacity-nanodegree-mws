@@ -1137,7 +1137,7 @@ Not surprisingly, the HTTP/2 server also loaded the site a lot faster. It loaded
 
 So the HTTP/2 server is a lot faster and also transfers less information.
 
-### 4.7 HTTP/2 in Practice
+### 4.7 HTTP/2 Best Practices
 HTTP/2 brings a lot of changes. But how do we transition from HTTP/1 to this amazing HTTP/2 world? What do we have to do to cater to all the users out there in the best possible manner?
 
 Requests are now cheap with head-of-line-blocking gone and new header compression in HTTP/2.
@@ -1178,7 +1178,7 @@ So it is fair to say that you can optimize your web for HTTP/2 without paying mu
 #### HTTP/2 Don't
 - Don't concatenate scripts & styles into a bundle. Keep files separate.
 
-### 4.8 Quiz: HTTP/2 Dev Techniques
+### 4.8 Quiz: Techniques
 With all of the changes and improvements that HTTP/2 brings, we need to change the way we develop our sites.
 
 Which of the following techniques should be used to in developing for HTTP/2?
