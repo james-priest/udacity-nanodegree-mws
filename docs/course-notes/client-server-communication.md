@@ -10,8 +10,6 @@ description: Notes by James Priest
 
 ---
 
-### Supporting Links
-
 ## 1. HTTP's Req/Resp Cycle
 ### 1.1 Course Intro
 

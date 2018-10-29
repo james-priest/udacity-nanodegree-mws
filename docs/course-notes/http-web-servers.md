@@ -10,8 +10,6 @@ description: Notes by James Priest
 
 ---
 
-### Supporting Links
-
 ## 6. Requests & Responses
 ### 6.1 Introduction
 This is a course about HTTP and web servers.

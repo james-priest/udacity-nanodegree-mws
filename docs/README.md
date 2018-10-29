@@ -35,8 +35,9 @@ The program is divided into three stages each taking approximately 2 months to c
 
 ---
 ## Course Notes
+These notes contain lesson transcripts along with screenshots, sample code, & links.
+
 ### Core Curriculum
-Notes contain full text of the lessons along with screenshots, sample code, & links.
 
 #### Stage 1: Accessible & Responsive Web Apps
   - [Responsive Web Design Fundamentals](course-notes/responsive-web-design-fundamentals.html) by Google (Lessons 1-5)

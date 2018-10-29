@@ -5,6 +5,8 @@ This site contains my code notes and project submissions for the 6-month Udacity
 [![Code Notes Homepage](docs/assets/images/fixed/MWS-Nanodegree-cert.png)](docs/assets/images/fixed/MWS-Nanodegree-cert.png)
 
 ## Course Notes
+These notes contain lesson transcripts along with screenshots, sample code, & links.
+
 ### Stage 1
 - [Responsive Web Design Fundamentals](docs/course-notes/responsive-web-design-fundamentals.md) by Google (Lessons 1-5)
 - [Responsive Images](docs/course-notes/responsive-images.md) by Google (Lessons 6-9)
@@ -26,10 +28,15 @@ This site contains my code notes and project submissions for the 6-month Udacity
 - [JavaScript Promises](docs/course-notes/javascript-promises.md) by Google (Lessons 1 & 2)
 
 ## Projects
+### Restaurant App Stage 1
 - GitHub Repo: [Restaurant Reviews App - Stage 1](https://github.com/james-priest/mws-restaurant-stage-1/tree/stage-1)
 - Documentation: [Code Notes & Walkthrough - Stage 1](https://james-priest.github.io/mws-restaurant-stage-1/stage1.html)
+
+### Restaurant App Stage 2
 - GitHub Repo: [Restaurant Reviews App - Stage 2](https://github.com/james-priest/mws-restaurant-stage-1/tree/stage-2)
-  - Documentation: [Code Notes & Walkthrough - Stage 2](https://james-priest.github.io/mws-restaurant-stage-1/stage2.html)
+- Documentation: [Code Notes & Walkthrough - Stage 2](https://james-priest.github.io/mws-restaurant-stage-1/stage2.html)
+
+### Restaurant App Stage 3
 - GitHub Repo: [Restaurant Reviews App - Stage 3](https://github.com/james-priest/mws-restaurant-stage-1/tree/stage-3)
 - Documentation: [Code Notes & Walkthrough - Stage 3](https://james-priest.github.io/mws-restaurant-stage-1/stage3.html)
 
