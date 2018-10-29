@@ -52,7 +52,7 @@ Notes contain full text of the lessons along with screenshots, sample code, & li
   
 #### Stage 3: Performant Web Apps
   - [Client Server Communication](course-notes/client-server-communication.html) by Google (Lessons 1-5)
-  - Requests, Responses, & Real World HTTP (Lessons 6-8)
+  - [HTTP & Web Servers](course-notes/http-web-servers.html) by Google (Lessons 6-8)
   - Browser Rendering Optimization by Google (Lessons 9-14)
 
 ### Optional Courses
@@ -84,16 +84,16 @@ Notes contain full text of the lessons along with screenshots, sample code, & li
 ## Projects
 
 ### Restaurant App Stage 1
-- [Restaurant Reviews App - Stage 1](https://github.com/james-priest/mws-restaurant-stage-1/tree/stage-1)
-  - [Code Log & Project Notes for Stage 1](https://james-priest.github.io/mws-restaurant-stage-1/stage1.html)
+- GitHub Repo: [Restaurant Reviews App - Stage 1](https://github.com/james-priest/mws-restaurant-stage-1/tree/stage-1)
+- Documentation: [Code Notes & Walkthough - Stage 1](https://james-priest.github.io/mws-restaurant-stage-1/stage1.html)
 
 ### Restaurant App Stage 2
-- [Restaurant Reviews App - Stage 2](https://github.com/james-priest/mws-restaurant-stage-1/tree/stage-2)
-  - [Code Log & Project Notes for Stage 2](https://james-priest.github.io/mws-restaurant-stage-1/stage2.html)
+- GitHub Repo: [Restaurant Reviews App - Stage 2](https://github.com/james-priest/mws-restaurant-stage-1/tree/stage-2)
+- Documentation: [Code Notes & Walkthrough - Stage 2](https://james-priest.github.io/mws-restaurant-stage-1/stage2.html)
 
 ### Restaurant App Stage 3
-- [Restaurant Reviews App - Stage 3](https://github.com/james-priest/mws-restaurant-stage-1)
-  - [Code Log & Project Notes for Stage 3](https://james-priest.github.io/mws-restaurant-stage-1/stage3.html)
+- GitHub Repo: [Restaurant Reviews App - Stage 3](https://github.com/james-priest/mws-restaurant-stage-1/tree/stage-3)
+- Documentation: [Code Notes & Walkthrough - Stage 3](https://james-priest.github.io/mws-restaurant-stage-1/stage3.html)
 
 ---
 
@@ -114,6 +114,7 @@ The core curriculum is split into three parts or stages and consists of courses 
 
 #### Stage 3. Performant Web Apps
 - Udacity course: [Client Server Communication](https://www.udacity.com/course/client-server-communication--ud897) by Google
+- Udacity course: [HTTP & Web Servers](https://www.udacity.com/course/http-web-servers--ud303) by Google
 - Udacity course: [Browser Rendering Optimization](https://www.udacity.com/course/browser-rendering-optimization--ud860) by Google
 
 ### Optional Course Links
