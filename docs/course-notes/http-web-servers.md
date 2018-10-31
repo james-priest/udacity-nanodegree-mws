@@ -10,6 +10,15 @@ description: Notes by James Priest
 
 ---
 
+### Resource Links
+#### Python Docs
+- [The Python Tutorial](https://docs.python.org/3/tutorial/index.html)
+- [BaseHTTPRequestHandler](https://docs.python.org/3/library/http.server.html#http.server.BaseHTTPRequestHandler)
+- [Executing modules as scripts](https://docs.python.org/3/tutorial/modules.html#executing-modules-as-scripts)
+- [urllib.parse](https://docs.python.org/3/library/urllib.parse.html)
+- [url-quoting](https://docs.python.org/3/library/urllib.parse.html#url-quoting)
+- [Requrests Quickstart](http://docs.python-requests.org/en/master/user/quickstart/)
+
 ### Setup
 Welcome to our course on HTTP and Web Servers! In this course, you'll learn how web servers work. You'll write web services in Python, and you'll also write code that accesses services out on the web.
 
@@ -371,7 +380,7 @@ ncat 127.0.0.1 9000
 
 Then type these two lines:
 
-```bash
+```text
 GET / HTTP/1.1
 Host: localhost
 ```
@@ -406,7 +415,7 @@ After you typed `Host: localhost` and pressed Enter twice, the server sent back 
 
 Here's another one to try. Use `ncat` to connect to `google.com` port 80, and send a request for the path `/` on the host `google.com`:
 
-```bash
+```text
 GET / HTTP/1.1
 Host: google.com
 ```
@@ -437,7 +446,7 @@ You can find out much more about HTTP status codes in this [Wikipedia article](h
 #### 6.6 Question 1
 Look back at the reponse Google sent, specifically the status line and the first header line:
 
-```bash
+```text
 HTTP/1.1 301 Moved Permanently
 Location: http://www.google.com/
 ```
@@ -514,7 +523,7 @@ By sending a 307 redirect code, you told your browser to go to a different URL, 
 
 Do it again! Run `ncat -l 9999` to play a server, and get your browser to access it. But this time, instead of sending a 307 redirect, send a `200 OK` with a piece of text in it:
 
-```text
+```http
 HTTP/1.1 200 OK
 Content-type: text/plain
 Content-length: 50
@@ -565,3 +574,1155 @@ To get ready for Lesson 2, download the exercise material and take a look around
 - [x] `cd course-ud303`
 - [x] `git remote remove origin`
 - [x] I looked around in the subdirectories of `course-ud303`
+
+## 7. The Web from Python
+### 7.1 Python's `http.server`
+In the last lesson, you used the built-in demo web server from the Python `http.server` module. But the demo server is just that — a demonstration of the module's abilities. Just serving static files out of a directory is hardly the only thing you can do with HTTP. In this lesson, you'll build a few different web services using `http.server`, and learn more about HTTP at the same time. You'll also use another module, `requests`, to write code that acts as an HTTP client.
+
+These modules are written in object-oriented Python. You should already be familiar with creating class instances, defining subclasses, and defining methods on classes. If you need a refresher on the Python syntax for these object-oriented actions, you might want to browse [the Python tutorial on classes](https://docs.python.org/3/tutorial/classes.html) or take another look at the sections on classes in our [Programming Foundations with Python](https://classroom.udacity.com/courses/ud036) course.
+
+In the exercises in this lesson, you'll be writing code that runs on your own computer. You'll need the [starter code](https://github.com/udacity/course-ud303) that you downloaded at the end of the last lesson, which should be in a directory called `course-ud303`. And you'll need your favorite text editor to work on these exercises.
+
+#### Servers and handlers
+Web servers using `http.server` are made of two parts: the `HTTPServer` class, and a request handler class. The first part, the `HTTPServer` class, is built in to the module and is the same for every web service. It knows how to listen on a port and accept HTTP requests from clients. Whenever it receives a request, it hands that request off to the second part — a **request handler** — which is different for every web service.
+
+Here's what your Python code will need to do in order to run a web service:
+
+- Import `http.server`, or at least the pieces of it that you need.
+- Create a subclass of `http.server.BaseHTTPRequestHandler`. This is your **handler class**.
+- Define a method on the handler class for each **HTTP verb** you want to handle. (The only HTTP verb you've seen yet in this course is `GET`, but that will be changing soon.)
+  - The method for GET requests has to be called `do_GET`.
+  - Inside the method, call built-in methods of the handler class to read the HTTP request and write the response.
+- Create an instance of `http.server.HTTPServer`, giving it your handler class and server information — particularly, the port number.
+- Call the `HTTPServer` instance's `serve_forever` method.
+
+Once you call the HTTPServer instance's `serve_forever` method, the server does that — it runs forever, until stopped. Just as in the last lesson, if you have a Python server running and you want to stop it, type Ctrl-C into the terminal where it's running. (You may need to type it two or three times.)
+
+#### Exercise: The hello server
+Let's take a quick tour of an example! In your terminal, go to the `course-ud303` directory you downloaded earlier. Under the `Lesson-2` subdirectory, you'll find a subdirectory called `0_HelloServer`. Inside, there's a Python program called `HelloServer.py`. Open it up in your text editor and take a look around. Then run it in your terminal with `python3 HelloServer.py`. It won't print anything in the terminal … until you access it at http://localhost:8000/ in your browser.
+
+[![hws2-1](../assets/images/hws2-1-small.jpg)](../assets/images/hws2-1.jpg)
+
+#### HelloServer.py
+
+```py
+#!/usr/bin/env python3
+#
+# The *hello server* is an HTTP server that responds to a GET request by
+# sending back a friendly greeting.  Run this program in your terminal and
+# access the server at http://localhost:8000 in your browser.
+
+from http.server import HTTPServer, BaseHTTPRequestHandler
+
+class HelloHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        # First, send a 200 OK response.
+        self.send_response(200)
+
+        # Then send headers.
+        self.send_header('Content-type', 'text/plain; charset=utf-8')
+        self.end_headers()
+
+        # Now, write the response body.
+        self.wfile.write("Hello, HTTP!\n".encode())
+
+if __name__ == '__main__':
+    server_address = ('', 8000)  # Serve on all addresses, port 8000.
+    httpd = HTTPServer(server_address, HelloHandler)
+    httpd.serve_forever()
+```
+
+#### A tour of the hello server
+Open up `HelloServer.py` in your text editor. Let's take a look at each part of this code, line by line.
+
+```py
+from http.server import HTTPServer, BaseHTTPRequestHandler
+```
+
+The http.server module has a lot of parts in it. For now, this program only needs these two. I'm using the `from` syntax of `import` so that I don't have to type `http.server` over and over in my code.
+
+```py
+class HelloHandler(BaseHTTPRequestHandler):
+  def do_GET(self):
+```
+
+This is the handler class. It inherits from the `BaseHTTPRequestHandler` parent class, which is defined in `http.server`. I've defined one method, `do_GET`, which handles HTTP GET requests. When the web server receives a GET request, it will call this method to respond to it.
+
+As you saw in the previous lesson, there are three things the server needs to send in an HTTP response:
+
+- a status code
+- some headers
+- and the response body
+
+The handler parent class has methods for doing each of these things. Inside `do_GET`, I just call them in order.
+
+```py
+    # First, send a 200 OK response.
+    self.send_response(200)
+```
+
+The first thing the server needs to do is send a 200 OK status code; and the `send_response` method does this. I don't have to tell it that 200 means OK; the parent class already knows that.
+
+```py
+    # Then send headers.
+    self.send_header('Content-type', 'text/plain; charset=utf-8')
+    self.end_headers()
+```
+
+The next thing the server needs to do is send HTTP headers. The parent class supplies the `send_header` and `end_headers` methods for doing this. For now, I'm just having the server send a single header line — the Content-type header telling the client that the response body will be in UTF-8 plain text.
+
+```py
+    # Now, write the response body.
+    self.wfile.write("Hello, HTTP!\n".encode())
+```
+
+The last part of the `do_GET` method writes the response body.
+
+The parent class gives us a variable called `self.wfile`, which is used to send the response. The name `wfile` stands for *writable file*. Python, like many other programming languages, makes an analogy between network connections and open files: they're things you can read and write data to. Some file objects are read-only; some are write-only; and some are read/write.
+
+`self.wfile` represents the connection from the server to the client; and it is write-only; hence the name. Any binary data written to it with its `write` method gets sent to the client as part of the response. Here, I'm writing a friendly hello message.
+
+What's going on with `.encode()` though? We'll get to that in a moment. Let's look at the rest of the code first.
+
+```py
+if __name__ == '__main__':
+  server_address = ('', 8000)  # Serve on all addresses, port 8000.
+  httpd = HTTPServer(server_address, HelloHandler)
+  httpd.serve_forever()
+```
+
+This code will run when we run this module as a Python program, rather than importing it. The `HTTPServer` constructor needs to know what address and port to listen on; it takes these as a tuple that I'm calling `server_address`. I also give it the `HelloHandler` class, which it will use to handle each incoming client request.
+
+At the very end of the file, I call `serve_forever` on the `HTTPServer`, telling it to start handling HTTP requests. And that starts the web server running.
+
+#### HelloServer.py
+
+```py
+#!/usr/bin/env python3
+#
+# The *hello server* is an HTTP server that responds to a GET request by
+# sending back a friendly greeting.  Run this program in your terminal and
+# access the server at http://localhost:8000 in your browser.
+
+from http.server import HTTPServer, BaseHTTPRequestHandler
+
+
+class HelloHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        # First, send a 200 OK response.
+        self.send_response(200)
+
+        # Then send headers.
+        self.send_header('Content-type', 'text/plain; charset=utf-8')
+        self.end_headers()
+
+        # Now, write the response body.
+        self.wfile.write("Hello, HTTP!\n".encode())
+
+if __name__ == '__main__':
+    server_address = ('', 8000)  # Serve on all addresses, port 8000.
+    httpd = HTTPServer(server_address, HelloHandler)
+    httpd.serve_forever()
+
+```
+
+#### End of the tour
+That's all that's involved in writing a basic HTTP server in Python. But the hello server isn't very interesting. It doesn't even do as much as the demo server. No matter what query you send it, all it has to say is hello. (Try it: [http://localhost:8000/goodbye](http://localhost:8000/goodbye))
+
+In the rest of this lesson, we'll build servers that do much more than say hello.
+
+### 7.2 What about `.encode()`
+
+[![hws2-2](../assets/images/hws2-2-small.jpg)](../assets/images/hws2-2.jpg)
+
+In the last exercise you saw this bit of code in the hello server:
+
+```py
+self.wfile.write("Hello, HTTP!\n".encode())
+```
+
+I mentioned that I'd explain the `.encode()` part later. Well, here goes!
+
+#### The short version
+An HTTP response could contain any kind of data, not only text. And so the `self.wfile.write` method in the handler class expects to be given a `bytes` object — a piece of arbitrary binary data — which it writes over the network in the HTTP response body.
+
+If you want to send a string over the HTTP connection, you have to `encode` the string into a `bytes` object. The `encode` method on strings translates the string into a `bytes` object, which is suitable for sending over the network. There is, similarly, a `decode` method for turning bytes objects into strings.
+
+That's all you need to know about text encodings in order to do this course. However, if you want to learn even more, read on ...
+
+#### The long version
+Text strings look simple, but they are actually kind of complicated underneath. There are a lot of different ways that computers can represent text in memory and on the network.
+
+Older software — including older versions of Python — tended to assume that each *character* takes up only one *byte* of memory. That works fine for some human languages, like English and Russian, but it doesn't work *at all* for other human languages, like Chinese; and it *really* doesn't work if you want to handle text from multiple languages in the same program.
+
+> These words all mean cat:
+> gato قط 猫 گربه кіт बिल्ली ねこ
+
+The Web is international, so browsers and servers need to support all languages. This means that the old one-byte assumption is completely thrown out. But when programs use the network, they need to know how long a piece of data is in terms of bytes. That has to be figured out unambiguously at some point in time. The way Python does this is by making us encode strings into `bytes` objects when we want to send them over a binary channel (such as an HTTP connection).
+
+This Japanese word for *cat* is two characters long. But when it's encoded in binary, it's six bytes long:
+
+```py
+>>> len('ねこ')
+2
+>>> len('ねこ'.encode())
+6
+```
+
+The most common encoding these days is called [UTF-8](https://en.wikipedia.org/wiki/UTF-8). It is supported by all major and minor browsers and operating systems, and it supports characters for almost all the world's languages. In UTF-8, a single character may be represented as anywhere from one to four bytes, depending on language.
+
+English text with no accent marks still takes up one byte per character:
+
+```py
+>>> len('cat')
+3
+>>> len('cat'.encode())
+3
+```
+
+UTF-8 is the default encoding in Python. When you call the `encode` method on a string without passing it another encoding, it assumes you mean UTF-8. This is the right thing to do, so that's what the code in this course does.
+
+For even more detail ...
+The [Python Unicode HOWTO](https://docs.python.org/3.6/howto/unicode.html) is a definitive guide to the history of string encodings in Python.
+
+Okay, now let's get back to writing web servers!
+
+### 7.3 The echo server
+The hello server doesn't do anything with the query you send it. It just always sends back the same piece of text. Let's modify it into a server that sends back whatever request path you send it, like an echo. For instance, if you access the page [http://localhost:8000/bears](http://localhost:8000/bears), you will see "bears" in your browser. We'll call this the **echo server**.
+
+In order to echo back the request, the server needs to be able to look at the request information. That's something that `http.server` lets your code do. But to find out how, let's take a look in the documentation.
+
+#### 7.3 Question 1
+Take a look at the Python documentation for the [`BaseHTTPRequestHandler` parent class](https://docs.python.org/3/library/http.server.html#http.server.BaseHTTPRequestHandler). What's the name of the instance variable that contains the request path?
+
+- [ ] url
+- [x] request
+- [ ] requestline
+- [ ] path
+
+`path` is the right answer. Which means that in `do_GET`, you'll need to access `self.path` to get the request path.
+
+#### Exercise: Turn HelloHandler into EchoHandler
+Change directory to `course-ud303/Lesson-2/1_EchoServer`. Here, you'll find a file called `EchoServer.py`. However, the code in that file is just a copy of the hello server code! For this exercise, modify this code so that it echoes back the request path that it receives. For instance, if you access [http://localhost:8000/puppies](http://localhost:8000/puppies), you should see the word "puppies" in your browser.
+
+While you're at it, rename it from `HelloHandler` to `EchoHandler`, to better describe what we'll have it do now. When you're done, run `EchoServer.py` and test it out with some different request paths.
+
+#### What didn't get echoed
+Once you have **EchoServer.py** running on your machine, try these three test URIs:
+
+- [http://localhost:8000/bears](http://localhost:8000/bears)
+- [http://localhost:8000/spiders_from_mars#stardust](http://localhost:8000/spiders_from_mars#stardust)
+- [http://localhost:8000/giant-squid?color=green](http://localhost:8000/giant-squid?color=green)
+
+Then take a look at this quiz:
+
+#### 7.3 Question 2
+Which of these silly words did not show up in the server's response when you tried the URIs above?
+
+- [ ] bears
+- [x] stardust
+- [ ] green
+
+#### How did you build the echo server
+The only difference in the code between `EchoHandler` and `HelloHandler` is what they write in the response body. The hello server always writes the same message, while the echo server takes its message from the request path. Here's how I did it — a one-line change at the end of `do_GET`:
+
+```py
+self.wfile.write(self.path[1:].encode())
+```
+
+What I'm doing here is taking the path (for instance `"/bears"`), using a string slice to remove the first character (which is always a slash), and then encoding the resulting string into bytes, then writing that to the HTTP response body.
+
+You could also do it in several lines of code:
+
+```py
+message = self.path[1:]  # Extract 'bears' from '/bears', for instance
+message_bytes = message.encode()  # Make bytes from the string
+self.wfile.write(message_bytes)  # Send it over the network
+```
+
+Make sure to keep `EchoServer.py` around! We'll use it later in the course to look at queries.
+
+#### 7.3 Question 3
+The echo server wants to listen on the same port that the hello server does: port 8000. What happens if you try to start `EchoServer.py` while `HelloServer.py` is still running or vice versa?
+
+- [x] The new server exists with an `OSError` exception.
+- [ ] The old server exits with an `OSError` exception.
+- [ ] The new server is assigned to listen on port 8001 instead of 8000.
+- [ ] Nothing unusual happens; they coexist just fine.
+- [ ] Your computer gets 423,827 viruses.
+
+The new server exits. Under normal conditions, only one program on your computer can listen on a particular port at the same time. If you want to have both servers running, you have to change the port number from 8000 to something else.
+
+> **Note:** Windows 10 has a different behavior from all other operating systems (including earlier Windows versions) when two processes try to listen on the same port.
+>
+> Instead of exiting with an error, the new server will stop and wait for the old server to exit. If you are using Windows 10, be on the lookout for this behavior in your network servers!
+
+#### EchoServer.py
+
+```py
+#!/usr/bin/env python3
+#
+# The *echo server* is an HTTP server that responds to a GET request by
+# sending the query path back to the client.  For instance, if you go to
+# the URI "http://localhost:8000/Balloon", the echo server will respond
+# with the text "Balloon" in the HTTP response body.
+#
+# Instructions:
+#
+# The starter code for this exercise is the code from the hello server.
+# Your assignment is to change this code into the echo server:
+#
+#   1. Change the name of the handler from HelloHandler to EchoHandler.
+#   2. Change the response body from "Hello, HTTP!" to the query path.
+#
+# When you're done, run it in your terminal.  Try it out from your browser,
+# then run the "test.py" script to check your work.
+
+from http.server import HTTPServer, BaseHTTPRequestHandler
+
+
+class EchoHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        # First, send a 200 OK response.
+        self.send_response(200)
+
+        # Then send headers.
+        self.send_header('Content-type', 'text/plain; charset=utf-8')
+        self.end_headers()
+
+        # Now, write the response body.
+        self.wfile.write(self.path[1:].encode())
+
+if __name__ == '__main__':
+    server_address = ('', 8000)  # Serve on all addresses, port 8000.
+    httpd = HTTPServer(server_address, EchoHandler)
+    httpd.serve_forever()
+
+```
+
+### 7.4 Queries & quoting
+#### Unpacking query parameters
+When you take a look at a URI for a major web service, you'll often see several *query parameters*, which are a sort of variable assignment that occurs after a `?` in the URI. For instance, here's a Google Image Search URI:
+
+[https://www.google.com/search?q=gray+squirrel&tbm=isch](https://www.google.com/search?q=gray+squirrel&tbm=isch)
+
+This will be sent to the web server as this HTTP request:
+
+```http
+GET /search?q=gray+squirrel&tbm=isch HTTP/1.1
+Host: www.google.com
+```
+
+The **query** part of the URI is the part after the `?` mark. Conventionally, query parameters are written as `key=value` and separated by `&` signs. So the above URI has two query parameters, `q` and `tbm`, with the values `gray+squirrel` and `isch`.
+
+(`isch` stands for Image Search. I'm not sure what `tbm` means.)
+
+There is a Python library called `urllib.parse` that knows how to unpack query parameters and other parts of an HTTP URL. (The library doesn't work on all URIs, only on some URLs.) [Take a look at the `urllib.parse` documentation here](https://docs.python.org/3/library/urllib.parse.html). Check out the `urlparse` and `parse_qs` functions specifically. Then try out this demonstration in your Python interpreter:
+
+```py
+>>> from urllib.parse import urlparse, parse_qs, parse_qsl
+>>> address = 'https://www.google.com/search?q=gray+squirrel&tbm=isch'
+>>> parts = urlparse(address)
+>>> print(parts)
+ParseResult(scheme='https', netloc='www.google.com', path='/search',
+  params='', query='q=gray+squirrel&tbm=isch', fragment='')
+>>> print(parts.query)
+q=gray+squirrel&tbm=isch
+>>> query = parse_qs(parts.query)
+>>> query
+{'q': ['gray squirrel'], 'tbm': ['isch']}
+>>> parse_qsl(parts.query)
+[('q', 'gray squirrel'), ('tbm', 'isch')]
+>>>
+```
+
+#### 7.4 Question 1
+What does `parse_qs('texture=fuzzy&animal=gray+squirrel')` return?
+
+- [ ] The list `['texture', 'fuzzy', 'animal', 'gray+squirrel']`
+- [ ] The dictionary `{'texture': 'fuzzy', 'animal', 'gray squirrel'}`
+- [x] The dictionary `{'texture': ['fuzzy'], 'animal': ['gray squirrel']}`
+
+#### URL quoting
+Did you notice that `'gray+squirrel'` in the query string became `'gray squirrel'` in the output of `parse_qs`? HTTP URLs aren't allowed to contain spaces or certain other characters. So if you want to send these characters in an HTTP request, they have to be translated into a "URL-safe" or "URL-quoted" format.
+
+**"Quoting"** in this sense doesn't have to do with quotation marks, the kind you find around Python strings. It means translating a string into a form that doesn't have any special characters in it, but in a way that can be reversed (unquoted) later.
+
+(And if that isn't confusing enough, it's sometimes also referred to as **URL-encoding** or **URL-escaping**).
+
+One of the features of the URL-quoted format is that spaces are sometimes translated into plus signs. Other special characters are translated into hexadecimal codes that begin with the percent sign.
+
+Take a look at [the documentation for urllib.parse.quote and related functions](https://docs.python.org/3/library/urllib.parse.html#url-quoting). Later in the course when you want to construct a URI in your code, you'll need to use appropriate quoting. More generally, whenever you're working on a web application and you find spaces or percent-signs in places you don't expect them to be, it means that something needs to be quoted or unquoted.
+
+### 7.5 HTML and forms
+[![hws2-3](../assets/images/hws2-3-small.jpg)](../assets/images/hws2-3.jpg)
+
+#### Exercise: HTML and forms
+Most of the time, query parameters don't get into a URL by the user typing them out into the browser. Query parameters often come from a user submitting an HTML form. So dust off your HTML knowledge and let's take a look at a form that gets submitted to a server.
+
+If you need a refresher on HTML forms, take a look at the [MDN introduction](https://developer.mozilla.org/en-US/docs/Learn/HTML/Forms) (gentle) or the [W3C standard reference](https://www.w3.org/TR/2011/WD-html5-20110525/forms.html) (more advanced).
+
+Here's a piece of HTML that contains a form:
+
+```html
+<!DOCTYPE html>
+<title>Login Page</title>
+<form action="http://localhost:8000/" method="GET">
+<label>Username:
+  <input type="text" name="username">
+</label>
+<br>
+<label>Password:
+  <input type="password" name="pw">
+</label>
+<br>
+<button type=submit>Log in!</button>
+```
+
+This HTML is also in the exercises directory, under `Lesson-2/2_HTMLForms/LoginPage.html`. Open it up in your browser.
+
+Before pressing the submit button, start up the **echo server** again on port 8000 so you can see the results of submitting the form.
+
+#### 7.5 Question 1
+What happens when you fill out the form and submit it?
+
+- [ ] Nothing; the browser just sits there.
+- [x] You see the username and password you entered in the output from the echo server
+- [ ] Your browser logs into your favorite web site and deletes all your favorite things.
+
+The form inputs, with the names `username` and `pw`, become query parameters to the echo server.
+
+Exercise: Form up for action
+Let's do another example! This HTML form has a pull-down menu with four options.
+
+```html
+<!DOCTYPE html>
+<title>Search wizardry!</title>
+<form action="http://www.google.com/search" method=GET>
+  <label>Search term:
+    <input type="text" name="q">
+  </label>
+  <br>
+  <label>Corpus:
+    <select name="tbm">
+      <option selected value="">Regular</option>
+      <option value="isch">Images</option>
+      <option value="bks">Books</option>
+      <option value="nws">News</option>
+    </select>
+  </label>
+  <br>
+  <button type="submit">Go go!</button>
+</form>
+```
+
+This form is in the HTML file `SearchPage.html` in the same directory. Open it up in your browser.
+
+This form tells your browser to submit it to Google Search. The inputs in the form supply the `q` and `tbm` query parameters. (And if Google ever changes the way their search query parameters work, this example is going to be totally broken.)
+
+#### 7.5 Question 2
+Using these two different forms as examples, can you tell what data in the form tells the browser which server to submit the form to?
+
+- [x] The URI in the form `action` attribute.
+- [ ] The text in the `submit` button.
+- [ ] The browser looks up the form's `title` in the DNS.
+
+Yes. The **form action** is the URI to which the form fields will be submitted.
+
+### 7.6 GET and POST
+In the last lesson, I mentioned that `GET` is only one of many HTTP verbs, or methods.
+
+When a browser submits a form via `GET`, it puts all of the form fields into the URI that it sends to the server. These are sent as a query, in the request path — just like search engines do. They're all jammed together into a single line. Since they're in the URI, the user can bookmark the resulting page, reload it, and so forth.
+
+This is fine for search engine queries, but it's not quite what we would want for (say) a form that adds an item to your shopping cart on an e-commerce site, or posts a new message on a comments board. `GET` methods are good for search forms and other actions that are intended to *look something up* or ask the server for a copy of some resource. But `GET` is not recommended for actions that are intended to alter or create a resource. For this sort of action, HTTP has a different verb, `POST`.
+
+#### Idempotence
+Vocabulary word of the day: **idempotent**. An action is idempotent if doing it twice (or more) produces the same result as doing it once. *"Show me the search results for 'polar bear'"* is an idempotent action, because doing it a second time just shows you the same results. *"Add a polar bear to my shopping cart"* is not, because if you do it twice, you end up with two polar bears.
+
+`POST` requests are not idempotent. If you've ever seen a warning from your browser asking you if you really mean to resubmit a form, what it's *really* asking is if you want to do a non-idempotent action a second time.
+
+[![hws2-4](../assets/images/hws2-4-small.jpg)](../assets/images/hws2-4.jpg)
+
+(Important note if you're ever asked about this in a job interview: **idempotent** is pronounced like "**eye**-dem-poe-tent", or rhyming with "Hide 'em, Joe Tent" — not like "id impotent".)
+
+#### 7.6 Question 1
+Here's a list  of several (non-HTTP) actions. Makr the ones that *are* idempotent.
+
+- [x] Adding zero to a numeric variable. (In Python, `x += 0`.)
+- [ ] Adding five to a numeric variable. (In Python, `x += 5`.)
+- [x] Setting a variable to the value 5. (In Python, `x = 5`.)
+- [x] Looking up an entry in a dictionary. (In Python, `h = words["hello"]`.)
+
+Adding zero to a number is idempotent, since you can add zero as many times as you want and the original number is unchanged. Adding five to a number is not idempotent, because if you do it twice you'll have added ten. Setting a variable to the value 5 is idempotent: doing it twice is the same as doing it once. Looking up an entry in a dictionary doesn't alter anything, so it's idempotent.
+
+#### Exercise: Be a server and receive a POST request
+Here's a piece of HTML with a form in it that is submitted via POST:
+
+```html
+<!DOCTYPE html>
+<title>Testing POST requests</title>
+<form action="http://localhost:9999/" method="POST">
+  <label>Magic input:
+    <input type="text" name="magic" value="mystery">
+  </label>
+  <br>
+  <label>Secret input:
+     <input type="text" name="secret" value="spooky">
+  </label>
+  <br>
+  <button type="submit">Do a thing!</button>
+</form>
+```
+
+This form is in your exercises directory as `Lesson-2/2_HTMLForms/PostForm.html`. Open it up in your browser. You should see a form. *Don't submit that form just yet.* First, open up a terminal and use `ncat -l 9999` to listen on port 9999. Then type some words into the form fields in your browser, and submit the form. You should see an HTTP request in your terminal. Take a careful look at this request!
+
+[![hws2-5](../assets/images/hws2-5-small.jpg)](../assets/images/hws2-5.jpg)
+
+#### 7.6 Question 2
+What's different about this HTTP request from ones you've seen before?
+
+- [x] The request line says "POST" instead of "GET".
+- [x] The form data is not in the URI path of the request.
+- [x] The form data is somewhere else in the request.
+- [ ] The for data is written backwards.
+
+The first three are true! Try changing POST to GET in the form and restarting `ncat`, and see how this affects the request you see when you submit the form.
+
+When a browser submits a form as a POST request, it doesn't encode the form data in the URI path, the way it does with a GET request. Instead, it sends the form data in the request body, underneath the headers. The request also includes `Content-Type` and `Content-Length` headers, which we've previously only seen on HTTP responses.
+
+> By the way, the names of HTTP headers are case-insensitive. So there's no difference between writing `Content-Length` or `content-length` or even `ConTent-LeNgTh` … except, of course, that humans will read your code and be confused by that last one.
+
+### 7.7 A server for POST
+One approach that I like to use when designing a new piece of code is to imagine that it already exists, and think through the ways that a user would use it. Coming up with these narratives is a useful tool to plan out what the code will need to do.
+
+In the next few exercises, you'll be building a **messageboard server**. When a user goes to the main page in their browser, it'll display a form for writing messages, as well as a list of the previously written messages. Submitting the form will send a request to the server, which stores the submitted message and then re-displays the main page.
+
+In order to test your messageboard server, you'll need to install the `requests` module, which is a Python module for making HTTP requests. We'll see much more about this module later in this lesson. For now, just run `pip3 install requests` in your terminal to install it.
+
+#### 7.7 Question 1
+Which HTTP method do you think this server will need to use?
+
+- [ ] Only GET
+- [ ] Only POST
+- [ ] GET for submitting messages, and POST for viewing them
+- [x] GET for viewing messages, and POST for submitting them
+
+We'll be using a GET request to display the messageboard's existing contents, and POST to update the contents by creating new messages. Creating new messages is not idempotent — we don't want duplicates.
+
+Why don't we want to use GET for submitting the form? Imagine if a user did this. They write a message and press the submit button … and the message text shows up in their URL bar. If they press reload, it sends the message again. If they bookmark that URL and go back to it, it sends the message again. This doesn't seem like such a great experience. So we'll use POST for message submission, and GET to display the main page.
+
+#### POST handlers read the request body
+Previously you've written handler classes that have just a single method, `do_GET`. But a handler class can have `do_POST` as well, to support GET and POST requests. This is exactly how the messageboard server will work. When a GET request comes in, the server will send the HTML form and current messages. When a POST request comes in with a new message, the server will store the message in a list, and then return all the messages it's seen so far.
+
+The code for a do_POST method will need to do some pretty different things from a do_GET method. When we're handling a GET request, all the user data in the request is in the URI path. But in a POST request, it's in the request body. Inside `do_POST`, our code can read the request body by calling the `self.rfile.read` method. `self.rfile` is a file object, like the `self.wfile` we saw earlier — but `rfile` is for reading the request, rather than writing the response.
+
+However, `self.rfile.read` needs to be told how many bytes to read … in other words, how long the request body is.
+
+#### 7.7 Question 2
+How do you think our code can tell how much data is in the request body of a POST request from a web browser?
+
+- [ ] The browser always sends exactly 1024 bytes.
+- [ ] Our code should read repeatedly until it gets an empty string.
+- [x] The browser sends the length of the request body in the `Content-Length` header.
+- [ ] The first two bytes of the request body encode the length of the request body.
+
+If there's a request body at all, the browser will send the length of the request body in the `Content-Length` header.
+
+#### Headers are strings (or missing)
+The handler class gives us access to the HTTP headers as the instance variable `self.headers`, which is an object that acts a lot like a Python dictionary. The keys of this dictionary are the header names, but they're case-insensitive: it doesn't matter if you look up `'content-length'` or `'Content-Length'`. The values in this dictionary are strings: if the request body is 140 bytes long, the value of the `Content-length` entry will be *the string* `"140"`. We need to call `self.rfile.read(140)` to read 140 bytes; so once we read the header, we'll need to convert it to an integer.
+
+But in an HTTP request, it's also possible that the body will be empty, in which case the browser might not send a Content-length header at all. This means we have to be a little careful when accessing the headers from the self.headers object. If we do `self.headers['content-length']` and there's no such header, our code will crash with a `KeyError`. Instead we'll use the `.get` dictionary method to get the header value safely.
+
+So here's a little bit of code that can go in the `do_POST` handler to find the length of the request body and read it:
+
+```py
+length = int(self.headers.get('Content-length', 0))
+data = self.rfile.read(length).decode()
+```
+
+Once you read the message body, you can use `urllib.parse.parse_qs` to extract the POST parameters from it.
+
+With that, you can now build a `do_POST` method!
+
+#### Exercise: Messageboard, Part One
+The first step to building the messageboard server is to build a server that accepts a POST request and just echoes it back to the browser. The starter code for this exercise is in `Lesson-2/3_MessageboardPartOne`.
+
+There are several steps involved in doing this, so here's a checklist —
+
+##### Messageboard Part One
+- [x] Find the length of the POST request data.
+- [x] Read the correct amount of request data.
+- [x] Extract the "message" field from the request data
+- [x] Run the `MessageboardPartOne.py` server.
+- [x] Run the `MessageboardPartOne.html` file in your browser and submit it.
+- [x] Run the test script `test.py` with the server running.
+
+#### Solution, Part One
+You can see my version of the solution to the Messageboard Part One exercise in the `3_MessageboardPartOne/solution` subdirectory. As before, there are lots of variations on how you can do this exercise; if the tests in `test.py` pass, then you've got a good server!
+
+```py
+#!/usr/bin/env python3
+#
+# Step one in building the messageboard server:
+# An echo server for POST requests.
+#
+# Instructions:
+#
+# This server should accept a POST request and return the value of the
+# "message" field in that request.
+#
+# You'll need to add three things to the do_POST method to make it work:
+#
+# 1. Find the length of the request data.
+# 2. Read the correct amount of request data.
+# 3. Extract the "message" field from the request data.
+#
+# When you're done, run this server and test it from your browser using the
+# Messageboard.html form.  Then run the test.py script to check it.
+
+from http.server import HTTPServer, BaseHTTPRequestHandler
+from urllib.parse import parse_qs
+
+
+class MessageHandler(BaseHTTPRequestHandler):
+    def do_POST(self):
+        # 1. How long was the message? (Use the Content-Length header.)
+        length = int(self.headers.get('Content-length', 0))
+
+        # 2. Read the correct amount of data from the request.
+        data = self.rfile.read(length).decode()
+
+        # 3. Extract the "message" field from the request data.
+        message = parse_qs(data)["message"][0]
+
+        # Send the "message" field back as the response.
+        self.send_response(200)
+        self.send_header('Content-type', 'text/plain; charset=utf-8')
+        self.end_headers()
+        self.wfile.write(message.encode())
+
+if __name__ == '__main__':
+    server_address = ('', 8000)
+    httpd = HTTPServer(server_address, MessageHandler)
+    httpd.serve_forever()
+```
+
+#### Exercise: Messageboard, Part Two
+So far, this server only handles POST requests. To submit the form to it, you have to load up the form in your browser as a separate HTML file. It would be much more useful if the server could serve the form itself.
+
+This is pretty straightforward to do. You can add the form in a variable as a Python string (in triple quotes), and then write a `do_GET` method that sends the form.
+
+You can choose to start from where you left off in the previous exercise; or if you like, you can start from the code in the `4_MessageboardPartTwo` directory.
+
+When you're done, you should have a server that you can access in your browser at [http://localhost:8000/](http://localhost:8000/). Going there should display the form. Submitting the form should get the message echoed back. That's most of the way to a messageboard server ... let's keep going!
+
+##### Messageboard, Part Two
+- [x] Add a string variable that contains the HTML form from `Messageboard.html`
+- [x] Add a `do_GET` method that returns the form.
+- [x] Run the server and test it in your browser at [http://localhost:8000](http://localhost:8000).
+- [x] Run the tests in `test.py` with the server running.
+
+#### Solution, Part Two
+You can see my version of the solution to the Messageboard Part Two exercise in the `4_MessageboardPartTwo/solution` subdirectory.
+
+```py
+#!/usr/bin/env python3
+#
+# Step two in building the messageboard server:
+# A server that handles both GET and POST requests.
+#
+# Instructions:
+#
+# 1. Add a string variable that contains the form from Messageboard.html.
+# 2. Add a do_GET method that returns the form.
+#
+# You don't need to change the do_POST method in this exercise!
+#
+# To test your code, run this server and access it at http://localhost:8000/
+# in your browser.  You should see the form.  Then put a message into the
+# form and submit it.  You should then see the message echoed back to you.
+
+from http.server import HTTPServer, BaseHTTPRequestHandler
+from urllib.parse import parse_qs
+
+form = '''<!DOCTYPE html>
+  <title>Message Board</title>
+  <form method="POST" action="http://localhost:8000/">
+    <textarea name="message"></textarea>
+    <br>
+    <button type="submit">Post it!</button>
+  </form>
+'''
+
+
+class MessageHandler(BaseHTTPRequestHandler):
+    def do_POST(self):
+        # How long was the message?
+        length = int(self.headers.get('Content-length', 0))
+
+        # Read the correct amount of data from the request.
+        data = self.rfile.read(length).decode()
+
+        # Extract the "message" field from the request data.
+        message = parse_qs(data)["message"][0]
+
+        # Send the "message" field back as the response.
+        self.send_response(200)
+        self.send_header('Content-type', 'text/plain; charset=utf-8')
+        self.end_headers()
+        self.wfile.write(message.encode())
+
+    def do_GET(self):
+        # First, send a 200 OK response.
+        self.send_response(200)
+
+        # Then send headers.
+        self.send_header('Content-type', 'text/html; charset=utf-8')
+        self.end_headers()
+
+        # Encode & send the form
+        self.wfile.write(form.encode())
+
+if __name__ == '__main__':
+    server_address = ('', 8000)
+    httpd = HTTPServer(server_address, MessageHandler)
+    httpd.serve_forever()
+
+```
+
+On the next page, you'll get into part three. But first, once you have your server up and running, try testing it out with some silly queries in this quiz:
+
+#### 7.7 Question 3
+Bring your messageboard server up and send it some requests from your browser with different URI paths, like [http://localhost:8000/bears](http://localhost:8000/bears) or [http://localhost:8000/udacity-rocks/my-foxes](http://localhost:8000/udacity-rocks/my-foxes).
+
+Does it do anything different based on the URI path?
+
+- [ ] Yes, it does.
+- [x] No, it doesn't
+
+This particular server doesn't look at the URI path at all. Any GET request will get the form. Any POST request will save a message.
+
+### 7.8 Post-Redirect-Get
+[![hws2-6](../assets/images/hws2-6-small.jpg)](../assets/images/hws2-6.jpg)
+
+There's a very common design pattern for interactive HTTP applications and APIs, called the **PRG** or [Post-Redirect-Get](https://en.wikipedia.org/wiki/Post/Redirect/Get) pattern. A client `POST`s to a server to create or update a resource; on success, the server replies not with a `200 OK` but with a `303` redirect. The redirect causes the client to GET the created or updated resource.
+
+This is just one of many, many ways to architect a web application, but it's one that makes good use of HTTP methods to accomplish specific goals. For instance, wiki sites such as Wikipedia often use Post-Redirect-Get when you edit a page.
+
+For the messageboard server, Post-Redirect-Get means:
+
+1. You go to [http://localhost:8000/](http://localhost:8000/) in your browser. Your browser sends a GET request to the server, which replies with a `200 OK` and a piece of HTML. You see a form for posting comments, and a list of the existing comments. (But at the beginning, there are no comments posted yet.)
+2. You write a comment in the form and submit it. Your browser sends it via `POST` to the server.
+3. The server updates the list of comments, adding your comment to the list. Then it replies with a `303` redirect, setting the `Location: /` header to tell the browser to request the main page via `GET`.
+4. The redirect response causes your browser to go back to the same page you started with, sending a `GET` request, which replies with a `200 OK` and a piece of HTML...
+
+One big advantage of Post-Redirect-Get is that as a user, every page you actually see is the result of a `GET` request, which means you can bookmark it, reload it, and so forth — without ever accidentally resubmitting a form.
+
+#### Exercise: Messageboard, Part Three
+Update the messageboard server to a full Post-Redirect-Get pattern, as described above. You'll need both `do_GET` and `do_POST` handlers; the `do_POST` handler should reply with a `303` redirect with no response body.
+
+The starter code for this exercise is in the `5_MessageboardPartThree` directory. I've added the logic that actually stores the messages into a list; all you need to do is implement the HTTP steps described above.
+
+When you're done, test it in your browser and with the `test.py` script, as before.
+
+##### Messageboard, Part Three
+
+- [x] In the `do_POST` method, send a 303 redirect back to the root page (`/`).
+- [x] In the `do_GET` method, assemble the response data together out of the form template and the stored messages.
+- [x] Run the server and test it in your browser.
+- [x] Run the tests in `test.py` with the server running.
+
+#### Solution, part three
+You can see my version of the solution to the Messageboard Part Three exercise in the `5_MessageboardPartThree/solution` subdirectory. Your code might not look the same as mine; stylistic variations are normal! But if the tests in `test.py` pass, you've got a good server.
+
+#### MessageboardPartThree.py
+
+```py
+#!/usr/bin/env python3
+#
+# Step two in building the messageboard server.
+#
+# Instructions:
+#   1. In the do_POST method, send a 303 redirect back to the / page.
+#   2. In the do_GET method, put the response together and send it.
+
+from http.server import HTTPServer, BaseHTTPRequestHandler
+from urllib.parse import parse_qs
+
+memory = []
+
+form = '''<!DOCTYPE html>
+  <title>Message Board</title>
+  <form method="POST">
+    <textarea name="message" id="message"></textarea>
+    <br>
+    <button type="submit">Post it!</button>
+  </form>
+  <pre>
+{}
+  </pre>
+  <script>
+    window.onload = () => document.querySelector("#message").focus();
+  </script>
+'''
+
+
+class MessageHandler(BaseHTTPRequestHandler):
+    def do_POST(self):
+        # How long was the message?
+        length = int(self.headers.get('Content-length', 0))
+
+        # Read the correct amount of data from the request.
+        data = self.rfile.read(length).decode()
+        # Extract the "message" field from the request data.
+        message = parse_qs(data)["message"][0]
+
+        # Escape HTML tags in the message so users can't break world+dog.
+        message = message.replace("<", "&lt;")
+
+        # Store it in memory.
+        memory.append(message)
+
+        # 1. Send a 303 redirect back to the root page.
+        self.send_response(303)
+        self.send_header('Location', '/')
+        self.end_headers()
+
+    def do_GET(self):
+        # First, send a 200 OK response.
+        self.send_response(200)
+
+        # Then send headers.
+        self.send_header('Content-type', 'text/html; charset=utf-8')
+        self.end_headers()
+
+        # 2. Put the response together out of the form and the stored messages.
+        msg = form.format("\n".join(memory))
+
+        # 3. Send the response.
+        self.wfile.write(msg.encode())
+
+if __name__ == '__main__':
+    server_address = ('', 8000)
+    httpd = HTTPServer(server_address, MessageHandler)
+    httpd.serve_forever()
+
+```
+
+### 7.9 Making requests
+Now let's turn from writing web servers to writing web clients. The `requests` library is a Python library for sending requests to web servers and interpreting the responses. It's not included in the Python standard library, though; you'll need to install it. In your terminal, run `pip3 install requests` to fetch and install the `requests` library.
+
+Then take a look at [the quickstart documentation for `requests`](http://docs.python-requests.org/en/master/user/quickstart/) and try it out.
+
+#### 7.9 Question 1
+Assuming you've still got your messageboard werver running on port 8000, how yould you send  a GET request to it using the `requests` library?
+
+- [ ] `requests.fetch("http://localhost/", port=8000)`
+- [x] `requests.get("http://localhost:8000/")`
+- [ ] `requests.transmit("GET", "localhost:8000", "/")`
+
+The `requests` function for performing GET requests is `requests.get`, and it takes the URI as an argument.
+
+#### Response objects
+When you send a request, you get back a Response object. Try it in your Python interpreter:
+
+```py
+>>> import requests
+>>> a = requests.get('http://www.udacity.com')
+>>> a
+<Response [200]>
+>>> type(a)
+<class 'requests.models.Response'>
+```
+
+#### 7.9 Question 2
+Use the documentation for the `requests` module to answer this question!
+
+If you have a response object called `r`, how can you get the reponse body - for instance, the HTML that the server sent?
+
+- [ ] `r.text`
+- [ ] `r.content`
+- [x] Both of the above, but they're different.
+
+Both, but they're different. `r.content` is a bytes object representing the literal binary data that the server sent. `r.text` is the same data but interpreted as a `str` object, a Unicode string.
+
+#### Handling errors
+Try fetching some different URIs with the `requests` module in your Python interpreter. More specifically, try some that *don't work*. Try some sites that don't exist, like [http://bad.example.com/](http://bad.example.com/), but also try some pages that don't exist on sites that do, like [http://google.com/ThisDoesNotExist](http://google.com/ThisDoesNotExist).
+
+What do you notice about the responses that you get back?
+
+```py
+uri = "http://bad.example.com/"
+r = requests.get(uri)
+```
+
+#### 7.9 Question 3
+Using the `requests` module, try making GET requests to nonexistent site or pages, e.g. `http://bad.example.com` or `http://google.com/NotExisty`. Mark all of the statements that are true.
+
+- [x] Accessing a nonexistent site raises a Python exception.
+- [ ] Accessing a nonexistent site gives you a object `r` where `r.status_code` is an error code.
+- [ ] Accessing a nonexistent page on a real site raises a Python exception.
+- [x] Accessing a nonexistent page on a real site gives you an object `r` where `r.status_code` is an error code.
+
+The first and last answers are correct, according to the way that HTTP is designed to work.
+
+If the `requests.get` call can reach an HTTP server at all, it will give you a `Response` object. If the request failed, the `Response` object has a `status_code` data member — either 200, or 404, or some other code.
+
+But if it wasn't able to get to an HTTP server, for instance because the site doesn't exist, then `requests.get` will raise an exception.
+
+**However:** Some Internet service providers will try to redirect browsers to an advertising site if you try to access a site that doesn't exist. This is called [DNS hijacking](https://en.wikipedia.org/wiki/DNS_hijacking), and it's nonstandard behavior, but some do it anyway. If your ISP hijacks DNS, you won't get exceptions when you try to access nonexistent sites. Standards-compliant DNS services such as [Google Public DNS](https://developers.google.com/speed/public-dns/) don't hijack.
+
+### 7.10 Using a JSON API
+[![hws2-7](../assets/images/hws2-7-small.jpg)](../assets/images/hws2-7.jpg)
+
+As a web developer, you will deal with data in a lot of different formats, especially when your code calls out to APIs provided by other developers. It's not uncommon for a large software system to have parts that deal with a dozen or more different data formats. Fortunately, usually someone else has already written libraries to help you read and write these formats.
+
+**JSON** is a data format based on the syntax of JavaScript, often used for web-based APIs. There are a lot of services that let you send HTTP queries and get back structured data in JSON format. You can read more about the JSON format at [http://www.json.org/](http://www.json.org/).
+
+Python has a built-in `json` module; and as it happens, the `requests` module makes use of it. A `Response` object has a `.json` method; if the response data is JSON, you can call this method to translate the JSON data into a Python dictionary.
+
+Try it out! Here, I'm using it to access the Star Wars API, a classic JSON demonstration that contains information about characters and settings in the Star Wars movies:
+
+```py
+>>> a = requests.get('http://swapi.co/api/people/1/')
+>>> a.json()['name']
+'Luke Skywalker'
+```
+
+#### 7.10 QUIZ QUESTION
+What happens if you call `r.json()` on a `Response` that isn't made of JSON data, such as the Udacity main page?
+
+- [ ] It returns an empty dictionary
+- [x] It raises an exception defined in Python's json library
+- [ ] It raises AttributeError; the method is only defined on valid JSON responses
+- [ ] It returns a dictionary containing a string which is the response data.
+
+Specifically, it raises a `json.decoder.JSONDecodeError` exception. If you want to catch this exception with a `try` block, you'll need to import it from the `json` module.
+
+#### Extract data from a JSON response
+There's a great example of an API on the site [http://uinames.com/](http://uinames.com/), a service that makes up fake names and user account information. You can find the full API documentation under the little menu at the top right.
+
+For this exercise, all you'll need is this URI and a couple of query parameters:
+
+[http://uinames.com/api/](http://uinames.com/api/)
+
+The query parameters to use are `ext`, which gives you a record with more fields, and `region`, which lets you specify which country you want your imaginary person to come from. For instance, to have the API invent a person from Italy:
+
+[http://uinames.com/api?ext&region=Italy](http://uinames.com/api?ext&region=Italy)
+
+(It's not perfect. For instance, currently it makes up North American phone numbers for everyone, regardless of where they live.)
+
+#### Exercise: Use JSON with UINames.com
+The starter code for this exercise is in the `Lesson-2/6_UsingJSON` directory, with the filename `UINames.py`. In this exercise, use the JSON methods described above to decode the response from the **uinames.com** site.
+
+#### Use JSON with UINames.com
+
+- [x] Decode the JSON data returned by the `GET` request.
+- [x] Print out the JSON data fields in the specified format
+- [x] Test your code by running `UINames.py`
+- [x] Run the test script in `test.py`
+
+#### UINames.py
+
+```py
+#!/usr/bin/env python3
+#
+# Client for the UINames.com service.
+#
+# 1. Decode the JSON data returned by the UINames.com API.
+# 2. Print the fields in the specified format.
+#
+# Example output:
+# My name is Tyler Hudson and the PIN on my card is 4840.
+
+import requests
+
+
+def SampleRecord():
+    r = requests.get("http://uinames.com/api?ext&region=United%20States",
+                     timeout=2.0)
+    # 1. Add a line of code here to decode JSON from the response.
+    json = r.json()
+
+    return "My name is {} {} and the PIN on my card is {}.".format(
+        # 2. Add the correct fields from the JSON data structure.
+        json['name'],
+        json['surname'],
+        json['credit_card']['pin']
+    )
+
+if __name__ == '__main__':
+    print(SampleRecord())
+```
+
+### 7.11 The bookmark server
+You're almost to the end of this lesson. One more exercise to go.
+
+In this one you'll write a piece of code that both accepts requests as a web server and makes requests as a web client.
+
+This will put together a bunch of things that you've learned this lesson. It's a server that serves up an HTML form via a GET request then accepts that form submission by a POST request.
+
+It checks web addresses using the request module to make sure they work and it uses the Post-Redirect-Get design.
+
+[![hws2-8](../assets/images/hws2-8-small.jpg)](../assets/images/hws2-8.jpg)
+
+#### Exercise: The bookmark server
+You're almost to the end of this lesson! One more server to write...
+
+You've probably seen URL-shortening services such as [TinyURL](https://tinyurl.com/) or Google's [goo.gl](https://goo.gl/), this service will be turning down support by Google Starting March 30, 2018.
+
+They let you create short URI paths like [https://tinyurl.com/jye5r6l](https://tinyurl.com/jye5r6l) that redirect to a longer URI on another site. It's easier to put a short URI into an email, text message, or tweet. In this exercise, you'll be writing a service similar to this.
+
+Like the messageboard server, this **bookmark server** will keep all of its data in memory. This means that it'll be reset if you restart it.
+
+Your server needs to do three things, depending on what kind of request it receives:
+
+- On a GET request to the / path, it displays an HTML form with two fields. One field is where you put the **long URI** you want to shorten. The other is where you put the **short name** you want to use for it. Submitting this form sends a POST to the server.
+- On a POST request, the server looks for the two form fields in the request body. If it has those, it first checks the URI with `requests.get` to make sure that it actually exists (returns a 200).
+  - If the URI exists, the server stores a dictionary entry mapping the short name to the long URI, and returns an HTML page with a link to the short version.
+  - If the URI doesn't actually exist, the server returns a 404 error page saying so.
+  - If either of the two form fields is missing, the server returns a 400 error page saying so.
+- On a GET request to an existing short URI, it looks up the corresponding long URI and serves a redirect to it.
+
+The starter code for this exercise is in the `7_BookmarkServer directory`. I've given you a skeleton of the server; your job is to fill out the details!
+
+#### The bookmark server
+
+- [x] Write the `checkURI` function. This function should take a URI as an argument, and return `True` if that URI could be successfully fetched, and `False` if it can't
+- [x] Write the code inside `do_GET` that sends a 303 redirect to a known name.
+- [x] Write the code inside `do_POST` that sends a 400 error if the form fields are not present in the POST
+- [x] Write the code inside `do_POST` that sends a 303 redirect to the form after saving a newly submitted URI.
+- [x] Write the code inside `do_POST` that sends a 404 error if a URI is not successfully checked (i.e. if CheckURI returns `False`)
+
+#### BookmarkServer.py
+
+```py
+#!/usr/bin/env python3
+#
+# A *bookmark server* or URI shortener.
+
+import http.server
+import requests
+from urllib.parse import unquote, parse_qs
+
+memory = {}
+
+form = '''<!DOCTYPE html>
+<title>Bookmark Server</title>
+<form method="POST">
+    <label>Long URI:
+        <input name="longuri">
+    </label>
+    <br>
+    <label>Short name:
+        <input name="shortname">
+    </label>
+    <br>
+    <button type="submit">Save it!</button>
+</form>
+<p>URIs I know about:
+<pre>
+{}
+</pre>
+'''
+
+
+def CheckURI(uri, timeout=5):
+    '''Check whether this URI is reachable, i.e. does it return a 200 OK?
+
+    This function returns True if a GET request to uri returns a 200 OK, and
+    False if that GET request returns any other response, or doesn't return
+    (i.e. times out).
+    '''
+    try:
+        r = requests.get(uri, timeout=timeout)
+        # If the GET request returns, was it a 200 OK?
+        return r.status_code == 200
+    except requests.RequestException:
+        # If the GET request raised an exception, it's not OK.
+        return False
+
+
+class Shortener(http.server.BaseHTTPRequestHandler):
+    def do_GET(self):
+        # A GET request will either be for / (the root path) or for /some-name.
+        # Strip off the / and we have either empty string or a name.
+        name = unquote(self.path[1:])
+
+        if name:
+            if name in memory:
+                # We know that name! Send a redirect to it.
+                self.send_response(303)
+                self.send_header('Location', memory[name])
+                self.end_headers()
+            else:
+                # We don't know that name! Send a 404 error.
+                self.send_response(404)
+                self.send_header('Content-type', 'text/plain; charset=utf-8')
+                self.end_headers()
+                self.wfile.write("I don't know '{}'.".format(name).encode())
+        else:
+            # Root path. Send the form.
+            self.send_response(200)
+            self.send_header('Content-type', 'text/html')
+            self.end_headers()
+            # List the known associations in the form.
+            known = "\n".join("{} : {}".format(key, memory[key])
+                              for key in sorted(memory.keys()))
+            self.wfile.write(form.format(known).encode())
+
+    def do_POST(self):
+        # Decode the form data.
+        length = int(self.headers.get('Content-length', 0))
+        body = self.rfile.read(length).decode()
+        params = parse_qs(body)
+
+        # Check that the user submitted the form fields.
+        if "longuri" not in params or "shortname" not in params:
+            self.send_response(400)
+            self.send_header('Content-type', 'text/plain; charset=utf-8')
+            self.end_headers()
+            self.wfile.write("Missing form fields!".encode())
+            return
+
+        longuri = params["longuri"][0]
+        shortname = params["shortname"][0]
+
+        if CheckURI(longuri):
+            # This URI is good!  Remember it under the specified name.
+            memory[shortname] = longuri
+
+            # Serve a redirect to the form.
+            self.send_response(303)
+            self.send_header('Location', '/')
+            self.end_headers()
+        else:
+            # Didn't successfully fetch the long URI.
+            self.send_response(404)
+            self.send_header('Content-type', 'text/plain; charset=utf-8')
+            self.end_headers()
+            self.wfile.write(
+                "Couldn't fetch URI '{}'. Sorry!".format(longuri).encode())
+
+if __name__ == '__main__':
+    server_address = ('', 8000)
+    httpd = http.server.HTTPServer(server_address, Shortener)
+    httpd.serve_forever()
+
+```
+
+### 7.12 Conclusion
+You know it took me several tries to get the URI shortening server right for that
+last exercise. And even though it looks pretty bare-bones when you see it from the browser, there's a lot of things going on in there.
+
+There's different response codes. There's a couple of headers. There's parsing the post body.
+
+All in all, my version turned out to be about a hundred lines of code. If you got
+that code working too you should feel proud of yourself.
+
+Go get a cookie. Oh hey, speaking of cookies, web cookies are one of the many things we're going to be talking about in the next lesson.
+
+#### You did it
+In this lesson, you've built up your knowledge of HTTP by building servers and clients that speak it. You've built Python programs that act as web servers, web clients, and both at once. That's pretty awesome!
+
+The next lesson will be a tour of some more advanced HTTP features that are essential to the modern web: cookies, encryption, and more.
