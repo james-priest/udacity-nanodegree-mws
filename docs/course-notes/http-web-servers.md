@@ -1729,6 +1729,8 @@ The next lesson will be a tour of some more advanced HTTP features that are esse
 
 ## 8. Real World HTTP
 ### 8.1 Deploy to Heroku
+[![hws3-2](../assets/images/hws3-2-small.jpg)](../assets/images/hws3-2.jpg)
+
 Localhost. We've been seeing a lot of that lately. Far too much, I'm afraid.
 
 As a web developer, you don't just want to put your server up on your own localhost where only you can use it. You want to run that server on the real web where other people can see it, and interact with it
