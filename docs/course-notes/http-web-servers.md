@@ -1867,7 +1867,7 @@ Take a look at [https://dashboard.heroku.com/apps/uri-server/logs](https://dashb
 - [x] I've logged into Heroku from the command line and pushed my app.
 - [x] I've tested it and it works!
 
-### 8.2 Handling more requests
+### 8.2 Multi-threaded Model
 Now that you've deployed that server, try using the deployed version. No more localhost-- now you have a version that you can send around all your friends so they can post really weird things in it.
 
 [![hws3-3](../assets/images/hws3-3-small.jpg)](../assets/images/hws3-3.jpg)
@@ -2261,7 +2261,7 @@ HTTP can't prevent a service from using methods to mean something different from
 The standard tells all
 For much more about HTTP methods, consult the [HTTP standards documents](https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html).
 
-### 8.7 New development in HTTP
+### 8.7 HTTP/1.1 vs HTTP/2
 HTTP has been around for almost 30 years now and it's seen some pretty big changes.
 
 The first version of HTTP didn't even have a version number on it, but it was later called version 0.9. It was really simple. It only supported GET Requests, it expected all responses to be in HTML, and it didn't even have any headers.
