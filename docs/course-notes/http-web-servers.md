@@ -19,6 +19,10 @@ description: Notes by James Priest
 - [url-quoting](https://docs.python.org/3/library/urllib.parse.html#url-quoting)
 - [Requrests Quickstart](http://docs.python-requests.org/en/master/user/quickstart/)
 
+#### Utilities
+- [Let's Encrypt](https://letsencrypt.org/) is a great site to learn about HTTPS in a hands-on way, by creating your own HTTPS certificates and installing them on your site.
+- [HTTP Spy](https://chrome.google.com/webstore/detail/http-spy/agnoocojkneiphkobpcfoaenhpjnmifb?hl=en) is a neat little Chrome extension that will show you the headers and request information for every request your browser makes.
+
 ### Setup
 Welcome to our course on HTTP and Web Servers! In this course, you'll learn how web servers work. You'll write web services in Python, and you'll also write code that accesses services out on the web.
 
@@ -1862,3 +1866,482 @@ Take a look at [https://dashboard.heroku.com/apps/uri-server/logs](https://dashb
 - [x] I've committed these changes to my Git repository.
 - [x] I've logged into Heroku from the command line and pushed my app.
 - [x] I've tested it and it works!
+
+### 8.2 Handling more requests
+Now that you've deployed that server, try using the deployed version. No more localhost-- now you have a version that you can send around all your friends so they can post really weird things in it.
+
+[![hws3-3](../assets/images/hws3-3-small.jpg)](../assets/images/hws3-3.jpg)
+
+But let's take a look at one limitation this version has and how to work around it.
+
+#### Handling more requests
+Try creating a link in it where the target URI is the bookmark server's own URI. What happens when you try to do that?
+
+[![hws3-4](../assets/images/hws3-4-small.jpg)](../assets/images/hws3-4.jpg)
+
+When I do this, the app gives me an error, saying it can't fetch that web page. That's weird! The server is right there; it should be able to reach itself! What do you think is going on here?
+
+#### 8.2 Question 1
+Why can't the bookmark server fetch a page from itself?
+
+- [ ] It needs to use the name `localhost` to do that, not it's public web address.
+- [x] `http.server` can only handle one request at a time.
+- [ ] The hosting service is blocking the app's request as spam.
+- [ ] Web sites are not allowed to link to themselves; it would create an infinite loop.
+
+The basic, built-in `http.server.HTTPServer` class can only handle a single request at once. The bookmark server tries to fetch every URI that we give it, *while it's in the middle of handling the form submission*.
+
+It's like an old-school telephone that can only have one call at once. Because it can only handle one request at a time, it can't "pick up" the second request until it's done with the first … but in order to answer the first request, it needs the response from the second.
+
+#### Concurrency
+Being able to handle two ongoing tasks at the same time is called *concurrency*, and the basic `http.server.HTTPServer` doesn't have it. It's pretty straightforward to plug concurrency support into an **HTTPServer**, though. The Python standard library supports doing this by adding a *mixin* to the ``HTTPServer` class. A mixin is a sort of helper class, one that adds extra behavior the original class did not have. To do this, you'll need to add this code to your bookmark server:
+
+```py
+import threading
+from socketserver import ThreadingMixIn
+
+class ThreadHTTPServer(ThreadingMixIn, http.server.HTTPServer):
+    "This is an HTTPServer that supports thread-based concurrency."
+```
+
+Then look at the bottom of your bookmark server code, where it creates an `HTTPServer`. Have it create a `ThreadHTTPServer` instead:
+
+```py
+if __name__ == '__main__':
+    port = int(os.environ.get('PORT', 8000))
+    server_address = ('', port)
+    httpd = ThreadHTTPServer(server_address, Shortener)
+    httpd.serve_forever()
+```
+
+Commit this change to your Git repository, and push it to Heroku. Now when you test it out, you should be able to add an entry that points to the service itself.
+
+[![hws3-5](../assets/images/hws3-5-small.jpg)](../assets/images/hws3-5.jpg)
+
+#### 8.2 Question 2
+Try posting an entry to your bookmark server that points to the server itself now. Did it work? If so, the server is now able to handle a second incoming request while processing another request.
+
+- [x] Yes, it worked!
+- [ ] Not quite.
+
+### 8.3 Apache & Nginx
+If you look up most popular web server using your favorite search engine, you're not going to see Python's `http.server` on the list. You'll see programs like Apache, NGINX, and Microsoft IIS.
+
+[![hws3-6](../assets/images/hws3-6-small.jpg)](../assets/images/hws3-6.jpg)
+
+These specialized web server programs handle a large number of requests very quickly. Let's take a look at what these do, and how they relate to the rest of the web service picture.
+
+#### Static content and more
+The Web was originally designed to serve documents, not to deliver applications. Even today, a large amount of the data presented on any web site is *static content* — images, HTML files, videos, downloadable files, and other media stored on disk.
+
+Specialized web server programs — like [Apache](https://httpd.apache.org/), [Nginx](https://www.nginx.com/resources/wiki/), or [IIS](https://www.iis.net/) — can serve static content from disk storage very quickly and efficiently. They can also provide access control, allowing only authenticated users to download particular static content.
+
+#### Routing and load balancing
+Some web applications have several different server components, each running as a separate process. One thing a specialized web server can do is dispatch requests to the particular backend servers that need to handle each request. There are a lot of names for this, including *request routing* and *reverse proxying*.
+
+Some web applications need to do a lot of work on the server side for each request, and need many servers to handle the load. Splitting requests up among several servers is called *load balancing*.
+
+Load balancing also helps handle conditions where one server becomes unavailable, allowing other servers to pick up the slack. A reverse proxy can *health check* the backend servers, only sending requests to the ones that are currently up and running. This also makes it possible to do updates to the backend servers without having an outage.
+
+#### Concurrent users
+Handling a large number of network connections at once turns out to be complicated — even more so than plugging concurrency support into your Python web service.
+
+As you may have noticed in your own use of the web, it takes time for a server to respond to a request. The server has to receive and parse the request, come up with the data that it needs to respond, and transmit the response back to the client. The network itself is not instantaneous; it takes time for data to travel from the client to the server.
+
+In addition, a browser is totally allowed to open up multiple connections to the same server, for instance to request resources such as images, or to perform API queries.
+
+All of this means that if a server is handling many requests per second, there will be many requests in progress at once — literally, at any instant in time. We sometimes refer to these as *in-flight requests*, meaning that the request has "taken off" from the client, but the response has not "landed" again back at the client. A web service can't just handle one request at a time and then go on to the next one; it has to be able to handle many at once.
+
+#### 8.3 Question 1
+In Spetember 2016, the English Wikipedia received about 250 million page views per day. That's an average of about **2,900 page views every second.** Let's imagine that an average page view involves **three** HTTP queries (the page HTML itself and two images), and the each HTTP query takes **0.1 seconds** (or 100 milliseconds) to serve.
+About how many requests are in flight at any instant?
+
+- [ ] Less than 100
+- [x] Between 100 and 1,000
+- [ ] Between 1,000 and 9,000
+- [ ] Over 9,000
+
+If each page view involves three queries, then there are about 8,700 queries per second. Each one takes 0.1 seconds, so about 870 are going to be in-flight at any instant. So "between 100 and 1,000" is the right answer here.
+
+#### Caching
+Imagine a web service that does a lot of complicated processing for each request — something like calculating the best route for a trip between two cities on a map. Pretty often, users make the same request repeatedly: imagine if you load up that map, and then you reload the page — or if someone else loads the same map. It's useful if the service can avoid recalculating something it just figured out a second ago. It's also useful if the service can avoid re-sending a large object (such as an image) if it doesn't have to.
+
+One way that web services avoid this is by making use of a *cache*, a temporary storage for resources that are likely to be reused. Web systems can perform caching in a number of places — but all of them are under control of the server that serves up a particular resource. That server can set HTTP headers indicating that a particular resource is not intended to change quickly, and can safely be cached.
+
+There are a few places that caching usually can happen. Every user's browser maintains a *browser cache* of cacheable resources — such as images from recently-viewed web pages. The browser can also be configured to pass requests through a *web proxy*, which can perform caching on behalf of many users. Finally, a web site can use a *reverse proxy* to cache results so they don't need to be recomputed by a slower application server or database.
+
+All HTTP caching is supposed to be governed by *cache control* headers set by the server. You can read a lot more about them in [this article](https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/http-caching) by Google engineer Ilya Grigorik.
+
+#### Capacity
+Why serve static requests out of cache (or a static web server) rather than out of your application server? Python code is totally capable of sending images or video via HTTP, after all. The reason is that — all else being equal — handling a request *faster* provides a better user experience, but also makes it possible for your service to support *more requests*.
+
+If your web service becomes popular, you don't want it to bog down under the strain of more traffic. So it helps to handle different kinds of request with software that can perform that function quickly and efficiently.
+
+#### 8.3 Question 2
+Imagine that you have a service that is handling 6,000 requests per second. One-third of its requests are for the site's CSS file, which doesn't change very often. So browsers shouldn't need to fetch it *every time* they load the site. If you tell the browser to cache the CSS, 1% of visitors will need to fetch it. After this change, about how many requests will the service be getting?
+
+- [ ] About 60 requests per second.
+- [ ] About 420 requests per second.
+- [x] About 4,020 requests per second.
+- [ ] About 6,060 requests per second.
+
+2,000 requests per second are the CSS file, so the other 4,000 requests are other things. Those 4,000 will be unaffected by this change.
+
+The 2,000 CSS requests will be reduced by 99%, to 20 requests.
+
+This means that after the caching improvement, the service will be getting 4,020 requests per second.
+
+### 8.4 Cookies
+Earlier in this course, you saw quite a lot about HTTP headers. There are a couple of particular headers that are especially important for web applications-- the Set-Cookie and Cookie headers.
+
+[![hws3-7](../assets/images/hws3-7-small.jpg)](../assets/images/hws3-7.jpg)
+
+These headers are used to store and transmit cookies. Now an HTTP cookie isn't a tasty snack. It's a piece of data that a web server asks a browser to store and send back.
+
+Cookies are immensely important to many web applications. They make it possible to
+- stay logged in to a website
+- or to associate multiple queries into a single session
+- they're also used to track users for advertising purposes.
+
+Let's take a look at how cookies work.
+
+#### Cookies
+Cookies are a way that a *server* can ask a *browser* to retain a piece of information, and send it back to the server when the browser makes subsequent requests. Every cookie has a name and a value, much like a variable in your code; it also has rules that specify when the cookie should be sent back.
+
+What are cookies for? A few different things. If the server sends each client a unique cookie value, it can use these to tell clients apart. This can be used to implement higher-level concepts on top of HTTP requests and responses — things like *sessions* and *login*. Cookies are used by analytics and advertising systems to track user activity from site to site. Cookies are also sometimes used to store user preferences for a site.
+
+#### How cookies happen
+The first time the client makes a request to the server, the server sends back the response with a **Set-Cookie** header. This header contains three things: a cookie `name`, a `value`, and some `attributes`. Every subsequent time the browser makes a request to the server, it will send that cookie back to the server. The server can update cookies, or ask the browser to expire them.
+
+#### Seeing cookies in your browser
+Browsers don't make it easy to find cookies that have been set, because removing or altering cookies can affect the expected behavior of web services you use. However, it is *possible* to inspect cookies from sites you use in every major browser. Do some research on your own to find out how to view the cookies that your browser is storing.
+
+Here's a cookie that I found in my Chrome browser, from a web site I visited:
+
+[![hws3-8](../assets/images/hws3-8-small.jpg)](../assets/images/hws3-8.jpg)
+
+What are all these pieces of data in my cookie? There are eight different fields there!
+
+> By the way, if you try to research "cookie fields" with a web search, you may get a lot of results from the Mrs. Fields cookie company. Try "HTTP cookie fields" for more relevant results.
+
+The first two, the cookie's ***name*** and ***content***, are also called its ***key*** and ***value***. They're analogous to a dictionary key and value in Python — or a variable's name and value for that matter. They will both be sent back to the server. There are some syntactic rules for which characters are allowed in a cookie name; for instance, they can't have spaces in them. The value of the cookie is where the "real data" of the cookie goes — for instance, a unique token representing a logged-in user's session.
+
+The next two fields, ***Domain*** and ***Path***, describe the scope of the cookie — that is to say, which queries will include it. By default, the domain of a cookie is the hostname from the URI of the response that set the cookie. But a server can also set a cookie on a broader domain, within limits. For instance, a response from `www.udacity.com` can set a cookie for `udacity.com`, but not for `com`.
+
+The fields that Chrome describes as ***"Send for"*** and ***"Accessible to script"*** are internally called ***Secure*** and ***HttpOnly***, and they are boolean flags (true or false values). The internal names are a little bit misleading. If the ***Secure*** flag is set, then the cookie will only be sent over HTTPS (encrypted) connections, not plain HTTP. If the ***HttpOnly*** flag is set, then the cookie will not be accessible to JavaScript code running on the page.
+
+Finally, the last two fields deal with the lifetime of the cookie — how long it should last. The creation time is just the time of the response that set the cookie. The expiration time is when the server wants the browser to stop saving the cookie. There are two different ways a server can set this: it can set an ***Expires*** field with a specific date and time, or a ***Max-Age*** field with a number of seconds. If no expiration field is set, then a cookie is expired when the browser closes.
+
+#### Using cookies in Python
+To set a cookie from a Python HTTP server, all you need to do is set the `Set-Cookie` header on an HTTP response. Similarly, to read a cookie in an incoming request, you read the `Cookie` header. However, the format of these headers is a little bit tricky; I don't recommend formatting them by hand. Python's `http.cookies` module provides handy utilities for doing so.
+
+To create a cookie on a Python server, use the `SimpleCookie` class. This class is based on a dictionary, but has some special behavior once you create a key within it:
+
+```py
+from http.cookies import SimpleCookie, CookieError
+
+out_cookie = SimpleCookie()
+out_cookie["bearname"] = "Smokey Bear"
+out_cookie["bearname"]["max-age"] = 600
+out_cookie["bearname"]["httponly"] = True
+```
+
+Then you can send the cookie as a header from your request handler:
+
+```py
+self.send_header("Set-Cookie", out_cookie["bearname"].OutputString())
+```
+
+To read incoming cookies, create a `SimpleCookie` from the `Cookie` header:
+
+```py
+in_cookie = SimpleCookie(self.headers["Cookie"])
+in_data = in_cookie["bearname"].value
+```
+
+Be aware that a request might not have a cookie on it, in which case accessing the `Cookie` header will raise a `KeyError` exception; or the cookie might not be valid, in which case the `SimpleCookie` constructor will raise `http.cookies.CookieError`.
+
+> **Important safety tip:** Even though browsers make it difficult for users to modify cookies, it's *possible* for a user to modify a cookie value. Higher-level web toolkits, such as Flask (in Python) or Rails (in Ruby) will cryptographically sign your cookies so that they won't be accepted if they are modified. Quite often, high-security web applications use a cookie just to store a session ID, which is a key to a server-side database containing user information.
+
+> **Another important safety tip:** If you're displaying the cookie data as HTML, you need to be careful to escape any HTML special characters that might be in it. An easy way to do this in Python is to use the `html.escape` function, from the built-in `html` module!
+
+For a lot more information on cookie handling in Python, see [the documentation for the http.cookies module](https://docs.python.org/3/library/http.cookies.html).
+
+#### Exercise: A server that remembers you
+In this exercise, you'll build a server that asks for your name, and then stores your name in a cookie on your browser. You'll be able to see that cookie in your browser's cookie data. Then when you visit the server again, it'll already know your name.
+
+The starter code for this exercise is in `Lesson-3/2_CookieServer`.
+
+- [ ] In the `doPOST` method, set the cookie fields: it's value, domain (localhost) and max-age.
+- [ ] In the `do_GET` method, extract and decode the returned cookie value.
+- [ ] Run the cookie serverand test it in your browser at [http://localhost:8000](http://localhost:8000/)
+- [ ] Run the `test.py` script to test the running server.
+- [ ] Inspect your browser's cookies for the `localhost` domain and find the cookie your your server created!
+
+Many web frameworks use cookies "under the hood" without you having to explicitly set them like this. But by doing it this way first, you'll know what's going on inside your applications.
+
+#### How it looks on my browser
+[![hws3-9](../assets/images/hws3-9-small.jpg)](../assets/images/hws3-9.jpg)
+
+[![hws3-10](../assets/images/hws3-10-small.jpg)](../assets/images/hws3-10.jpg)
+
+#### DNS domains and cookie security
+Back in Lesson 1, you used the `host` or `nslookup` command to look up the IP addresses of a few different web services, such as Wikipedia and your own `localhost`. But domain names play a few other roles in HTTP besides just being easier to remember than IP addresses. A DNS domain links a particular hostname to a computer's IP address. But it also indicates that the owner of that domain intends for that computer to be treated as part of that domain.
+
+Imagine what a bad guy could do if they could convince your browser that their server `evilbox` was part of (say) Facebook, and get you to request a Facebook URL from `evilbox` instead of from Facebook's real servers. Your browser would send your `facebook.com` cookies to `evilbox` along with that request. But these cookies are what prove your identity to Facebook … so then the bad guy could use those cookies to access your Facebook account and send spam messages to all your friends.
+
+In the immortal words of Dr. Egon Spengler: *It would be bad*.
+
+This is just one reason that DNS is essential to web security. If a bad guy can take control of your site's DNS domain, they can send all your web traffic to their evil server … and if the bad guy can fool users' browsers into sending that traffic their way, they can steal the users' cookies and reuse them to break into those users' accounts on your site.
+
+### 8.5 HTTPS for security
+As a web user, you've probably heard of HTTPS, the encrypted version of HTTP. Whenever you see that little green lock upin your browser or an HTTPS URI, you're looking at an encrypted website.
+
+For a user, HTTPS does two really important things. It protects your data from eavesdroppers on the network, and it also checks the authenticity of the site you're talking to. For a web developer, HTTPS lets you offer those assurances to your users.
+
+Originally, HTTPS was used to protect credit card information, passwords, and other high-security information. But as web security and privacy got more and more important, a lot of major sites started using it on every connection.
+
+[![hws3-11](../assets/images/hws3-11-small.jpg)](../assets/images/hws3-11.jpg)
+
+Today, sites like Google, Facebook, and Wikipedia--and Udacity--default to HTTPS for every connection.
+
+Now earlier in this lesson, you deployed a service on the web in a way that already makes use of HTTPS. We can use that to test it out and see how it works.
+
+#### What HTTPS does for you
+When a browser and a server speak HTTPS, they're just speaking HTTP, but over an encrypted connection. The encryption follows a standard protocol called [Transport Layer Security](https://en.wikipedia.org/wiki/Transport_Layer_Security), or TLS for short. TLS provides some important guarantees for web security:
+
+- It keeps the connection **private** by encrypting everything sent over it. Only the server and browser should be able to read what's being sent.
+- It lets the browser **authenticate** the server. For instance, when a user accesses [https://www.udacity.com/](https://www.udacity.com/), they can be sure that the response they're seeing is really from Udacity's servers and not from an impostor.
+- It helps protect the **integrity** of the data sent over that connection — checking that it has not been (accidentally or deliberately) modified or replaced.
+
+> **Note:** TLS is also very often referred to by the older name **SSL** (Secure Sockets Layer). Technically, SSL is an older version of the encryption protocol. This course will talk about TLS because that's the current standard.
+
+#### 8.5 Question 1
+Here are a few different malicious things that an attacker could do to normal HTTP traffic. Each of the three guarantees (privacy, authenticity, and integrity) helps defend agains one of them. Match them up!
+
+| Attack | Defense |
+| --- | --- |
+| You're reading your email in a coffee shop, and the shop owner can read your email off of their Wi-Fi network you're using. | **Privacy**<br>Authenticity<br>Integrity |
+| You think you're loggin into Facebook, but actually you're sending your FB password to a server in the coffee shop's back room | Privacy<br>**Authenticity**<br>Integrity |
+| The coffe shop owner doesn't like cat pics, so they replace all the cat pics on the web page you're looking at with pics of celery. | Privacy<br>Authenticity<br>**Integrity** |
+
+#### Inspecting TLS on your service
+If you deployed a web service on Heroku earlier in this lesson, then HTTPS should already be set up. The URI that Heroku assigned to your app was something like [https://yourappname.herokuapp.com/](https://yourappname.herokuapp.com/).
+
+From there, you can use your browser to see more information about the HTTPS setup for this site. However, the specifics of where to find this information will depend on your browser. You can experiment to find it, or you can check the documentation: [Chrome](https://support.google.com/chrome/answer/95617), [Firefox](https://support.mozilla.org/en-US/kb/secure-website-certificate), [Safari](https://support.apple.com/kb/PH21415).
+
+> **Note:** In some browser documentation you'll see references to SSL certificates. These are the same as TLS certificates. Remember, SSL is just the older version of the encryption standard.
+
+[![hws3-12](../assets/images/hws3-12-small.jpg)](../assets/images/hws3-12.jpg)<br>
+**Click the lock icon to view details of the HTTPS connection.**
+
+[![hws3-13](../assets/images/hws3-13-small.jpg)](../assets/images/hws3-13.jpg)<br>
+**Viewing TLS certificate details for the `herokuapp.com` certificate.**
+
+#### What does it mean?
+Well, there are a lot of locks in these pictures. Those are how the browser indicates to the user that their connection is being protected by TLS. However, these dialogs also show a little about the server's TLS setup.
+
+#### Keys and certificates
+The server-side configuration for TLS includes two important pieces of data: a **private key** and a **public certificate**. The private key is secret; it's held on the server and never leaves there. The certificate is sent to every browser that connects to that server via TLS. These two pieces of data are mathematically related to each other in a way that makes the encryption of TLS possible.
+
+The server's certificate is issued by an organization called a **certificate authority** (CA). The certificate authority's job is to make sure that the server really is who it says it is — for instance, that a certificate issued in the name of Heroku is actually being used by the Heroku organization and not by someone else.
+
+The role of a certificate authority is kind of like getting a document notarized. A notary public checks your ID and witnesses you sign a document, and puts their stamp on it to indicate that they did so.
+
+#### 8.5 Question 2
+Take a look at the TLS certificate presented for your deployed app, or the screenshots above from my version of it. What organization was this server certificate issued to? Who issued it?
+
+- [ ] It was issued to **Heroku**, and the issuer is **SHA2 High Assurance**.
+- [ ] It was issued to **DigiCert**, and the issuer is **the state of California**.
+- [ ] It was issued to **Heroku**, and the issuer is **the state of California**.
+- [x] It was issued to **Heroku**, and the issuer is **DigiCert**.
+- [ ] It was issued to `localhost`, and the issuer is **port 8000**.
+
+DigiCert, Inc. is the issuer, or certificate authority, that issued this TLS certificate. Heroku, Inc. is the organization to which it was issued.
+
+#### How does TLS assure privacy?
+The data in the TLS certificate and the server's private key are mathematically related to each other through a system called [public-key cryptography](https://en.wikipedia.org/wiki/Public-key_cryptography). The details of how this works are way beyond the scope of this course. The important part is that the two endpoints (the browser and server) can securely agree on a shared secret which allows them to scramble the data sent between them so that only the other endpoint — and not any eavesdropper — can unscramble it.
+
+#### How does TLS assure authentication?
+A server certificate indicates that an encryption key belongs to a particular organization responsible for that service. It's the job of a certificate authority to make sure that they don't issue a cert for (say) **udacity.com** to someone other than the company who actually runs that domain.
+
+But the cert also contains *metadata* that says what DNS domain the certificate is good for. The cert in the picture above is only good for sites in the **.herokuapp.com** domain. When the browser connects to a particular server, if the TLS domain metadata doesn't match the DNS domain, the browser will reject the certificate and put up a big scary warning to tell the user that something fishy is going on.
+
+[![hws3-14](../assets/images/hws3-14-small.jpg)](../assets/images/hws3-14.jpg)<br>
+**A big scary warning that Chrome displays if a TLS certificate is not valid.**
+
+#### How does TLS assure integrity?
+Every request and response sent over a TLS connection is sent with a [message authentication code](https://en.wikipedia.org/wiki/Message_authentication_code) (MAC) that the other end of the connection can verify to make sure that the message hasn't been altered or damaged in transit.
+
+#### 8.5 Question 3
+Suppose that an attacker were able to trick your browser into sending your **udacity.com** requests to the attacker's server instead of Udacity's real servers. What could the attacker do with that evil ability?
+
+- [x] Steal your **udacity.com** cookies, use them to log into the real site as you, and post terrible span to the discussion forums.
+- [x] Make this course appear with terrible images in it instead of nice friendly ones.
+- [ ] Send fake email through your Gmail account or post spam to your friends on Facebook.
+- [ ] Cause your computer to explode.
+
+If your browser believes the attacker's server is **udacity.com**, it will send your **udacity.com** authentication cookies to the attacker's server. They can then put those cookies in their own web client and masquerade as you when talking to the real site. Also, if your browser is fetching content from the attacker's server, the attacker can put whatever they want in that content. They could even forward *most* of the content from the real server.
+
+However, compromising Udacity's site would not allow an attacker to break into your Gmail or Facebook accounts, and fortunately it wouldn't let the attacker blow up your computer either.
+
+#### 8.5 Question 4
+When your browser talks to your deployed service over HTTPS, there are still some ways that an attacker could spy on the communication. Mark the cases that HTTPS **does not** protect against.
+
+- [x] A malicious program on your computer taking a screenshot of your browser.
+- [ ] An attacker monitoring the WiFi network in the coffee shop you're in when you deploy your app.
+- [ ] Your Internet service provider tying to read the contents of your connection as it passes through their network.
+- [x] An attacker guessing your Heroku password and replacing your service with a malicious one.
+- [x] An attacker who had broken into Heroku's servers themselves
+
+HTTPS only protects your data **in transit**. It doesn't protect it from an attacker who has taken over your computer, or the computer that's running your service. So items 1, 4, and 5 are not things that HTTPS can help with.
+
+### 8.6 Beyond GET and POST
+API's are a huge part of the modern web. A lot of web applications make use of a server side part that exposes an API and the client side part that sends queries to that API.
+
+But not every API call make sense as a GET or a POST query. The GET method is really for requesting a copy of a resource. And POST is for things that act more or less like form submission.
+
+But there are a bunch of other methods in HTTP. Let's see what those are.
+
+#### All of the other methods
+The different HTTP methods each stand for different actions that a client might need to perform upon a server-hosted resource. Unlike `GET` and `POST`, their usage isn't built into the normal operation of web browsers; following a link is always going to be a `GET` request, and the default action for submitting an HTML form will always be a `GET` or `POST` request.
+
+However, other methods are available for web APIs to use, for instance from client code in JavaScript. If you want to use other methods in your own full-stack applications, you'll have to write both server-side code to accept them, and client-side JavaScript code to make use of them.
+
+#### `PUT` for creating resources
+The HTTP `PUT` method can be used for creating a new resources. The client sends the URI path that it wants to create, and a piece of data in the request body. A server could implement `PUT` in a number of different ways — such as storing a file on disk, or adding records to a database. A server should respond to a PUT request with a `201 Created` status code, if the PUT action completed successfully. After a successful `PUT`, a `GET` request to the same URI should return the newly created resource.
+
+#### 8.6 Question 1
+`PUT` can be used for actions such as uploading a file to a web site. However, it's not the most common way to do file uploads. `PUT` has to be done in application code (e.g.JavaScript), whereas with another method it's pssible to do uploads with just HTML on the client side. What method do you think this describes?
+
+- [ ] `GET`
+- [ ] `POST`
+- [ ] `UPLOAD`
+
+Most file uploads are done via `POST` requests. For examples, see [this article at MDN](https://developer.mozilla.org/en-US/docs/Using_files_from_web_applications).
+
+#### `DELETE` for, well, deleting things
+The destructive counterpart to `PUT` is `DELETE`, for removing a resource from the server. After a `DELETE` has happened successfully, further `GET` requests for that resource will yield `404 Not Found` ... unless, of course, a new resource is later created with the same name!
+
+#### 8.6 Question 2
+What's something that we would almost always want the client to do before allowing it to delete resouces in your application?
+
+- [ ] Create a new resouce to replace it
+- [ ] Establish a doubly encrypted protocal tunnel 
+- [x] Log in, or otherwise authenticate
+
+Most applications that involve creating and deleting resources on the server are going to require authentication, to make sure that the client is actually someone we want to trust with that power.
+
+#### `PATCH` for making changes
+The `PATCH` method is a relatively new addition to HTTP. It expresses the idea of *patching* a resource, or changing it in some well-defined way. (If you've used Git, you can think of patching as what applying a Git commit does to the files in a repository.)
+
+However, just as HTTP doesn't specify what format a resource has to be in, it also doesn't specify in what format a patch can be in: how it should represent the changes that are intended to be applied. That's up to the application to decide. An application could send diffs over HTTP `PATCH` requests, for instance. One standardized format for `PATCH` requests is the [JSON Patch](http://jsonpatch.com/) format, which expresses changes to a piece of JSON data. A different one is [JSON Merge Patch](https://tools.ietf.org/html/rfc7386).
+
+#### `HEAD`, `OPTIONS`, `TRACE` for debugging
+There are a number of additional methods that HTTP supports for various sorts of debugging and examining servers.
+
+- `HEAD` works just like GET, except the server doesn't return any content — just headers.
+- `OPTIONS` can be used to find out what features the server supports.
+- `TRACE` echoes back what the server received from the client — but is often disabled for security reasons.
+
+#### 8.6 Question 3
+If HTTP method are the "verbs" in the protocol, what are the "objects" (in the grammatical sense)?
+
+- [x] URIs (e.g. [https://en.wikipedia.org/wiki/Transport_Layer_Security](https://en.wikipedia.org/wiki/Transport_Layer_Security))
+- [ ] Servers (e.g. **en.wikipedia.org**)
+- [ ] Status codes (e.g.**200 OK**)
+- [ ] URI schemes (e.g. **https**)
+- [ ] Authenticated users, content-types, and network latency
+
+An HTTP method asks the server to do something to a resource, which is named by a URI.
+
+#### Great responsibility
+HTTP can't prevent a service from using methods to mean something different from what they're intended to mean, but this can have some surprising effects. For instance, you *could* create a service that used a GET request to delete content. However, web clients don't expect GET requests to have side-effects like that. In one famous case from 2006, an organization put up a web site where "edit" and "delete" actions happened through GET requests, and the result was that [the next search-engine web crawler to come along deleted the whole site](http://thedailywtf.com/articles/The_Spider_of_Doom).
+
+The standard tells all
+For much more about HTTP methods, consult the [HTTP standards documents](https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html).
+
+### 8.7 New development in HTTP
+HTTP has been around for almost 30 years now and it's seen some pretty big changes.
+
+The first version of HTTP didn't even have a version number on it, but it was later called version 0.9. It was really simple. It only supported GET Requests, it expected all responses to be in HTML, and it didn't even have any headers.
+
+[![hws3-16](../assets/images/hws3-16-small.jpg)](../assets/images/hws3-16.jpg)<br>
+
+HTTP 1.0 came out in 1996. It added Headers, Post Requests for forms, Status Codes, and Content Types. A lot of features were then added by browser and server developers without immediately getting standardized. That's where Cookies came from.
+
+HTTP 1.1 followed in 1999, and was significantly revised in 2007, including a lot of those changes. It added improved Caching, a whole bunch of features to make Requests more efficient, and the ability to host multiple websites on the same serverand IP address by using the Host Header.
+
+[![hws3-17](../assets/images/hws3-17-small.jpg)](../assets/images/hws3-17.jpg)<br>
+
+As of the end of 2016, HTTP 1.1 is what 90% of the web is using. But there's a whole new version now too.
+
+HTTP 2 was designed to make HTTP much more efficient, especially for busy services that involve large numbers of Requests. HTTP 1.1 isn't going away, but let's take a look at what the new one does.
+
+#### HTTP/2
+The new version of HTTP is called HTTP/2. It's based on earlier protocol work done at Google, under the name SPDY (pronounced "speedy").
+
+**Unfortunately, we can't show you very much about HTTP/2 in Python, because the libraries for it are not very mature yet (as of early 2017).** We'll still take a look at the motivations for the changes that HTTP/2 brings, though.
+
+Some other languages are a little bit more up to the minute; one of the best demonstrations of HTTP/2's advantages is in the [Gophertiles demo](https://http2.golang.org/gophertiles) from the makers of the Go programming language. In order to see the effects, you'll need to be using a browser that supports HTTP/2. Check [CanIUse.com](http://caniuse.com/#feat=http2) to check that your browser does!
+
+This demo lets you load the same web page over HTTP/1.1 and HTTP/2. It also lets you add extra latency (delay) to each request, simulating what happens when you access a server that's far away or when you're on a slow network. The latency options are zero (no extra latency), 30 milliseconds, 200 milliseconds, and one second. Try it out!
+
+[![hws3-15](../assets/images/hws3-15-small.jpg)](../assets/images/hws3-15.jpg)<br>
+**A partly -loaded Gophertiles demo, using HTTP/1 with a server latency of 1 second.**
+
+#### 8.7 Question
+In the Gophertiles demo, try the HTTP/2 and HTTP/1 links with 1 second of latency. What do you notice about the time it takes to load all the images?
+
+- [ ] HTTP/1 loads much more quickly than HTTP/2
+- [ ] They're about the same.
+- [x] HTTP/2 loads much more quickly than HTTP/1.
+
+HTTP/2 should load much faster than HTTP/1, if your browser is using it!
+
+#### Other HTTP/2 demos
+You don't have to take the Go folks' word for it, either; there's [http://www.http2demo.io/](http://www.http2demo.io/) too, and also [https://http2.akamai.com/demo](https://http2.akamai.com/demo). Each of these demos works similarly to the Gophertiles demo, and will show you much the same effects. The HTTP/2 one is (on average) a whole lot faster, especially with high latency.
+
+But why is it faster? To answer that, we first need to look at some browser behavior in HTTP/1.1.
+
+#### Exercise: Multiple connections
+Since the early days of HTTP, browsers have kept open multiple connections to a server. This lets the browser fetch several resources (such as images, scripts, etc.) in parallel, with less waiting. However, the browser only opens up a small number of connections to each server. And in HTTP/1.1, each connection can only request a single resource at a time.
+
+As an exercise, take a look at the server in `Lesson-3/3_Parallelometer`. Try running this server on your computer and accessing it at [http://localhost:8000](http://localhost:8000) to see parallel requests happening. The code here is based on the threading server that you've seen earlier in this lesson.
+
+Depending on your browser, you may see different numbers, but most likely the biggest one you'll see is 6. Common browsers such as Chrome, Firefox, and Safari open up as many as six connections to the same server. And under HTTP/1.1, only one request can effectively be in flight per connection, which means that they can only have up to six requests in flight with that server at a time.
+
+#### Multiplexing
+But if you're requesting hundreds of different tiny files from the server — as in this demo or the Gophertiles demo — it's kind of limiting to only be able to fetch six at a time. This is particularly true when the latency (delay) between the server and browser gets high. The browser can't start fetching the seventh image until it's fully loaded the first six. The greater the latency, the worse this affects the user experience.
+
+HTTP/2 changes this around by *multiplexing* requests and responses over a single connection. The browser can send several requests all at once, and the server can send responses as quickly as it can get to them. There's no limit on how many can be in flight at once.
+
+And that's why the Gophertiles demo loads much more quickly over HTTP/2 than over HTTP/1.
+
+#### Server push
+When you load a web page, your browser first fetches the HTML, and then it goes back and fetches other resources such as stylesheets or images. But if the server already knows that you will want these other resources, why should it wait for your browser to ask for them in a separate request? HTTP/2 has a feature called [server push](https://en.wikipedia.org/wiki/HTTP/2_Server_Push) which allows the server to say, effectively, "If you're asking for `index.html`, I know you're going to ask for `style.css` too, so I'm going to send it along as well."
+
+#### Encryption
+The HTTP/2 protocol was being designed around the same time that web engineers were getting even more interested in encrypting all traffic on the web for privacy reasons. Early drafts of HTTP/2 proposed that encryption should be required for sites to use the new protocol. This ended up being removed from the official standard … but most of the browsers did it anyway! Chrome, Firefox, and other browsers will only attempt HTTP/2 with a site that is using TLS encryption.
+
+#### Many more features
+Now you have a sense of where HTTP development has been going in the past few years. You can read much more about HTTP/2 in the [HTTP/2 FAQ](https://http2.github.io/faq/).
+
+### 8.8 Learning Resources
+Congratulations. You've reached the end this course. You've learned a lot in the past few lessons, and you've done a lot.
+You've built code that interacts with the web in a bunch of ways-- 
+
+- as a server
+- as a client
+- both at once
+
+But you've also built up your own knowledge of the protocols that the web is built out of. I hope that will serve you well in the rest of your education as a web developer. Go build things.
+
+#### Resources
+Here are some handy resources for learning more about HTTP:
+
+- [Mozilla Developer Network's HTTP index page](https://developer.mozilla.org/en-US/docs/Web/HTTP) contains a variety of tutorial and reference materials on every aspect of HTTP.
+- The standards documents for HTTP/1.1 start at [RFC 7230](https://tools.ietf.org/html/rfc7230). The language of Internet standards tends to be a little difficult, but these are the official description of how it's supposed to work.
+- The standards documents for HTTP/2 are at [https://http2.github.io/](https://http2.github.io/).
+- [Let's Encrypt](https://letsencrypt.org/) is a great site to learn about HTTPS in a hands-on way, by creating your own HTTPS certificates and installing them on your site.
+- [HTTP Spy](https://chrome.google.com/webstore/detail/http-spy/agnoocojkneiphkobpcfoaenhpjnmifb?hl=en) is a neat little Chrome extension that will show you the headers and request information for every request your browser makes.
