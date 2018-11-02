@@ -22,7 +22,7 @@ These notes contain lesson transcripts along with screenshots, sample code, & li
 ### Stage 3
 - [Client Server Communication](docs/course-notes/client-server-communication.md) by Google (Lessons 1-5)
 - [HTTP & Web Servers](docs/course-notes/http-web-servers.md) by Google (Lessons 6-8)
-- Browser Rendering Optimization by Google (Lessons 9-14)
+- [Browser Rendering Optimization](docs/course-notes/browser-rendering-optimization.md) by Google (Lessons 9-14)
 
 ### Optional Courses
 - [JavaScript Promises](docs/course-notes/javascript-promises.md) by Google (Lessons 1 & 2)

@@ -54,7 +54,7 @@ These notes contain lesson transcripts along with screenshots, sample code, & li
 #### Stage 3: Performant Web Apps
   - [Client Server Communication](course-notes/client-server-communication.html) by Google (Lessons 1-5)
   - [HTTP & Web Servers](course-notes/http-web-servers.html) by Google (Lessons 6-8)
-  - Browser Rendering Optimization by Google (Lessons 9-14)
+  - [Browser Rendering Optimization](course-notes/browser-rendering-optimization.html) by Google (Lessons 9-14)
 
 ### Optional Courses
 - [JavaScript Promises](course-notes/javascript-promises.html) by Google (Lessons 1 & 2)
