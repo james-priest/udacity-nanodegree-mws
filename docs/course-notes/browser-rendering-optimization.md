@@ -136,7 +136,7 @@ If an element is set to display none that means that the element is not going to
 
 In order for `.style2` to end up in the render tree, it needs to have some content, like '' assigned to it.
 
-### 9.10 DOM, CSSOM, Render Tree
+### 9.9 DOM, CSSOM, Render Tree
 Okay, back to the rendering process of a single frame.
 
 Once the browser knows which rules apply to an element, it can begin calculate layout. Or it, in other words, how much space elements take up and where they are on the screen.
@@ -216,3 +216,173 @@ Again, this will be included in composite layers. And lastly, the GPU will be in
 [![bro1-31](../assets/images/bro1-31-small.jpg)](../assets/images/bro1-31.jpg)
 
 And that, in brief, is how we get from a single request all the way through to pixels on screen.
+
+### 9.10 Quiz Layout
+For this quiz, I'm giving you a sample DOM, there's a body with a div container underneath it. And then a child div underneath the container.
+
+[![bro1-33](../assets/images/bro1-33-small.jpg)](../assets/images/bro1-33.jpg)
+
+If you make changes to the geometry of any of these elements, the browser will have to run layout. So, my question for you is, which of these elements, will when changed, include more of their parent elements in the scope of the resulting layout.
+
+In other words, will changing the geometry of any of these elements trigger layout against most or all of the page? If so, which one triggers more? You can use [the sample site to find out](http://udacity.github.io/60fps/lesson1/layoutPaint/index.html).
+
+Clicking once makes a change to the body, clicking again makes a change the top level div, and the last click changes the child div.
+
+If you're already familiar with DevTools, you can record a timeline trace to see what layout happened after each click on this page. If not that's no big deal,you'll be learning how to use the timeline next lesson, and i'll be demonstrating how to find information about layout in the solution video.
+
+You can also check out the link in the instructor notes fora little bit more information. So, do some analysis if you can, but otherwise make a prediction. Will changing the width of the body trigger layout with a larger scope than changing the width of this div, or will they have the same scope? Pick one of these answers.
+
+[![bro1-32](../assets/images/bro1-32-small.jpg)](../assets/images/bro1-32.jpg)
+
+#### Links
+
+- [Sample Site](http://udacity.github.io/60fps/lesson1/layoutPaint/index.html)
+- [How to Use the Timeline Tool](https://developer.chrome.com/devtools/docs/timeline#rendering-event-properties)  - The Timeline tool is now deprecated'. See Performance Tool below.
+- [Get Started With Analyzing Runtime Performance](https://developers.google.com/web/tools/chrome-devtools/evaluate-performance/) - Replaces Timeline Tool
+
+#### 9.10 Solution
+Which change creates more work for the browser during layout?
+
+- [ ] Changing the width of the body
+- [ ] Changing the width of the div
+- [x] They create the same work
+
+Right! No matter what, layout needs to be run against the whole page.
+
+Believe it or not the correct answer is that they have the same scope. In both cases the browser has to assume the worst. Meaning that the change invalidated the entire DOM.
+
+The browser then has to keep the entire DOM in scope while it's running layout. This is the Performance panel in dev tools which you'll be spending quite a bit of time with later in this course.
+
+[![bro1-34](../assets/images/bro1-34-small.jpg)](../assets/images/bro1-34.jpg)
+
+To see what happens when I click around on the page, I will go ahead and click this button which starts recording and then I will click once, twice, three times and then stop recording.
+
+[![bro1-35](../assets/images/bro1-35-small.jpg)](../assets/images/bro1-35.jpg)
+
+Like I said, you'll be spending quite a bit of time with this tool later in the course, so I’m going to quickly zoom in and show you what you need to see.
+
+This is the first click event which affected the geometry of the body.
+
+[![bro1-36](../assets/images/bro1-36-small.jpg)](../assets/images/bro1-36.jpg)
+
+You can see that the click lead to other pieces of work.
+
+Next I click on the Layout segment which gives me further detail.
+
+I can see that "Nodes That Need Layout" is **3 of 5**. Which means that three of the five DOM nodes are affected by this.
+
+[![bro1-37](../assets/images/bro1-37-small.jpg)](../assets/images/bro1-37.jpg)
+
+Okay now I wonder what it looks like for the other two elements.
+
+Here's the second click event, which affected the top level div. And this is the resulting layout.
+
+[![bro1-38](../assets/images/bro1-38-small.jpg)](../assets/images/bro1-38.jpg)
+
+Notice that, in this case, that four of the five nodes were affected by this.
+
+Now I'll look at the last one. Here's the last click event on the child div. So this div is the farthest down on the DOM. And here's the resulting layout.
+
+[![bro1-39](../assets/images/bro1-39-small.jpg)](../assets/images/bro1-39.jpg)
+
+Here it looks like all five nodes are affected by this.
+
+You may have noticed as I was going through the clicks that the different layout events affected different numbers of nodes. But the whole time the entire DOM was in scope.
+
+In case you're wondering, it's possible but very difficult to limit layout scope. You can use something called a layout boundary but Paul and I won't be getting into that in this class.
+
+So if there is one take away from this question, it's that the layout process is complicated and it's probably best to assume that the entire DOM is always in scope.
+
+### 9.11 Layout and Paint
+So this is what a typical frame looks like for as developers when things are more than just a static page.
+
+[![bro1-40](../assets/images/bro1-40-small.jpg)](../assets/images/bro1-40.jpg)
+
+It looks like the pipeline I talked about just before except I've now chucked JavaScript at the front.
+
+Normally, you're going to use JavaScript to handle work that will result in visual changes. Whether it's jQuery's animate function, sorting a data set, or adding DOM elements to the page. But you don't have to use JavaScript for your visual changes. In fact, for many applications developers use CSS animations, transitions, or even the new Web Animations API to make visual changes to their page.
+
+[![bro1-41](../assets/images/bro1-41-small.jpg)](../assets/images/bro1-41.jpg)
+
+Now with that out of the way, we can talk about the pipeline a bit more.
+
+The changes we make here won't necessarily trigger every part of the pipeline either. In fact, there are three ways the pipeline normally plays out fora given frame. So let's talk about those for a second.
+
+#### One
+So number one, you make a visual change either with CSS Or JavaScript.
+
+[![bro1-42](../assets/images/bro1-42-small.jpg)](../assets/images/bro1-42.jpg)
+
+The browser must recalculate the styles of the elements that were affected. Now if you changed a layout property, so that's one that changed an element's geometry like its `width`, `height`, or position with relation to another element like `left` or `top`, then the browser will have to check all the other elements and re-flow the page. Any affected areas will need to be repainted. And the final painted elements will need to be composited back together.
+
+#### Two
+The second way the pipeline gets used is when you change a paint only property, like `background-image`, text `color`, or shadows.
+
+[![bro1-43](../assets/images/bro1-43-small.jpg)](../assets/images/bro1-43.jpg)
+
+This time, we make the change, the styles are calculated, we don't do layout because we didn't change the geometry of any elements. We do paint and we do composite.
+
+#### Three
+And the last way involves changing something that requires neither layout, nor paint, just compositing.
+
+[![bro1-44](../assets/images/bro1-44-small.jpg)](../assets/images/bro1-44.jpg)
+
+Compositing is where the browser puts the individual layers of the page together. And that requires layer management to ensure we have the right layers, and in the correct order. So we make our change. We do style calculations, but we only do composite.
+
+You probably noticed that style was always included for each of those variations. Different styles affect which parts of the pipeline we touch; And therefore the performance characteristics of our apps.
+
+### 9.12 Quiz: Render
+Here's a scenario for you to consider. Flexbox is a very useful tool for responsive design. It's a CSS display property that resizes elements, and reflows them on the page. For instance, imagine you've got these three elements on a page and then the user resizes the screen to become larger. As a result, the elements themselves become larger.
+
+[![bro1-45](../assets/images/bro1-45-small.jpg)](../assets/images/bro1-45.jpg)
+
+In this scenario, which of the following processes does the browser perform to render the new page? Does the browser perform style, layout, paint, or composite? Check all that apply.
+
+#### 9.12 Solution
+I'll start with style. There are no style calculations here, because the element styles are already known. So, on the screen resize event, the styles are actually applied through layout. And as you just learned, if the browser runs layout, it also has to paint the elements in their new positions on the page, and then composite them together.
+
+[![bro1-46](../assets/images/bro1-46-small.jpg)](../assets/images/bro1-46.jpg)
+
+There are actually exceptions to the lack of style here, however. If there was a resize handler that changed the style, or if a media query break point was hit, then the browser would actually have to recalculate styles. But that's not happening here, so don't check that box.
+
+### 9.13 Quiz: CSS Research
+For this quiz, I want you to head over to [csstriggers.com](https://csstriggers.com/) and do some research.
+
+I want you to find a CSS property that triggers layout, paint, and composite, and type it into the first box. Then find a CSS property that only triggers paint and composite and type it into the second box. Lastly, find a CSS property that only triggers composite and type it into the third box.
+
+[![bro1-47](../assets/images/bro1-47-small.jpg)](../assets/images/bro1-47.jpg)
+
+The reason you're checking out csstriggers.com is because it's a super useful resource for determining the amount of work your CSS will trigger.
+
+It's really important to become familiar with it if you want to write performant websites.
+
+#### 9.13 Solution
+This quiz, I picked `margin-left` for layout, paint, and composite, `color` for paint and composite, and then `transform` for just composite.
+
+[![bro1-48](../assets/images/bro1-48-small.jpg)](../assets/images/bro1-48.jpg)
+
+Not all CSS is created equal. Some CSS properties have much wider-reaching consequences than others.
+
+Your CSS should trigger the least amount of work possible, and that's going to mean avoiding paint and layout whenever possible.\
+
+Transforms and opacity are far and away the best properties to change, because they can be handled just by the compositor if the element has its own layer. You'll learn more about how to create and manage layers later in the course.
+
+### 9.14 Final Project
+Right now you are looking at the app that you'll be debugging at the end of this course.
+
+[![bro1-49](../assets/images/bro1-49-small.jpg)](../assets/images/bro1-49.jpg)
+
+It uses the Hacker News API to show the most recent stories and their scores.
+
+Right now its performance is pretty awful, especially on mobile, but there's really no reason it shouldn't be hitting 60 frames per second.
+
+By the end of this course, you'll have the skills, techniques, and above all, you'll have the mindset needed to turn this janky experience into an amazing 60 frames per second experience.
+
+### 9.15 Lesson Outro
+Okay, you're well on your way to getting some good performance. You know
+
+- why we care about hitting 60 frames a second
+- what goes into making a frame
+- that the properties we change affect the performance in different ways
+
+In the next lesson, you'll begin your first real performance battle. Jank is more problematic at some points in an app's life cycle than at others .And you'll need to spend your time and effort on the areas that matter most to your users.
