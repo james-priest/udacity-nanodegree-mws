@@ -29,7 +29,8 @@ See these ships at the top? They move smoothly. The ones at the bottom judder. T
 
 Link to [Jank Invaders Game](http://jakearchibald.github.io/jank-invaders/)
 
-### 9.3 Lesson IntroThroughout this course you'll be working on a bunch of samples with performance issues. But by the end of the course, you'll be applying what you've learned to make silky, smooth experiences.
+### 9.3 Lesson Intro
+Throughout this course you'll be working on a bunch of samples with performance issues. But by the end of the course, you'll be applying what you've learned to make silky, smooth experiences.
 
 But first, in order to develop an app that runs at 60 frames per second, you need to understand what goes into creating each frame.
 
@@ -136,7 +137,7 @@ If an element is set to display none that means that the element is not going to
 
 In order for `.style2` to end up in the render tree, it needs to have some content, like '' assigned to it.
 
-### 9.9 DOM, CSSOM, Render Tree
+### 9.9 DOM & Render Tree
 Okay, back to the rendering process of a single frame.
 
 Once the browser knows which rules apply to an element, it can begin calculate layout. Or it, in other words, how much space elements take up and where they are on the screen.
