@@ -387,3 +387,285 @@ Okay, you're well on your way to getting some good performance. You know
 - that the properties we change affect the performance in different ways
 
 In the next lesson, you'll begin your first real performance battle. Jank is more problematic at some points in an app's life cycle than at others .And you'll need to spend your time and effort on the areas that matter most to your users.
+
+## 10. App Lifecycles
+### 10.1 Lesson Intro
+In the first lesson, you learned how the browser renders pixels from HTML, CSS,and JavaScript. Understanding this process is key to optimizing an app's performance.
+
+[![bro1-1](../assets/images/bro1-1-small.jpg)](../assets/images/bro1-1.jpg)
+
+In this lesson, you'll take a step back to think at a high level about your app's life cycle as a whole. The goal is to help you make intelligent choices about when your app can and should do the heavy work to create a buttery smooth experience for your users. 
+
+Now, before we start, I have a question for you. Should your goal be to make your app run at 60 frames per second all of the time? The answer is no, actually, not quite.
+
+It's important that you pick your battles a bit, and focus on the things that matter to your end users. When you think about it, there are actually four major areas of any web app's life cycle, and performance fits into them in very different ways.
+
+### 10.2 RAIL
+I call the four major areas of a web up's life cycle RAIL. RAIL stands for
+
+- Response
+- Animations
+- Idle
+- Load
+
+Wait. That's not chronological order. Shouldn't it be LIAR?
+
+- Load
+- Idle
+- Animation
+- Response
+
+It turns out LIAR is a less popular acronym than RAIL? It's just a good way to remember it, and yeah, even though, you do loads at the start, most apps do multiple loads with XHRs and web sockets and HTML imports.
+
+Anyway, orders of letters, not withstanding, it's really a useful way to conceptualize and group your apps workload. 
+
+Let's do them in chronological order though.
+
+### 10.3 Load and Idle
+So the first we're going to look at is Load. Whatever it is, users want it to load quickly, and it's super important that we optimize for the critical rendering path.
+
+[![bro2-1](../assets/images/bro2-1-small.jpg)](../assets/images/bro2-1.jpg)
+
+Earlier I took you through a quick tour of the rendering process in the first lesson,but essentially you want your initial load to be done in one second.
+
+Okay, I'm going to switch across to Chrome, and I'm going to load Google Play Music, and I suspect it'll load in about one second.
+
+[![bro2-2](../assets/images/bro2-2-small.jpg)](../assets/images/bro2-2.jpg)
+
+Now after an app's loaded, it's normally idle, it's waiting for a user to interact. And this is our opportunity to deal with things that we deferred to meet that one second load time.
+
+[![bro2-3](../assets/images/bro2-3-small.jpg)](../assets/images/bro2-3.jpg)
+
+**Normally, these idle blocks are around 50 milliseconds long, although you may several of them in one go.**
+
+These idle blocks are fantastic times to get some heavy lifting done so that when the user interacts things are nice and snappy. I'll stop for a second and let you think through the best way to approach an app's idle time.
+
+### 10.4 Quiz: Idle Time
+In this quiz, you'll be thinking about this hypothetical news app.
+
+[![bro2-4](../assets/images/bro2-4-small.jpg)](../assets/images/bro2-4.jpg)
+
+Inside the app, users will be reading articles about how California's in a drought. They'll be looking at images like this in London, where they actually do get rain. And they'll be watching videos like this, where a Golden Retriever is writing some JavaScript because that's definitely something that could happen.
+
+You've booched up the app to render content above the fold pretty quickly. You also know from your analytics that most people look at a page for a couple of seconds, before they start interacting.
+
+[![bro2-5](../assets/images/bro2-5-small.jpg)](../assets/images/bro2-5.jpg)
+
+So, with that in mind, what kind of tasks should you handle during this post-load idle state?
+
+[![bro2-6](../assets/images/bro2-6-small.jpg)](../assets/images/bro2-6.jpg)
+
+Should you load the text for news stories? Should you load image assets? Should you load videos like the web deb Golden Retriever? Should you load the app's basic critical functionality? Or should you load the comments section?
+
+#### 10.4 Solution
+The correct answer is everything except for the news text and the basic critical functionality.
+
+[![bro2-7](../assets/images/bro2-7-small.jpg)](../assets/images/bro2-7.jpg)
+
+In order for the app to even work, you've got to deliver the basic critical functionality. So this shouldn't be coming after the load.
+
+Also, people would be visiting a site like this specifically to read the news text, so they should be there as soon as the first pixels are being painted.
+
+Everything else though, like images, videos and the comments section can come later. In fact, this is probably a pattern you've seen before on other apps.
+
+Keep in mind, however, that user actions could actually still happen during the post load idle state. And in a moment you'll learn that **you only have one hundred milliseconds to respond to those actions**.
+
+This makes it all the more important to **keep the post load task that you're performing to fifty millisecond chunks**.
+
+### 10.5 RAIL Response
+You've handled Load and considered what you might do during periods of idle time.But what next?
+
+[![bro2-8](../assets/images/bro2-8-small.jpg)](../assets/images/bro2-8.jpg)
+
+Well, the user's going to interact with the app, and you need to be responsive to that. This isn't responsive in the sense that it responds to screens of different sizes. This is responsive in the sense that it reacts to the user input without delay.
+
+Well how responsive does it need to be then? Well, studies show that there is a limit of 100 milliseconds. So a tenth of a second after someone presses something on screen before they notice any lag.
+
+[![bro2-9](../assets/images/bro2-9-small.jpg)](../assets/images/bro2-9.jpg)
+
+So if you can respond to all user input in that time, you're good to go.
+
+That's great if the thing they did was to say, toggle a check box or tap a button. And you show a single change, like a selected state. But there's another version of this which is more challenging, which is that the user does something that requires animation.
+
+The most challenging performance issues always come out of the need to hit 60 frames a second. Which is either interactions that stick to the user's finger or transitions and animations.
+
+For those we have a limit of 16 milliseconds. Which is one second or a thousand milliseconds divided by 60.
+
+[![bro2-10](../assets/images/bro2-10-small.jpg)](../assets/images/bro2-10.jpg)
+
+In reality, we actually have less than 16 milliseconds, because the browser has overhead. So really we get around 10 to 12 milliseconds. That's not a lot of time.
+
+### 10.6 RAIL Animations 1
+So some user interactions need 60 frames a second, but so do transitions and animations, like card expansions or menu sliding in. Those need to be at 60 frames a second, too, which isn't always simple.
+
+[![bro2-10](../assets/images/bro2-10-small.jpg)](../assets/images/bro2-10.jpg)
+
+It's so easy to accidentally trigger performance issues, unless you're very careful about which properties you animate and when.
+
+There are many ways to tackle animations, and it completely depends on your project. I'll give you an example of one approach I've used. It feels like I'm kind of getting into "weird trick" territory here, but seriously this one actually works.
+
+For the 2014 Chrome Dev Summit web sites, I wanted to animate these cards.
+
+[![bro2-11](../assets/images/bro2-11-small.jpg)](../assets/images/bro2-11.jpg)
+
+I couldn't expand the cards fast enough to maintain 60 frames a second, so I had to try something a bit different. I tried working backwards.
+
+I call my strategy FLIP. First, Last, Invert, Play.
+
+[![bro2-12](../assets/images/bro2-12-small.jpg)](../assets/images/bro2-12.jpg)
+
+I took advantage of the fact that once the browser had done the initial hard work to run the animation once, I could run it backwards at very little cost. It's like pre-calculating the expensive work.
+
+My code took the start point of a card,and then it took the end point when the card was expanded.
+
+So let's say the card was about here when it started, and the icon was like this.
+
+[![bro2-13](../assets/images/bro2-13-small.jpg)](../assets/images/bro2-13.jpg)
+
+Using getBound and ClientRect, I measured all the elements' positions before and after.
+
+[![bro2-14](../assets/images/bro2-14-small.jpg)](../assets/images/bro2-14.jpg)
+
+That then meant I knew how far everything needed to move on the page, and if it's opacity changed, I also knew that as well.
+
+So back here again. First - is where the card starts. Last - is where the card finished. Now we need to talk about inverting.
+
+[![bro2-12](../assets/images/bro2-12-small.jpg)](../assets/images/bro2-12.jpg)
+
+I use the information from first and last to apply transform and opacity changes to reverse the animation.
+
+With a little bit of extra work with clipping, it was like the card had never moved.
+
+[![bro2-15](../assets/images/bro2-15-small.jpg)](../assets/images/bro2-15.jpg)
+
+So, now we've inverted the animation. We can just simply play it and it runs smoothly.
+
+### 10.7 RAIL Animations 2
+And this is what it looks like in code.
+
+[![bro2-16](../assets/images/bro2-16-small.jpg)](../assets/images/bro2-16.jpg)
+
+- Firstly, we collect the properties of the card in a collapsed position.
+- We expand the card and collect the properties again.
+- Next, we figure out the differences and then we transform the card back.
+- Because we made this style change we have to wait a frame for those style changes to take effect. Otherwise, if we change them again the browser would ignore these and we'd see no animation.
+- Now we've waited a frame.We can switch on animations and remove the invert, transforms, and our past two changes.
+
+All that property collection, probably sounds quite expensive and you may be wondering how you can afford to do it. It sounds like a lot, and it is. I mean, you're doing all these calculations on demand whenever a user clicks or taps on a card.
+
+Well it turns out, I was making use of the 100 millisecond response window to do all those experts of calculations up front.
+
+[![bro2-17](../assets/images/bro2-17-small.jpg)](../assets/images/bro2-17.jpg)
+
+On a Nexus 5 it took around 70 milliseconds to get everything done, which is well inside that 100 millisecond boundary.
+
+### 10.8 Quiz: Rendering Animations
+Paul just explained how he used FLIP to create a pretty snazzy animation. He performed all the hard calculations up front, so that he would touch as little of the pipeline as possible during the actual animation.
+
+This is how he kept it going at a silky smooth 60 frames per second. When he applied opacity and transform changes to reverse the animation, what steps in the rendering pipeline did Paul trigger?
+
+[![bro2-18](../assets/images/bro2-18-small.jpg)](../assets/images/bro2-18.jpg)
+
+Did the HTML need to get converted to the DOM? Did the CSS need to get converted to the CSSOM? Did the DOM and CSSOM need to be combined into the Render Tree? Did the browser have to run Layout again, Composite again, or Paint again? Check all that apply.
+
+#### 10.8 Solution
+Great job! Notice how `opacity` and `transform` only trigger composite? Keep that in mind as you build your performant apps.
+
+[![bro2-19](../assets/images/bro2-19-small.jpg)](../assets/images/bro2-19.jpg)
+
+As you just discovered, changes to `opacity` and `transform` only trigger composite when the elements are on their own layers. But remember, Paul also had to use clip to reverse the animation. And that, unfortunately, requires paint.
+
+It's important to always understand the implications of any property you choose to animate, because some are definitely cheaper than others.
+
+### 10.9 Quiz: Interactions & Animations
+During the response section of rails. You saw that you have about 100 milliseconds to respond to user input. But, some user interactions also require animations which then need to run at 60 frames per second.
+
+What kind of interactions do you think require 60 frames per second animations?
+
+[![bro2-20](../assets/images/bro2-20-small.jpg)](../assets/images/bro2-20.jpg)
+
+Should spinners always be running at 60 frames per second ?What about scrolling? Dragging and dropping, Pinching, Pulling to refresh, Menus sliding out from the side, Comment section opening from below, Changing the state of items and forms, Or last but not least, changing the themes of an app? Check all that apply.
+
+#### 10.9 Solution
+As it turns out, anything that involves movement or finger on screen interactions will need to run at 60 frames per second.
+
+[![bro2-21](../assets/images/bro2-21-small.jpg)](../assets/images/bro2-21.jpg)
+
+The only two items that don't fall into those categories are toggling form controls and app theme changes. For these two, you still have 100 milliseconds to respond, but afterwards, the app must continue running at 60 frames per second if it's going to keep feeling responsive.
+
+### 10.10 RAIL Review
+LIAR stands for 
+
+- Load
+- Idle
+- Animations
+- Responsiveness.
+
+#### Load
+During the Load stage you have about one second or a thousand milliseconds to render the page before the app no longer feels responsive, and the user's attention level falls.
+
+**Download and render your critical resources here.**
+
+#### Idle
+After loading, the app is Idle, and this is a great time to do non-essential work to ensure that whatever interactions occur after this period will feel instantaneous.
+
+**Your app's idle time should be broken down into 50 millisecond chunks so that you can stop when the user starts interacting.**
+
+#### Animation
+During the Animation stage, such as when users are scrolling or animations are occurring, **you only have 16 milliseconds to render a frame**.
+
+**This is when 60 frames per second is absolutely critical.**
+
+#### Response
+Lastly, there's the Response period. The human mind has about 100 milliseconds' grace period before an interaction with the site feels laggy and janky.
+
+**That means your app needs to respond to user input in some way within a 100 milliseconds.**
+
+Using this time wisely is absolutely critical for setting up difficult animations that run at 60 frames a second.
+
+In the next few quizzes, you'll be asked to apply what you've learned about RAIL in some real-world scenarios.
+
+### 10.11 Quiz: RAIL 1
+For this quiz I want you to pretend that you're developing an app that displays a loading gif like this one while video resources are being buffered.
+
+Do you think it's a good idea to request this gif just during the animation phase? It's also worth noting that if you're requesting the gif during the animation phase you also have to insert it into the page during the animation phase.
+
+[![bro2-22](../assets/images/bro2-22-small.jpg)](../assets/images/bro2-22.jpg)
+
+#### 10.11 Solution
+The correct answer is either one of these.
+
+[![bro2-23](../assets/images/bro2-23-small.jpg)](../assets/images/bro2-23.jpg)
+
+Realistically, there is no way that GIF is going to show up in less than 16 milliseconds and the request adds extra overhead, too, in the animation phase, which is not the time to handle it.
+
+Have the GIF prepared well in advance before the users actually click on video. It's small, so why not make it a part of the initial app load? Either way, don't request it now.
+
+### 10.12 Quiz: RAIL 2
+I want you to think through the Idle stage. This user has just loaded an app with baseball scores on it. Right now they're in the 50 millisecond idle period before they start to interact with the app.
+
+[![bro2-24](../assets/images/bro2-24-small.jpg)](../assets/images/bro2-24.jpg)
+
+Which of the following tasks can you accomplish in this 50 millisecond period? Check all that apply.
+
+#### 10.13 Solution
+[![bro2-25](../assets/images/bro2-25-small.jpg)](../assets/images/bro2-25.jpg)
+
+The correct answer here is that you can pretty much do whatever you want so long as it's not for above-the-fold content, which in all reality, the user should already have downloaded.
+
+### 10.13 Lesson Outro
+So at this point, you know what you can afford to do and when you can do it, which is pretty handy.
+
+Now one thing to bear in mind is just because you can, say, paint or do layouts or even run JavaScript doesn't mean you have an unlimited budget. Layouts and style calculation times for example, both depend on the number of elements that are affected.
+
+As you'll see soon, one of the ways you can keep that time down is to reduce the number of elements on which they have to work.
+
+This table shows time allowances for different tasks. It'll help you set a budget for each of those tasks.
+
+So that you and any other developers you're working with are all on the same page. It's time to drill into the specifics of resolving performance issues
+
+[![bro2-26](../assets/images/bro2-26-small.jpg)](../assets/images/bro2-26.jpg)
+
+In the next lesson you'll be taking a look at the tools that you have at your disposal for identifying jank in your apps.
+
+The first step in reducing jank is identifying its cause which is exactly what you'll do.
