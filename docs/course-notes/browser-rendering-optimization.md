@@ -669,3 +669,279 @@ So that you and any other developers you're working with are all on the same pag
 In the next lesson you'll be taking a look at the tools that you have at your disposal for identifying jank in your apps.
 
 The first step in reducing jank is identifying its cause which is exactly what you'll do.
+
+## 11. Debug Tools
+### 11.1 Intro
+At this point, you know that performance is important, and you know what the parts of the pipeline are. So, now it's time to learn how to use the tools at your disposal to identify and destroy jank
+
+The main tool you're going to use is Chrome's DevTools, and in particular, the Performance panel. In this lesson you'll dive into DevTools' Performance view to start to identify exactly where jank is happening.
+
+### 11.2 DevTools
+You can open up the developer tools by hitting Cmd+Alt+J on a Mac or Ctrl+Alt+J on PC. 
+
+[![bro3-1](../assets/images/bro3-1-small.jpg)](../assets/images/bro3-1.jpg)
+
+Now that we're in DevTools, we need to go to the Performance panel. Performance is here to allow you to track frames per second (fps) for your project. You can record a timeline and it will tell you what fps you were getting and for each frame, what work was involved. That work will tie back into the pipeline you learned in the last lesson.
+
+Now I'm going to hit record and then I'm going to scroll around the site. Now I can stop the recording and I get a load of records back. At first glance I think the user interface can be a little bit overwhelming, so let's just look at it bit by bit.
+
+[![bro3-2](../assets/images/bro3-2-small.jpg)](../assets/images/bro3-2.jpg)
+
+The green bars at the top indicate the frames per second. If we're trying to hit 60 frames a second, all these bars should be tall. The lower the bar the less frames per second. If we hover over any of the bars in the **Frames** row we will actually get the fps for that moment in time
+
+Underneath, in the row labeled **Main** there's a load of information about how we spent our time in each of the frames. Right now it's quite zoomed out so we need to actually dive in a little bit deeper.
+
+To do that we simply click drag in the frames area at the top, and now you see it's zoomed in a little bit more. You can also use the W, A, S, and D keys on your keyboard if you prefer.
+
+[![bro3-3](../assets/images/bro3-3-small.jpg)](../assets/images/bro3-3.jpg)
+
+Here in the details you can see the parts of the pipeline we discussed earlier. There's **JavaScript**, there's **Style Calculations**, **Layout**, **Layer Management**, **Paint**, and **Composite**.
+
+If you've never taken a timeline recording before take a moment to go and take your first recording. Go to any website, it doesn't matter which, and hit record in the timeline. Then explore the timeline and see what you can find out.
+
+Okay, cool. You're able to take timeline recordings, and you can quickly see where your hitting jank. But now you need to start digging into the details of those frames, and figure out why frames are running long.
+
+#### 11.2 Links Resources
+- [Parallax Demo Site](http://www.html5rocks.com/static/demos/parallax/demo-1a/demo.html)
+- [Performance Panel REference](https://developers.google.com/web/tools/chrome-devtools/evaluate-performance/reference)
+
+### 11.3 Performance in Depth
+So I have the DevTools Performance panel open here and I had it record what happened during the load of this page. Let's take a look at the records in a little more detail.
+
+[![bro3-4](../assets/images/bro3-4-small.jpg)](../assets/images/bro3-4.jpg)
+
+The first thing to notice is that they're color coded. Blue records are HTML being parsed. Now, normally this is really fast and I haven't personally seen a performance issue where this was the bottleneck, certainly not past the initial page load anyway.
+
+Moving along a little bit, and zooming in with the W key, just drag that along a little bit, you can see that we actually have two purple records. One is Recalculate Style, and then there's Layout as well. You can also see I've got a green one here which is Paint, and a green one which is Composite.
+
+[![bro3-5](../assets/images/bro3-5-small.jpg)](../assets/images/bro3-5.jpg)
+
+This is called the flame chart and it represents the main thread activities. The x-axis represents the recording over time. The y-axis represents the call stack. The events on top cause the events below it.
+
+Below that is a series of tabs.  The Summary tab and three additional tabular views for analyzing activities. Each view gives you a different perspective on the activities:
+
+- Summary
+- Bottom Up
+- Call Tree
+- Event Log
+
+#### Summary
+The **Summary** tab can show two things.
+
+First, it shows a pie chart of the relative time spent on each activity for the selected time period.
+
+[![bro3-6](../assets/images/bro3-6-small.jpg)](../assets/images/bro3-6.jpg)
+
+Secondly, when you click an item on the flame chart it will display details about that item.
+
+[![bro3-7](../assets/images/bro3-7-small.jpg)](../assets/images/bro3-7.jpg)
+
+#### Bottom Up
+- **Bottom Up** - When you want to view the activities where the most time was directly spent, use the Bottom-Up tab.
+
+[![bro3-8](../assets/images/bro3-8-small.jpg)](../assets/images/bro3-8.jpg)
+
+#### Call Tree
+- **Call Tree** - When you want to view the root activities that cause the most work, use the Call Tree tab.
+  
+[![bro3-9](../assets/images/bro3-9-small.jpg)](../assets/images/bro3-9.jpg)
+
+#### Event Log
+- **Event Log** - When you want to view the activities in the order in which they occurred during the recording, use the Event Log tab.
+
+[![bro3-10](../assets/images/bro3-10-small.jpg)](../assets/images/bro3-10.jpg)
+
+### 11.4 Quiz: Reading Timeline
+For this quiz, I want you to load a timeline. You can do it pretty easily. Simply right-click in the timeline and go to Save As to save one, or Load to load a timeline.
+
+Loading a timeline is a super easy way to share and compare timelines. You can [download a timeline here for the exercise](https://www.udacity.com/api/nodes/4158208827/supplemental_media/timeline-l3-reading-timeline/download).
+
+Once you've loaded the timeline, see if you can figure out which function caused `initWebGLObjects()` to run. Type it into this box. And finally, if this JavaScript was called during an animation,would it still be possible for the animation to reach 60 frames per second? Yes or no.
+
+[![bro3-11](../assets/images/bro3-11-small.jpg)](../assets/images/bro3-11.jpg)
+
+#### 11.4 Solution
+I've got the Flame view open, and it's pretty apparent that some kind of work is being repeated over and over. I'll just go ahead and zoom into one of these chunks.
+
+[![bro3-12](../assets/images/bro3-12-small.jpg)](../assets/images/bro3-12.jpg)
+
+With this closer inspection, it becomes pretty obvious that render is causing InitWebGLObjects to be called.
+
+At the top, you can see that the code ran for about 66 milliseconds, which is well over the 16 millisecond budget per frame. This unfortunately means that there is no way this app is going to run at 60 frames per second.
+
+Looking at the frame viewer at the top, you can see that these frames are made up almost entirely of JavaScript, hence all the yellow bars. This means that this code is definitely going to need some refactoring if it's going to run at 60 frames per second.
+
+So the correct answers are, render as the function and, no ,it is not going to run at 60 frames per second.
+
+### 11.5 Identify Jank
+Okay, I want to walk you through another example. This is a weight truck app I built a while ago. And I notice that when I open the menu on the left hand side, that it sticks and Janks.
+
+[![bro3-13](../assets/images/bro3-13-small.jpg)](../assets/images/bro3-13.jpg)
+
+So now with the timeline open, I'm going to see if I can find out what the cause is. The first thing I do is refresh the page, just so that I know I've got a fresh start. Next I hit record, bring out the menu, and stop recording.
+
+Immediately, I see that there are three big spikes of yellow here. So, I'm going to select one of those and I realize that I am spending a lot of time in JavaScript. Once you zoomed in, you can also get details of what's going on in those frames.
+
+[![bro3-14](../assets/images/bro3-14-small.jpg)](../assets/images/bro3-14.jpg)
+
+Let me start by dragging this up a little bit more, so we can see it. You can see what it is, how long it's been working, when it started and a little bit more about how it's broken down. The time itself and any child records. Lastly, you find out where the task was triggered In your code.
+
+[![bro3-15](../assets/images/bro3-15-small.jpg)](../assets/images/bro3-15.jpg)
+
+The details will differ depending on the kind of record you're looking at. For example, Recalculate Style, tells you the number of elements that were affected, as does Layout.
+
+With Layout, we see the tree size, the scope, where it started and in this case, we also see an additional warning. Which we'll talk about in a little bit. Lastly, we see where in the code we triggered layout.
+
+[![bro3-16](../assets/images/bro3-16-small.jpg)](../assets/images/bro3-16.jpg)
+
+In this case though, I would be most concerned about these large yellow blocks. They seem to be what's causing me to stop hitting 60 frames a second.
+
+[![bro3-14](../assets/images/bro3-14-small.jpg)](../assets/images/bro3-14.jpg)
+
+### 11.6 Test all Devices
+One of the mistakes that people often make is to only test their site's performance on the desktop.
+
+[![bro3-17](../assets/images/bro3-17-small.jpg)](../assets/images/bro3-17.jpg)
+
+Because desktops are significantly more powerful than mobiles, it means you can miss performance issues that only show up when on device's CPU, memory or connectivity constrained.
+
+What you want to do is where you can, test on real devices. If you have an Android device, you can use the same Chrome DevTools you know and love from your desktop. So I can start it, interact, stop,and you can see I got a timeline that I can work with.
+
+[![bro3-18](../assets/images/bro3-18-small.jpg)](../assets/images/bro3-18.jpg)
+
+If you don't have an Android device available, you can check out the instructor notes below for how to use the emulation settings in Chrome DevTools. Remember though, that the performance characteristics of simulators and emulators are wildly different to a device itself.
+
+So while it's good for getting used to the workflow, you'll need to test on the device itself to make sure that you don't have any performance issues there.
+
+In the next video, Peter Lovis is going to show you how you can useChrome DevTools with your Android device. If you already know, just skip ahead.
+
+### 11.7 Setup for Mobile
+The set up is simple. All you need is an Android device, a USB cable, and your development machine. Let's take a look.
+
+Before you get started you need to turn on the Developer Mode in your Android device. This may be different on any given device and you can check your device's manual on how to do this. In many cases though, you need to go to your device's settings, click on About Device and then click on Build Number seven times. Seriously.
+
+Next you'll want to turn on USB debugging. Again, this varies slightly on your given device, but this is usually located in the developer options. We also need to make sure we have the right tools installed. On my laptop, I have Chrome Canary and on my mobile device, I have Chrome Beta installed.
+
+#### What is Chrome Canary and why should I use it
+Chrome Canary is the developer version of Chrome. It looks and acts like the regular Chrome browser, but it includes new and experimental features that haven't been released yet. We recommend analyzing websites with Canary to take advantage of the latest tech. However, be warned that Canary isn't guaranteed to be stable, so expect crashes and occasional bugs.
+
+#### Do I have to test on mobile
+For the purposes of this course, no. But testing your websites on mobile is a best practice, and if you have the means to do so we highly recommend it.
+
+### 11.8 DevTools on Mobile
+Now that we have everything set up the way we need, open Chrome on your development machine and go to Chrome inspect. Make sure the site you want to debug is open on your mobile device and then connect your laptop to your mobile device via USB.Then confirm that you want to allow USB debugging.
+
+Back in our development machine, we can see a list of the attached devices and the Chrome tabs that are open on the devices. You can even open other tabs.
+
+[![bro3-19](../assets/images/bro3-19-small.jpg)](../assets/images/bro3-19.jpg)
+
+We can also focus on specific tabs, you can reload them and you can even close a tab. The best part of course is that you can inspect the pages that are running on your mobile device, from your development machine.
+
+[![bro3-20](../assets/images/bro3-20-small.jpg)](../assets/images/bro3-20.jpg)
+
+One of my favorite new features is the new screen cast mode. This allows you to drive the experience on your mobile device from your development machine. You can click on links, and see them update simultaneously on the device. As well as on your desktop.
+
+### 11.9 Mobile for iOS
+Now, that was really easy and it's also possible to do this on mobile Safari with the web inspector using the iOS web kit debug proxy. Now, that's a little bit harder to set up, so check out the link below for more information.
+
+[iOS WebKit Debug Proxy](https://github.com/google/ios-webkit-debug-proxy)
+
+Please note that in the community, there is a discussion continuing about `ios-webkit-debug-proxy`. Depending on your version of canary, if you're using it, it might take a lot of time and some students suggest trying Safari Dev Tools and point to links like this:
+
+https://www.smashingmagazine.com/2014/09/testing-mobile-emulators-simulators-remote-debugging/
+
+Remember you can run in simulator mode in Chrome Dev Tools.
+
+### 11.10 Quiz: More Timeline
+Before this quiz starts, I want to talk testing strategy.
+
+[![bro3-21](../assets/images/bro3-21-small.jpg)](../assets/images/bro3-21.jpg)
+
+First off, you want to make sure that you're collecting clean data. So, you should first quit any other apps that you have running besides the browser. Along the same lines, extensions can skew your results. So, make sure you're running your tests in an incognito window.
+
+You should also recognize that sometimes you may have several bottlenecks in your code, and they may be triggered in different ways from different parts of the pipeline. So, it's important that you focus on the causes of bottlenecks more than you focus on their symptoms.
+
+And lastly, with any performance issue, make sure you always measure first, before you start to apply fixes. There's no point in fixing an issue you don't actually have. And you won't be able to know how well your fixes actually work unless you've measured first, so that you can compare the difference.
+
+All right. Well, now it's time for you to practice your DevTools skills and take a timeline recording of [this website](http://jsbin.com/saxalu/2/quiet).
+
+Start recording. Click on the Switch Layout button and then, see if you can figure out where the jank was caused inside the code.Type your answer into this box.
+
+[![bro3-22](../assets/images/bro3-22-small.jpg)](../assets/images/bro3-22.jpg)
+
+#### 3.10 Solution
+Okay, here's my timeline. But you know, sometimes you can have a pretty good idea of where the cause of jank might be found in the pipeline, but other times it could be kind of tricky to find.
+
+[![bro3-23](../assets/images/bro3-23-small.jpg)](../assets/images/bro3-23.jpg)
+
+Now, I see a bunch of frames here, and it looks like the last scripting thing to happen before all the layouts happened right here. So, I'll go ahead and zoom in. I clicked on this last scripting event. I zoomed in a little bit further to see that this event caused a function to run, I'll click on it in see that it's location is in this quiet file at line 172.Click on that to see what it's referring to in fact this functionOn switch layout click is definitely the culprit that i'm looking for here.
+
+[![bro3-24](../assets/images/bro3-24-small.jpg)](../assets/images/bro3-24.jpg)
+
+Toggling wide on the body is causing all of those janky long layouts. So, the correct answer is the function `onSwitchLayoutClick`.
+
+### 11.11 Quiz: Finding Jank
+[Here's another link to a website](http://jsbin.com/nanana/2/quiet). Just like before, hit Record and hit Switch Layout.
+
+Record a timeline trace, and see if you can figure out where the jank is coming from.
+Once you think you've found the source of the Jank, type the name of the function into this box.
+
+[![bro3-25](../assets/images/bro3-25-small.jpg)](../assets/images/bro3-25.jpg)
+
+#### 11.11 Solution
+The trace for the site is looking actually pretty close to 60 frames per second, but it's not quite there. All the big purple bars are a pretty good indication that there's probably too much layout happening.
+
+[![bro3-26](../assets/images/bro3-26-small.jpg)](../assets/images/bro3-26.jpg)
+
+Just like before, I want to find the cause of the jank, so I'll zoom into the beginning of the trace to see what started this mess. When I zoomed in it becomes pretty apparent that there's something wrong with these layouts. These red triangles definitely look like warning signs to me.
+
+[![bro3-27](../assets/images/bro3-27-small.jpg)](../assets/images/bro3-27.jpg)
+
+I've clicked on one, and then inside the Details pane I see a warning. The warning says that, "Forced reflow is a likely performance bottleneck." Well, this seems like a pretty useful message, and where's it happening?
+
+On a function called `totesLayingOutYo`. Well, it's coming in at the `quiet` script on line 190. I think this might be the culprit. Just to make sure, I've clicked on the function that led to this forced reflow layout, and it's pointing me to the quiet script, too.
+
+[![bro3-28](../assets/images/bro3-28-small.jpg)](../assets/images/bro3-28.jpg)
+
+And there it is `totesLayingOutYo` on line 190, he's setting offset width which is forcing layout. And there you have it, there's the source of the jank.
+
+This time the jank wasn't caused by the function that started it. But, in fact, it's a function that's being called every time a new frame has to be run. So the jank isn't caused by a function running at the beginning of the script, it's a function that's being called every frame by `requestAnimationFrame`.
+
+This means the correct answer is `totesLayingOutYo`.
+
+By the way, Paul and I will come back to this example later on in the course. You'll learn just a little bit more about what you're seeing here and what this performance issue is.
+
+### 11.12 Quiz: More Jank
+In the instructor notes, you'll find a link to this kind of terrifying website.
+
+[![bro3-29](../assets/images/bro3-29-small.jpg)](../assets/images/bro3-29.jpg)
+
+It may not look like much now but click this animate button and see what happens.
+
+[![bro3-30](../assets/images/bro3-30-small.jpg)](../assets/images/bro3-30.jpg)
+
+So this is a really super janky animation. Even on a new MacBook Pro, this thing barely chugs along. What I want you to do is record a timeline trace of what happens when you click the Animate button.
+
+When you've got the timeline play with it along with the tabs and see which works better for you as you're analyzing the website.
+
+Just like before, I want you to find where the ridiculous Jank in the timeline is coming from. So what is causing it? Pick one of these answers.
+
+[![bro3-31](../assets/images/bro3-31-small.jpg)](../assets/images/bro3-31.jpg)
+
+#### 11.12 Solution
+I'm seeing a lot of green in the timeline, which is a pretty good indication that there's a Paint problem.
+
+[![bro3-32](../assets/images/bro3-32-small.jpg)](../assets/images/bro3-32.jpg)
+
+I'll go ahead and zoom into one of these frames. It looks like each frame is starting with the script. There's an Animation Frame Fired followed immediately by style calculations and then a Paint.
+
+[![bro3-33](../assets/images/bro3-33-small.jpg)](../assets/images/bro3-33.jpg)
+
+This looks like a JavaScript problem because if the problem was coming from CSS, then chances are I wouldn't be seeing an animation frame being fired.
+
+So in the end it's pretty clear that there is a paint problem and it's being caused by JavaScript.
+
+### 11.13 Lesson Outro
+So now you know how to spot jank using DevTools and you're getting into the details of where jank is coming fromin the pipeline.
+
+In the next lesson, you'll dive into the details just a little bit more as you look at the common causes of jank and how you can fix them.
