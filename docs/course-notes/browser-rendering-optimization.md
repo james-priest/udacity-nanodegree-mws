@@ -942,6 +942,400 @@ This looks like a JavaScript problem because if the problem was coming from CSS,
 So in the end it's pretty clear that there is a paint problem and it's being caused by JavaScript.
 
 ### 11.13 Lesson Outro
-So now you know how to spot jank using DevTools and you're getting into the details of where jank is coming fromin the pipeline.
+So now you know how to spot jank using DevTools and you're getting into the details of where jank is coming from in the pipeline.
 
 In the next lesson, you'll dive into the details just a little bit more as you look at the common causes of jank and how you can fix them.
+
+## 12. JavaScript Debug
+### 12.1 Lesson Intro
+Let's take stock of where you are in your 60 frames a second journey, so to speak.
+
+1. You know what goes into making a frame and how different styles affect the pipeline.
+2. You know about how to prioritize your performance work based on RAIL. (LIAR)
+3. You know about the application life cycle and Chrome DevTools timeline.
+
+Now you are going to step into the common causes of jank that crop up time and time again. You'll use dev tools to find those problems, fix them, and test the results. 
+
+You'll be starting at the beginning of the pipeline with JavaScript.
+
+### 12.2 Just In Time
+Okay, the first thing you need to know about JavaScript, is that the code you write, isn't actually the code that runs. Now that may sound a little strange if you never heard it before, but it comes about because of the fact that modern JavaScript engines recompile your code to something that can run more quickly. It's done thru a Just In Time compiler, or JIT.
+
+[![bro4-1](../assets/images/bro4-1-small.jpg)](../assets/images/bro4-1.jpg)
+
+A JIT compiler will optimize the JavaScript bit by bit as it runs, and it's a brilliant but extremely complex engine. For us as developers, what that means is that there's no way to look at JavaScript and know exactly what code will run in the engine.
+
+[![bro4-2](../assets/images/bro4-2-small.jpg)](../assets/images/bro4-2.jpg)
+
+Take a look at this JavaScript code here. It's a for loop, it's pretty simple. But if we use this tool called IRHydra to look at how Chrome's JavaScript engine V8 would look at representing it, it looks like this.
+
+[![bro4-3](../assets/images/bro4-3-small.jpg)](../assets/images/bro4-3.jpg)
+
+Now you don't need to understand any of this. This is just how Chrome and its V8 JavaScript Engine understands the code that you wrote. But what I want you to take away here is that you should avoid what we call micro-optimizations.
+
+Micro-optimizations come about when you try to write code that you would think would be a little bit faster for a browser to run. Like say, which is faster, this for loop or this while loop?
+
+[![bro4-4](../assets/images/bro4-4-small.jpg)](../assets/images/bro4-4.jpg)
+
+But the thing is, we don't know how the JavaScript engine is going to treat these two pieces of code. So there's no point in guessing. Any micro-optimization you write should be a last resort once you've exhausted all your other options.
+
+In short, what I'm saying is don't spend your time comparing similar pieces of JavaScript in this way. It won't help you. There are other things you can do to improve performance that don't involve micro-optimizations.
+
+So you're done, right? I mean, you can't guess exactly how a JavaScript engine is going to handle your code. So obviously we can move on. Well, no, actually. It turns out there are plenty of things that you can do to make your code run better.So let's get started
+
+### 12.3 Quiz: JS Optimize for Animation
+While you shouldn't concern yourself with micro-optimizations like this one, there are obviously steps you can take to ease JavaScript's burden on the rendering pipeline. 
+
+Think back to the different stages of RAIL. Each stage has a different window of time to execute JavaScript without incurring a user experience penalty. That is to say, you have a small amount of time to execute JavaScript, and if all of it happens before the window of time is over, the app will still feel snappy and smooth.
+
+[![bro4-5](../assets/images/bro4-5-small.jpg)](../assets/images/bro4-5.jpg)
+
+Looking at this time frame for an animation, you realistically only have about ten milliseconds to do everything you need to do to prepare the frame, which includes running layout, compositing, and paint.
+
+So, with that in mind, how do you make sure JavaScript is out of the way as much as possible to hit that ten-millisecond deadline? Pick one of these four answers.
+
+[![bro4-6](../assets/images/bro4-6-small.jpg)](../assets/images/bro4-6.jpg)
+
+#### 12.3 Solution
+As JS can trigger every part of the rendering pipeline, it makes sense to run it as early as possible each frame.
+
+[![bro4-7](../assets/images/bro4-7-small.jpg)](../assets/images/bro4-7.jpg)
+
+- For the first one, no. Remember, micro-optimizations really aren't that helpful.
+- For the second one, not quite. While it may seem like a good idea to execute JavaScript on a 16 millisecond schedule, this doesn't necessarily guarantee that JavaScript is always executing at the right time for each frame.
+- The third one isn't right either. You need to make sure that JavaScript is done as early as possible, because it can lead to style calculations, layout, and paint. In fact, this answer doesn't even really make sense, because the frame is done when the pixels are painted.
+- The last answer is correct. The beginning of every frame is definitely the best time to run JavaScript because remember, it can create style, layout, paint and compositing changes. And finishing JavaScript early means you have as much time as possible to take care of everything else.
+
+In the next video, you will learn about request animation frame which is an API that will schedule your JavaScript to run at the right point of every frame.
+
+### 12.4 requestAnimationFrame
+RequestAnimationFrame should be your go to tool for creating animations.
+
+Nobody likes to be interrupted in the middle of a task, and the browser is no different. Remember how little time the browser has to render the frame at 60 frames a second.
+
+If one second is a thousand milliseconds and we have to fit 60 frames in, well we have 16 milliseconds.
+
+[![bro4-8](../assets/images/bro4-8-small.jpg)](../assets/images/bro4-8.jpg)
+
+Realistically though, there's some overhead to running a frame and the browser has housekeeping to do. So we should aim for about 10 milliseconds instead.
+
+The JavaScript part of your frame should typically be kept around three to four milliseconds at most. Because there's going to be other work, like style calculations,layer management, and compositing that will come afterwords.
+
+[![bro4-9](../assets/images/bro4-9-small.jpg)](../assets/images/bro4-9.jpg)
+
+I want you to imagine that the browser is in the middle of doing some style work. And then, in comes some JavaScript that needs attention. The browser now has to deal with the JavaScript that just came in before it can move on to other tasks. That new JavaScript may cause the work for the frame to be redone, and that could well mean missing the frame.
+
+RequestAnimationFrame schedules your JavaScript to run at the earliest possible moment in each frame. That gives the browser as much time as possible to run your code, then style, then the layout, painting, and compositing.
+
+A lot of older code around the web that is used for animation, uses `setTimeout` or `setInterval`, because back in the day that's all there was. In fact, jQuery still uses setTimeout for its animation today.
+
+[![bro4-10](../assets/images/bro4-10-small.jpg)](../assets/images/bro4-10.jpg)
+
+The problem with both of these functions is that the JavaScript engine pays no attention to the rendering pipeline when scheduling these. They're good functions to use when you want to wait some time to elapse or do some repeated task every so often, but they're not a good fit for animations.
+
+This is how you use `requestAnimationFrame` .You make a call to it and tell it which function you want it to call. That gets called where you do your animation. And at the end of it you schedule the next one. The browser takes care of when it should run and how.
+
+[![bro4-11](../assets/images/bro4-11-small.jpg)](../assets/images/bro4-11.jpg)
+
+Of the many browsers available to users today, the only one that doesn't support requestAnimationFrame is Internet Explorer 9. So, for that you'd need to use a polyfill, which would use setTimeout. It's not ideal as a fall back, but it will allow you at least to use `requestAnimationFrame` in your code and not worry about compatibility.
+
+### 12.5 JavaScript Profile
+Hopefully, all your JavaScript is running at the right time in the frame. And that's great. But now, you need to make sure that it's not taking too long to run.
+
+Remember that to meet 60 frames a second you have to fit all the work inside 16 milliseconds. And that's not just JavaScript but everything for our frame.
+
+[![bro4-12](../assets/images/bro4-12-small.jpg)](../assets/images/bro4-12.jpg)
+
+In reality, we have to be inside of ten to twelve milliseconds to leave the browser some time for it's housekeeping. It's easy for JavaScript to take quite some time to run, especially if you are using frameworks and libraries because they will need some time to do their work. Whether that's organizing views in your app or handling callbacks or perhaps, even analyzing data.
+
+In previous versions of Chrome DevTools we had to explicitly turn on the JavaScript Profiler when taking a recording in order to get detailed info on which functions were called, when, and for how long.
+
+This is no longer the case. Now we can get this information from the Bottom Up, Call Tree, or Event Log panel.
+
+[![bro4-13](../assets/images/bro4-13-small.jpg)](../assets/images/bro4-13.jpg)
+
+The timeline also shows the call stack when we zoom in enough.
+
+### 12.6 Quiz: Long Running JS
+For this quiz, you're going to be comparing the time it takes two functions to run. One function will run when you hit Sort by name, and the other when you hit Sort by number.
+
+[Here is the link to the site.](http://jsbin.com/feloni/3/quiet)
+
+I want you to use DevTools to analyze what happens when you hit these two buttons. One of these buttons will take longer to sort this list than the other.
+
+[![bro4-14](../assets/images/bro4-14-small.jpg)](../assets/images/bro4-14.jpg)
+
+I'll give you a hint that the slow function, one of these two, is going to be using a bubble sort which happens to be super, super slow.
+
+The other of these two functions is going to be using JavaScript's built in sort function which is way faster. The point of this quiz question isn't necessarily about which sort function you should use, though in fact the built in one is normally great.
+
+[![bro4-15](../assets/images/bro4-15-small.jpg)](../assets/images/bro4-15.jpg)
+
+This question is about being able to see, at a glance, how much work is going into a frame.
+
+#### 12.6 Solution
+I hit record and then I hit both buttons. On first look it's pretty obvious to see what's going on here. Here's the first click and here's the second one. As a child of the first click event `onSortOne` ran. And, as a child of the second click event `onSortTwo` ran.
+
+And just looking here it's pretty obvious that `onSortOne` took longer to run.
+
+[![bro4-16](../assets/images/bro4-16-small.jpg)](../assets/images/bro4-16.jpg)
+
+Before I move on, I want to point out some interesting bits in this little sample. If you're in the flame view and you click on the top-level click record like this one here, you can pull up the details pane for some useful information.
+
+This pie chart gives you an idea of how much time it took different events caused by this function to run. You can get the scripting time for this function itself, which tells you how long it took just this function to run. And if this function called any others, which this one did, then you can see how long it took it's children to run.
+
+[![bro4-17](../assets/images/bro4-17-small.jpg)](../assets/images/bro4-17.jpg)
+
+In this case the function that ran on the click called other functions including the `bubbleSort` one, which is included in this children scripting time.
+
+[![bro4-18](../assets/images/bro4-18-small.jpg)](../assets/images/bro4-18.jpg)
+
+I've changed over to the second click event for the second event and you can see that the scripting time for its children, is only 96 milliseconds, compared to 484 milliseconds.
+
+I want you to notice one other thing. After the first click there is a recalculate style and then a layout event, and after the second click there is another recalculate style and another layout event.
+
+[![bro4-19](../assets/images/bro4-19-small.jpg)](../assets/images/bro4-19.jpg)
+
+These two pairs of recalculate style and layout are essentially the same length. This is a clear indication that no matter how you sort the data in this example, you still have to write out the whole table of results, which is going to require recalculating styles, relaying out the page, and repainting everything.
+
+So with all that in mind, answer one took longer to run.
+
+### 12.7 Quiz: Web Workers
+Web Workers are really super useful, so you're going to be creating one for this next quiz.
+
+Web workers provide an interface for spawning scripts to run in the background. Normally, websites run in a single thread running on the operating system. Web workers allow you to run JavaScript in a totally different scope than the main window and on a totally separate operating system thread.
+
+[![bro4-20](../assets/images/bro4-20-small.jpg)](../assets/images/bro4-20.jpg)
+
+Whatever work is happening in the main thread, in the main window, won't affect or be affected by the worker thread. And of course the opposite is true. Whatever work is happening in the worker thread won't affect or be affected by the main window, but the two can send messages back and forth.
+
+This means that you can isolate long running JavaScript inside a worker thread and allow the main thread to run free unimpeded.
+
+[![bro4-21](../assets/images/bro4-21-small.jpg)](../assets/images/bro4-21.jpg)
+
+What's really cool though is that the web worker and the main thread can communicate with each other. Altogether, web workers are an incredibly valuable strategy for running long running code that does not create any jank on the main thread.
+
+Essentially you'll need to create a separate JavaScript file which your main app will spawn into a new web worker.
+
+```js
+var w = new Worker('worker.js);
+```
+
+For this quiz I want you to download and dejankify [this small app](https://github.com/udacity/web-workers-demo).
+
+[![bro4-22](../assets/images/bro4-22-small.jpg)](../assets/images/bro4-22.jpg)
+
+I want to point out the two main features of this app.
+
+On the left side there is the Jank Timer which will tell you if any jank appears on the page. And on the right side there's the image manipulator, which will let you pick a file from your local machine and then do some type of image manipulation on it.
+
+In this case I've just gone ahead and uploaded a Chrome logo. The image manipulator's janky and needs a little bit of work. Watch what happens when i click invert.
+
+[![bro4-23](../assets/images/bro4-23-small.jpg)](../assets/images/bro4-23.jpg)
+
+The page froze for more than four seconds as this image was being inverted. That is definitely a lot of jank and that needs to be fixed.
+
+[![bro4-24](../assets/images/bro4-24-small.jpg)](../assets/images/bro4-24.jpg)
+
+Your job for this quiz is to offload the image manipulation work from the main thread into a web worker.
+
+You know you've done it correctly when the page doesn't freeze for multiple seconds when you click one of these buttons.
+
+As a second challenge, there's also a massive performance bug in the way the image manipulators run.
+
+[![bro4-25](../assets/images/bro4-25-small.jpg)](../assets/images/bro4-25.jpg)
+
+<!-- 
+I'm about to give you a big hint about where it is in the app. So if you want to really nice challenge right now just stop and click continue to quiz and skip this hint. Okay, are you still here? Here it comes.Inside image-app.js you can find this loop, which includes the logic for separating each pixel into the different channels, and then running some manipulation on them. This function, manipulate, is where you should start looking for the performance bug. To help you out with the web worker, I'm including a file called worker.js that currently handles most of the web worker. It's going to be your job to go into image-app.js and then install worker.js as a web worker. So, once you've moved the image manipulation work into a web worker and you've found the performance bug, check this box to let us know that you're done. -->
+
+##### 12.7 Resource Links
+
+- [Image manipulation repo](https://github.com/udacity/web-workers-demo) - App to download and de-jankify
+- [Web Worker docs](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers) -  on MDN
+- [Web Workers](http://www.html5rocks.com/en/tutorials/workers/basics/) - on HTML5 Rocks
+
+#### 12.7 Solution
+It makes sense to start by taking a look at worker.js. Notice that when it receives a message from the main thread, it's going to get two things, the image data and the type of manipulation.
+
+#### worker.js
+
+```js
+importScripts('imageManips.js');
+
+this.onmessage = function (e) {
+  var imageData = e.data.imageData;
+  var type = e.data.type;
+
+  var a, b, g, i, j, length, pixel, r, ref;
+  try {
+    length = imageData.data.length / 4;
+    var manipulatePixel = getManipFunc(type);
+    for (i = j = 0, ref = length;
+      0 <= ref ? j <= ref : j >= ref;
+      i = 0 <= ref ? ++j : --j) {
+      r = imageData.data[i * 4 + 0];
+      g = imageData.data[i * 4 + 1];
+      b = imageData.data[i * 4 + 2];
+      a = imageData.data[i * 4 + 3];
+      // pixel = manipulate(type, r, g, b, a);
+      pixel = manipulatePixel(r, g, b, a);
+      imageData.data[i * 4 + 0] = pixel[0];
+      imageData.data[i * 4 + 1] = pixel[1];
+      imageData.data[i * 4 + 2] = pixel[2];
+      imageData.data[i * 4 + 3] = pixel[3];
+    }
+    self.postMessage(imageData);
+  } catch (e) {
+    throw new ManipulationException('Image manipulation error');
+  }
+};
+
+function ManipulationException(message) {
+  this.name = "ManipulationException";
+  this.message = message;
+}
+```
+
+`e` is the whole message from the main thread. And then the data is the user data that we're sending to the worker. So, when I post a message to the web worker, I'll make sure that both of these are included.
+
+Back in the image app, notice that the loop is gone from `manipulateImage`. That's because the loop now lives in worker.js. At the top of the script, I created the web worker from worker.js andI just called it `imageWorker`.
+
+#### image-app.js
+
+```js
+(function(){
+  var original;
+  var imageLoader = document.querySelector('#imageLoader');
+  imageLoader.addEventListener('change', handleImage, false);
+  var canvas = document.querySelector('#image');
+  var ctx = canvas.getContext('2d');
+
+  // Add web worker
+  var imageWorker = new Worker('scripts/worker.js');
+  imageWorker.onmessage = (e) => {
+    toggleButtonsAbledness();
+    return ctx.putImageData(e.data, 0, 0);
+  };
+  imageWorker.onerror = (e) => {
+    function WorkerException(message) {
+      this.name = 'WorkerException';
+      this.message = message;
+    }
+    throw new WorkerException('Worker error.');
+  };
+
+  function manipulateImage(type) {
+    var imageData;
+    imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+    toggleButtonsAbledness();
+
+    let data = { 'imageData': imageData, 'type': type };
+    imageWorker.postMessage(data);
+  }
+})();
+```
+
+When I'm ready for the worker to start doing its work, I'll simply post a message to it by calling `postMessage` on the variable for the worker that I created above.
+
+Next up there's the `onmessage` handler that's attached to the web worker. This function gets run once the web worker returns something back to the main thread.
+
+As a good practice, I also included an `onerror` handler on the web worker. It also calls a function, which in this case throws a web worker exception.
+
+#### Processing done in Main thread (non-web worker solution)
+All right. Now let's see how all of this runs. I've opened the solution in the browser and I've loaded my own image.
+
+[![bro4-26](../assets/images/bro4-26-small.jpg)](../assets/images/bro4-26.jpg)
+
+This first run will be with the old code. When I hit Invert I get a jank reading of 243ms.
+
+[![bro4-27](../assets/images/bro4-27-small.jpg)](../assets/images/bro4-27.jpg)
+
+Here's the detail reading
+
+[![bro4-27a](../assets/images/bro4-27a-small.jpg)](../assets/images/bro4-27a.jpg)
+
+#### Processing done in Web Worker
+
+Next I load up the web worker solution. I'll hit Invert and watch. No Jank, it doesn't freeze up, and then a few seconds later, the inverted image appears
+
+[![bro4-28](../assets/images/bro4-28-small.jpg)](../assets/images/bro4-28.jpg)
+
+Here is the detail view.
+
+[![bro4-28a](../assets/images/bro4-28a-small.jpg)](../assets/images/bro4-28a.jpg)
+
+Notice that there was no huge stutter. There was no Jank appearing in the timer. That's a really good sign that the image manipulation work, is happening off the main thread.
+
+Notice how the main thread stays at 60 frames per second the whole time. That's awesome. And also you can see the processing has been offloaded from the main thread into the Worker thread. Very cool.
+
+### 12.8 JS Memory Management
+Finally, I want to point out one other aspect of JavaScript. And that is memory management approach. JavaScript is garbage collected, which means for us developers, we don't need to worry about pointers, deleting objects, or how to handle local variables, any of that.
+
+We can just declare things like this `var x = { ... }` and forget about them. The downside is that the JavaScript engine has to handle that itself, and when it decides to run the garbage collector, nothing else runs. This can trigger visible pauses in rendering the page.
+
+Like I said earlier, the JavaScript you write isn't the JavaScript that runs, thanks to JIT. So it's not always easy to predict whether your code is going to be garbagey. It also depends heavily on the frameworks and libraries you use, and how you structure your code. That's why you need to measure first.
+
+Well, the good news is that Chrome's DevTools will show you memory usage in your projects. Okay, take a look at [this undulating-monkey project](http://lab.aerotwist.com/webgl/undulating-monkey/). I made this a while ago. Don't ask me, it's pretty weird. I'm not sure what kind of mood I was in that day.
+
+[![bro4-29](../assets/images/bro4-29-small.jpg)](../assets/images/bro4-29.jpg)
+
+What we can do is, we can see the memory usage of this demo in Chrome DevTools. You can see I've checked the Memory box before running the profiler.
+
+[![bro4-30](../assets/images/bro4-30-small.jpg)](../assets/images/bro4-30.jpg)
+
+What we see is this sawtooth pattern here and that's actually fine. We expect JavaScript to use some memory and eventually, when this drop-off happens, that's the garbage collector running.
+
+There are two things we're looking for here.
+
+- Firstly, are there a lot of fast climbs? That can indicate that we're assigning a lot of memory very quickly and very often.
+- Secondly, when the garbage collector runs, does it take it back to zero? If not, we might have a memory leak.
+
+If we're interested in a little more detail on the garbage collection, we can switch off the memory profiler and then go to the search down here.If that's not on your screen, you can hit Cmd+F or Ctrl+F.
+
+[![bro4-31](../assets/images/bro4-31-small.jpg)](../assets/images/bro4-31.jpg)
+
+Enter GC into the field. And then hit Enter.In my case, I've got five results.
+
+I can step through them with these arrows. And you can see, for example, I'm only spending a fraction of a millisecond here.
+
+[![bro4-32](../assets/images/bro4-32-small.jpg)](../assets/images/bro4-32.jpg)
+
+If you find that you're missing frames because of garbage collection, then there are some fabulous resources you can use to learn more about patterns and practices that will help you avoid creating too much garbage.
+
+Check out these links for more information.
+
+#### Garbage Collection Resources
+
+- [Undulating Monkey](http://lab.aerotwist.com/webgl/undulating-monkey/)
+- [Writing Fast, Memory-Efficient JavaScript on Smashing Magazine](http://www.smashingmagazine.com/2012/11/writing-fast-memory-efficient-javascript/)
+- [Memory Management on MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Memory_Management)
+- [High-Performance, Garbage-Collector-Friendly Code on Build New Games](http://buildnewgames.com/garbage-collector-friendly-code/)
+
+<!-- 
+### 12.9 Quiz: QR Code App
+This is a QR code app that Paul Kinlan put together.
+
+[![bro4-33](../assets/images/bro4-33-small.jpg)](../assets/images/bro4-33.jpg)
+
+You'll need a copy on your local machine, so follow these instructions.
+
+[Here's a link to the QR Code App repo](https://github.com/udacity/qrcode)
+Build instructions:
+
+1. Clone the repo
+2. Update the gulp-sass line (#18) in package.json to `"gulp-sass": "^3.1.0",`
+3. [Install npm](https://github.com/npm/npm)
+4. [Install Gulp](https://github.com/gulpjs/gulp/blob/master/docs/getting-started.md)
+5. Run `npm install` in the QR Code App directory
+6. Build and run with `gulp serve`
+
+This is a really cool app, but right now it's a bit janky.
+
+In this first quiz, you'll be replacing `setInterval` with `requestAnimationFrame`. And in the second quiz you'll be moving all the image decoding work off the main thread and into a web worker.
+
+Before you start working on the app, you'll need to install gulp if you don't already have it. Once you install gulp, run npm install to get all the dependencies, and that will allow you to run `gulp serve` to build and then serve the web site.
+
+`gulp serve` also watches all your files for changes. So if you save a change to any of the JavaScript files, it'll automatically rebuild and refresh the page.
+
+So for this quiz navigate to `app/scripts/main.js` in your favorite text editor and start using `requestAnimationFrame`. Build and run the page with `gulp serve` and you'll know you've done it properly. When the app loads and you're seeing animation frame fired in the timeline. When you're done check this box to let us know that you're firing animation frames. -->
