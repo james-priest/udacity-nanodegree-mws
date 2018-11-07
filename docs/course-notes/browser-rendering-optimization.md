@@ -1312,8 +1312,7 @@ Check out these links for more information.
 - [Memory Management on MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Memory_Management)
 - [High-Performance, Garbage-Collector-Friendly Code on Build New Games](http://buildnewgames.com/garbage-collector-friendly-code/)
 
-<!-- 
-### 12.9 Quiz: QR Code App
+### 12.9 Quiz: QR Code App 1
 This is a QR code app that Paul Kinlan put together.
 
 [![bro4-33](../assets/images/bro4-33-small.jpg)](../assets/images/bro4-33.jpg)
@@ -1338,4 +1337,139 @@ Before you start working on the app, you'll need to install gulp if you don't al
 
 `gulp serve` also watches all your files for changes. So if you save a change to any of the JavaScript files, it'll automatically rebuild and refresh the page.
 
-So for this quiz navigate to `app/scripts/main.js` in your favorite text editor and start using `requestAnimationFrame`. Build and run the page with `gulp serve` and you'll know you've done it properly. When the app loads and you're seeing animation frame fired in the timeline. When you're done check this box to let us know that you're firing animation frames. -->
+So for this quiz navigate to `app/scripts/main.js` in your favorite text editor and start using `requestAnimationFrame`. Build and run the page with `gulp serve`.
+
+You'll know you've done it properly when the app loads and you see "Animation Frame Fired" in the timeline. When you're done check this box to let us know that you're firing animation frames.
+
+#### 12.9 Solution
+Here's the Performance panel recording of the QR Code app prior to any changes.  it's using `setInterval` for its polling.
+
+[![bro4-34](../assets/images/bro4-34-small.jpg)](../assets/images/bro4-34.jpg)
+
+It shows a warning on "Timer Fired" and show that the handler took 51ms to complete.
+
+I'm `main.js` I went to find `setInterval` the easy way by using Cmd+F. It looks like `setInterval` is repeating on a four millisecond timer, which is actually a little ridiculous.
+
+I go ahead and remove that and replace `setInterval` with `requestAnimationFrame`.
+
+```js
+  var isSetup = setupVariables(e);
+  if(isSetup) {
+    // setInterval(captureFrame.bind(self), 4);
+    requestAnimationFrame(captureFrame.bind(self));
+  }
+  else {
+    // This is just to get around the fact that the videoWidth is not
+    // available in Firefox until sometime after the data has loaded.
+    setTimeout(function() {
+      setupVariables(e);
+
+      // setInterval(captureFrame.bind(self), 4);
+      requestAnimationFrame(captureFrame.bind(self));
+    }, 100);
+  }
+```
+
+Okay, now, that's simple enough but remember, the function itself also needs to call `requestAnimationFrame`. Here's the function `captureFrame` which is running the animation. And inside, I will make another call to `requestAnimationFrame` to the same function.
+
+```js
+var captureFrame = function() {
+  // Work out which part of the video to capture and apply to canvas.
+  canvas.drawImage(cameraVideo, sx /scaleFactor, sy/scaleFactor,
+    sWidth/scaleFactor, sHeight/scaleFactor, dx, dy, dWidth, dHeight);
+
+  drawOverlay(dWidth, dHeight, scaleFactor);
+
+  // A frame has been captured.
+  if(self.onframe) self.onframe();
+
+  coordinatesHaveChanged = false;
+
+  requestAnimationFrame(captureFrame);  //   <- add this
+};
+```
+
+I'll save it, and let's see what it looks like. I record it and look at the timeline. It looks like "Animation Frame Fire"d is being called over and over.
+
+[![bro4-35](../assets/images/bro4-35-small.jpg)](../assets/images/bro4-35.jpg)
+
+So it looks like the job here is done. All right, well, now it's on to the Web Worker.
+
+### 12.10 Quiz: QR Code App 2
+Right now, the QR code app is doing all of the image decoding on the main thread. It's hard work, and it sometimes introduces a bit of jank to the app. This is actually a perfect situation for Web Workers.
+
+Image decoding can be handled in a separate thread by a worker while the main thread is simply concerned with delivering 60 frame per second video. The main thread can send off image data to the worker so it can do its analysis. And then when it's done, the worker will simply post the data back to the main thread.
+
+[![bro4-21](../assets/images/bro4-21-small.jpg)](../assets/images/bro4-21.jpg)
+
+In this case, the processed data that the worker thread will be sending back to the main thread is simply a URL if the QR code was resolved, or undefined, if not.
+
+Here are the steps to refactor this app:
+
+1. Use this Web Worker: `app/scripts/qrworker.js`
+2. Create Web Worker in: `QRCodeManager` in `app/scripts/main.js`
+3. Send data to worker from: `detectQRCode`
+4. Remove unnecessary scripts from: `index.html`
+
+#### 12.10 Solution
+The first thing I did was open `app/scripts/main.js` and add in the Web Worker code.
+
+I commented out old call to the `decode` method and then created a `postMessage` to send `imageData` to the Worker. Next I added the `onmessage` listener to receive data back from the Worker.
+
+```js
+var QRCodeManager = function(element) {
+  var root = document.getElementById(element);
+  var canvas = document.getElementById("qr-canvas");
+  var qrcodeData = root.querySelector(".QRCodeSuccessDialog-data");
+  var qrcodeNavigate = root.querySelector(".QRCodeSuccessDialog-navigate");
+  var qrcodeIgnore = root.querySelector(".QRCodeSuccessDialog-ignore");
+
+  var client = new QRClient();
+  var qrWorker = new Worker('scripts/jsqrcode/qrworker.js');  // <- here
+  // ...
+
+  this.detectQRCode = function(imageData, callback) {
+    callback = callback || function() {};
+
+    // client.decode(imageData, function(result) {
+    //   if(result !== undefined) {
+    //     self.currentUrl = result;
+    //   }
+    //   callback(result);
+    // });
+
+    qrWorker.postMessage(imageData);
+
+    qrWorker.onmessage = function (e) {
+      var result = e.data;
+      if (result !== undefined) {
+        self.currentUrl = result;
+      }
+      callback(result);
+    };
+    qrWorker.onerror = function (err) {
+      function WorkerException(message) {
+        this.name = "WorkerException";
+        this.message = message;
+      }
+      throw new WorkerException('Decoder error');
+    };
+  };
+  // ...
+})();
+```
+
+Lastly, I commented out the scripts from `index.html` since they are now being imported into the Worker.
+
+Here's the updated Performance recording with two timelines. One for the main thread and another for the worker. Each frame is running at 60 fps or above.
+
+[![bro4-36](../assets/images/bro4-36-small.jpg)](../assets/images/bro4-36.jpg)
+
+### 12.11 Lesson Outro
+JavaScript profiling takes some practice, but now you know the tools you need to succeed.
+
+So, have a look at your own projects and see if you have some long-running JavaScript or some badly timed JavaScript. See where you can reschedule it, reduce its impact, or just remove it all together.
+
+Now, a lot of people often think at this point, they're done with their performance work. And if the JavaScript runs well, well there's nothing else left to do. But that's not at all true. As you saw earlier, there's a whole pipeline after the JavaScript runs, and that also needs to fit into that ten to 12-millisecond window. As the developer, you're in control of that pipeline. You're the one who decides what the browser does and when.
+
+So in next lesson, we'll be taking a look at the different kinds of work that JavaScript often triggers. It could trigger style calculations, layout, and paint.
