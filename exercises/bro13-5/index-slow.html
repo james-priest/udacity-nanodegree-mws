@@ -1,0 +1,86 @@
+
+<!doctype html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="author" content="" />
+    <meta name="viewport" content="width=device-width">
+    <title>Box Style Old</title>
+
+    <style>
+    html, body {
+      background: #ECECEC;
+    }
+
+    main .box-container .box {
+      display: inline-block;
+      width: 40px;
+      height: 40px;
+      background: #FFF;
+      box-shadow: 0 1px 1px rgba(0,0,0,0.3);
+      margin: 5px;
+      position: relative;
+      will-change: transform;
+    }
+
+    body.toggled main .box-container .box:nth-child(2n) {
+      background: #777 !important;
+    }
+
+    button {
+      margin: 0 auto;
+      padding: 20px;
+      background: #CC0000;
+      font-size: 20px;
+      border: none;
+      border-radius: 3px;
+      box-shadow: 0 1px 1px rgba(0,0,0,0.3);
+    }
+
+    </style>
+  </head>
+
+  <body>
+
+    <button>Click me</button>
+
+    <main>
+      <div class="box-container">
+
+
+
+      </div>
+    </main>
+
+    <script>
+
+    var container = document.querySelector('.box-container');
+    var button = document.querySelector('button');
+
+    for (var i = 0; i < 3000; i++) {
+      var div = document.createElement('div');
+      div.classList.add('box');
+      div.index = i;
+      container.appendChild(div);
+    }
+
+    function styleSwapper() {
+      console.log("start: " + window.performance.now());
+      document.body.classList.toggle('toggled');
+      // DO NOT REMOVE THIS LINE (or the test will automatically pass)
+      // it forces the browser to wait until the recalc event ends before finishing the function
+      window.getComputedStyle(document.querySelector('div')).backgroundColor;
+      console.log("end: " + window.performance.now());
+    }
+
+    button.addEventListener('click', styleSwapper);
+
+    </script>
+    <script src="recalcStyles-grader.js"></script>
+    <script async src="/frontend-grading-engine/ud-grading-engine-v0.1.js"></script>
+  </body>
+
+</html>
+
