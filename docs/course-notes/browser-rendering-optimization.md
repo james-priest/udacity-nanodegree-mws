@@ -1473,3 +1473,571 @@ So, have a look at your own projects and see if you have some long-running JavaS
 Now, a lot of people often think at this point, they're done with their performance work. And if the JavaScript runs well, well there's nothing else left to do. But that's not at all true. As you saw earlier, there's a whole pipeline after the JavaScript runs, and that also needs to fit into that ten to 12-millisecond window. As the developer, you're in control of that pipeline. You're the one who decides what the browser does and when.
 
 So in next lesson, we'll be taking a look at the different kinds of work that JavaScript often triggers. It could trigger style calculations, layout, and paint.
+
+## 13. Styles and Layout
+### 13.1 Lesson Intro
+You've started to find and fix issues. Now, hopefully, you're JavaScript is behaving well, but remember that it's only a small part of making a frame.
+
+In this lesson, you'll be tackling styles or, as it's labeled in DevTools,Recalculate Styles. By the end of this lesson, you'll be identifying and solving performance issues from style calculations. But bear in mind that JavaScript can often be the trigger for the issues we're going to cover. But it's not necessarily JavaScript's fault. Also, remember from the first lesson that style calculations will take the DOM and then for each element, figure out what its visual properties should be.
+
+So the browser ends up with a Render Tree which is like the DOM. Only it's, the elements, too, just need to be drawn. So anything that shouldn't be drawn won't be in there. So if you set something to `display: none`, it won't be there, but if you have something like pseudo-elements, like `:before` or `:after`, they will be in this tree, even though they don't exist in the DOM.
+
+### 13.2 Quiz: Style Change Cost
+For this quiz I want you to make a prediction. What will happen to performance if you change the styles of different elements? Pick one of these four answers.
+
+[![bro5-1](../assets/images/bro5-1-small.jpg)](../assets/images/bro5-1.jpg)
+
+#### 13.2 Solution
+As it turns out, it's actually linear in most cases. There can be cases where it's more or less expensive than linear but that depends on whether or not you're using expensive styles which you'll learn more about in a moment.
+
+[![bro5-2](../assets/images/bro5-2-small.jpg)](../assets/images/bro5-2.jpg)
+
+So this means that changing 1,000 elements is roughly ten times more expensive than only changing 100 elements. This is important to keep in mind when you have a page with a lot going on.
+
+### 13.3 Selector Matching
+As well as the number of elements that are involved, you have to factor in selector matching.
+
+Selector matching is the process of figuring out whether some styles should actually apply to any given DOM element. It's possible to select this div, either with its class `.b-3`, or with a more complex selector like `:nth-child(3)`.
+
+[![bro5-3](../assets/images/bro5-3-small.jpg)](../assets/images/bro5-3.jpg)
+
+It's complex, because in order to know if the style applies, it has to figure out if this is the third child, whereas with this, it can simply use the class name.
+
+Now you may be thinking that this shouldn't matter. And actually for matching a single element, it really doesn't. And this is a pretty simple example. It's only going to take a browser a fraction of a millisecond to figure out the match in both cases, but if you have a large number of elements affected by a style change, then the complexity of the selected can really start to matter.
+
+One approach that works very well is BEM, or block, element, modifier. And it's a way of writing your CSS.
+
+[![bro5-4](../assets/images/bro5-4-small.jpg)](../assets/images/bro5-4.jpg)
+
+It uses single class names to style elements. And not only does it provide more modular, reusable, and readable styles, it is advantageous to performance, since class matching is often the fastest selector to match for modern browsers.
+
+In the case of the example we just had, you could probably use a class like this. 
+
+[![bro5-5](../assets/images/bro5-5-small.jpg)](../assets/images/bro5-5.jpg)
+
+It's a box which would've been the block. There isn't any element, but the modifier would be, say three, to show that it's the third box.
+
+If you want to know more about BEM, take a look in the links below. You can use any number of methodologies for keeping your CSS tidy. So if BEM isn't your thing there are plenty of others you can try. The key thing is, where you can, keep your selector matching simple.
+
+#### 13.3 Link Resources
+
+- [BEM Key Concepts](https://en.bem.info/methodology/key-concepts/)
+- [BEM & SMACSS advice for developers](http://www.sitepoint.com/bem-smacss-advice-from-developers/)
+
+### 13.4 Quiz: Selector Matching
+We just explained to you how complex CSS selectors add to the browser's workload. 
+
+[![bro5-6](../assets/images/bro5-6-small.jpg)](../assets/images/bro5-6.jpg)
+
+The more complex a selector is, the more browser has to move up and down the DOM tree. The more it has to move up and down the DOM tree,the longer it takes to resolve the right element.
+
+For this quiz, I want you to predict which CSS selector is fastest.
+
+[![bro5-7](../assets/images/bro5-7-small.jpg)](../assets/images/bro5-7.jpg)
+
+You've got these three options. And if you want to see them in action, [check out this link here](http://jsbin.com/gozula/1/quiet).
+
+#### 13.4 Solution
+Remember the only way you can really know which one is fastest is by measuring.So that's exactly what we do.
+
+[![bro5-8](../assets/images/bro5-8-small.jpg)](../assets/images/bro5-8.jpg)
+
+You can see the times pop up. The first one is about 3.7 milliseconds the second is 1.00, and the last is almost 3.7 milliseconds. The middle selector is the clear winner here. However, things get a little bit more interesting.
+
+Using different nightly builds the times shift somewhat. This goes to show just how important it is to measure your performance, because, as times change, so do the numbers.
+
+So, this means that, for the moment, the middle answer's the fastest. But hey, that can change some day. Make sure that you use the tools at your disposal to keep measuring.
+
+### 13.5 Quiz: Recalculate Styles
+Feeling up for a challenge? [Here's a link to this site](http://udacity.github.io/60fps/lesson5/recalcStyles/index-slow.html).
+
+[![bro5-9](../assets/images/bro5-9-small.jpg)](../assets/images/bro5-9.jpg)
+
+Pop open the timeline, hit the big red button to record. And then click the "Click Me" button. Find the big Recalculate Style block in the timeline, and then notice how it's self time is going to be way too long to hit 60 frames per second.
+
+[![bro5-10](../assets/images/bro5-10-small.jpg)](../assets/images/bro5-10.jpg)
+
+There are three things you can do in this case.
+
+1. You can either reduce the number of affected elements
+2. You can reduce the selector complexity
+3. or you can do both.
+
+- Reducing the number of affected elements 
+  - means modifying fewer nodes in the render tree.
+- Reducing selector complexity
+  - means that you are going to using fewer tags and class names to select your elements.
+
+But hey, why not try to do both, because that is a double whammy.
+
+For this quiz, I want you to make recalculate styles much more efficient. If all goes well, you should be able to get a five to ten x drop. But before you start, I'm going to give you a little bit of a hint.
+
+This sample uses a class on the body to change the style of all the boxes. And this means that it has to check the style of each and every box.
+
+```js
+// javascript
+button.addEventListener('click', function() {
+  document.body.classList.toggle('toggled');
+});
+```
+
+```css
+/* css */
+body.toggled main .box-container .box:nth-child(2n) {
+  background: #777 !important;
+}
+```
+
+You can see that happening here with this nth-child selector on class `.box`. An alternative would be to use `querySelectorAll` to grab all of the boxes on the page.
+
+Once you have them, toggle the style of every other box by iterating through this list using JavaScript.
+
+Once you're seeing a five to ten x drop, check this box to let us know you're recalculating styles much more efficiently.
+
+[![bro5-11](../assets/images/bro5-11-small.jpg)](../assets/images/bro5-11.jpg)
+
+#### 13.5 Solution
+Here's the solution that uses `querySelectorAll`.
+
+First things first. I look for every element on the page with class `.box`, using `querySelectorAll`. And then I loop through each element and attach the class `.gray` to every other one.
+
+
+```js
+// javascript
+var container = document.querySelector('.box-container');
+
+button.addEventListener('click', function() {
+  var boxes = container.querySelectorAll('.box');
+  for(var i=0; i < boxes.length; i++) {
+    if(i%2 === 1) {
+      boxes[i].classList.add('gray');
+    }
+  }
+});
+```
+
+```css
+/* css */
+.gray {
+  background: #777 !important;
+}
+```
+
+So now the selectors are pretty simple and all the iteration is happening with JavaScript.
+
+I start by recording the performance times on the old page.
+
+[![bro5-12](../assets/images/bro5-12-small.jpg)](../assets/images/bro5-12.jpg)
+
+I then do the same for the new updated page.
+
+[![bro5-13](../assets/images/bro5-13-small.jpg)](../assets/images/bro5-13.jpg)
+
+Here are the updated results.
+
+| page | re-calc time | total time |
+| --- | --- | --- |
+| old page | 41 ms | 226 ms |
+| new page | 18 ms | 175 ms |
+
+In this case, a little bit of JavaScript and a little bit less CSS went a long way.
+
+### 13.6 Layout Thrashing
+Let's take a look at [this sample site](http://jsbin.com/aqavin/2/quiet). When I change the width of the green bar and then click this button, all the paragraphs will change size.
+
+[![bro5-14](../assets/images/bro5-14-small.jpg)](../assets/images/bro5-14.jpg)
+
+Unfortunately, it takes a really long time for that to work out. To understand why, we need to look again at the pipeline and specifically the order of the tasks that it contains.
+
+The order is pretty clear.We do want JavaScript here.Then we do our style calculations and then we do any layout.
+
+[![bro5-15](../assets/images/bro5-15-small.jpg)](../assets/images/bro5-15.jpg)
+
+Maintaining this order is important. And this is the code.
+
+```js
+var paragraphs = document.querySelector('p');
+var greenBlock = document.getElementById('block');
+
+for (var p =0; p < paragraphs.length; p++) {
+  var blockWidth = greenBlock.offsetWidth;
+  paragraphs[p].style.width = blockWidth + 'px';
+}
+```
+
+First we select all the paragraphs, and then the green block. And then we step through each of the paragraphs in turn.
+
+For each paragraph, we request the green block's width,
+
+- `var blockWidth = greenBlock.offsetWidth;`
+
+and then we set the width of each paragraph to match.
+
+- `paragraphs[p].style.width = blockWidth + 'px';`
+
+Now the problem is this: to answer the question of the element's width using `offsetWidth`, the browser must first calculate it, which requires layout.
+
+But see what that does to the pipeline. It moves the layout task into JavaScript, and that puts the layout before the style calculations.
+
+[![bro5-16](../assets/images/bro5-16-small.jpg)](../assets/images/bro5-16.jpg)
+
+Now this is not a problem unless you now make a style change, which we did when we set the width of the paragraph.
+
+Look again at the code. We request the width, and then we set a style. We do layout and then we do a style calculation.
+
+
+```js
+var paragraphs = document.querySelector('p');
+var greenBlock = document.getElementById('block');
+
+for (var p =0; p < paragraphs.length; p++) {
+  var blockWidth = greenBlock.offsetWidth;          // <- Layout
+  paragraphs[p].style.width = blockWidth + 'px';    // <- Style
+}
+```
+
+Every time we change a style, the layout pass that we just did is invalidated because you changed things. So now, the browser has to do it all again, and this can be an expensive mistake to make.
+
+If you trigger a forced synchronous layout, DevTools will denote this with a little red triangle in the corner of a layout record.
+
+[![bro5-17](../assets/images/bro5-17-small.jpg)](../assets/images/bro5-17.jpg)
+
+If you see this warning, then you need to look at where it was forced in your code and remove it.
+
+### 13.7 Quiz: Forced Reflow
+You just learned that forced synchronous layout (forced reflow) occurs when you ask a browser to run layout first inside the JavaScript section, and then recalculate styles, and then run layout again.
+
+[![bro5-18](../assets/images/bro5-18-small.jpg)](../assets/images/bro5-18.jpg)
+
+There are a few different properties that when accessed will cause layout. And you can find a list of them below.
+
+With that in mind I've got three reasonable snippets of code I want you to analyze. Each includes some kind of iteration using `forEach`.
+
+Normally you cannot use `forEach` with a collection of DOM nodes which is what you get from something like `document.querySelectorAll`.
+
+But using the `forEach` callback syntax is pretty powerful. So what I do is convert the collection of DOM nodes, into an array of DOM nodes which gives you the option to use `forEach` and [other array methods](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array).
+
+#### DOM Node Collection to Array
+
+Here's the helper function that I use instead of `document.querySelectorAll`.
+
+```js
+function getDomNodeArray(selector) {
+  // get the elements as a DOM collection
+  var elemCollection = document.querySelectorAll(selector);
+
+  // coerce the DOM collection into an array
+  var elemArray = Array.prototype.slice.apply(elemCollection);
+
+  return elemArray;
+};
+
+var divs = getDomNodeArray('div');
+```
+
+Anyways, two of these three will cause a Forced Reflow. But which one cannot cause a forced synchronous layout?
+
+[![bro5-19](../assets/images/bro5-19-small.jpg)](../assets/images/bro5-19.jpg)
+
+```js
+// Snippet #1
+divs.forEach(function(elem, index, arr) {
+  if (window.scrollY < 200) {
+    elem.style.opacity = 0.5;
+  }
+})
+
+// Snippet #2
+divs.forEach(function(elem, index, arr) {
+  if (elem.offsetHeight < 500) {
+    elem.style.maxHeight = "100vh";
+  }
+})
+
+// Snippet #3
+var newWidth = container.offsetWidth;
+divs.forEach(function(elem, index, arr) {
+  elem.style.width = newWidth + "px";
+})
+```
+
+[Here's a sample site](http://udacity.github.io/60fps/lesson5/stopFSL/index.html) that uses all three as well as some other helpful hints. So open the examples site, try out these three and see if you can figure out which one is not causing the forced synchronous layout.
+
+#### 13.7 Resources
+
+- [CSS Triggers](https://csstriggers.com/) - Which CSS triggers layout, paint, & composite
+- [How (not) to trigger a layout in WebKit](https://hk.saowen.com/a/32352075fd2d028a372a112f820cae5d608e8c5496c4f1b7fbb82c8807667386)
+- [Google Developers - Avoid Layout Thrashing](https://developers.google.com/web/fundamentals/performance/rendering/avoid-large-complex-layouts-and-layout-thrashing)
+
+#### 13.7 Solution
+I'll start with a first one, which in fact does cause a forced synchronous layout.
+
+```js
+// Snippet #1
+divs.forEach(function(elem, index, arr) {
+  if (window.scrollY < 200) {
+    elem.style.opacity = 0.5;
+  }
+})
+```
+
+Take a look here at `window.scrollY`. This is one of those properties that, when accessed, will cause layout. So, you're causing layout and then you're updating styles. This is putting the browser in a bad read/write cycle between recalculate styles and layout.
+
+The second option also causes a forced synchronous layout.
+
+```js
+// Snippet #2
+divs.forEach(unction(elem, index, arr) {
+  if (elem.offsetHeight < 500) {
+    elem.style.maxHeight = "100vh";
+  }
+})
+```
+
+Once again, accessing `offsetHeight` causes the browser to run layout, and then here comes a style change. This option is definitely bad for performance.
+
+This means that the third one does not cause a forced synchronous layout.
+
+```js
+// Snippet #3
+var newWidth = container.offsetWidth;
+divs.forEach(function(elem, index, arr) {
+  elem.style.width = newWidth + "px";
+})
+```
+
+Notice our accessing `offsetWidth` is happening outside of the loop. That's a good strategy. Layout runs once and then you batch update the styles afterwards.
+
+### 13.8 Quiz: Stopping Reflow
+So, now that you know that pieces of code like this one can cause forced synchronous layout, what can you reasonably do to avoid it?
+
+```js
+divs.forEach(function(elem, index, arr) {
+  if (elem.offsetHeight < 500) {
+    elem.style.maxHeight = "100vh";
+  }
+})
+```
+
+[![bro5-20](../assets/images/bro5-20-small.jpg)](../assets/images/bro5-20.jpg)
+
+Pick one of these four answers.
+
+#### 13.8 Solution
+First of all, answer #1 & #4 are definitely wrong. It's totally reasonable to read and modify layout properties and styles with JavaScript. In fact, that's why the language exists.So don't be afraid of it,even though for synchronous layouts sometimes happen.
+
+So I want to take a look the other two answers individually.
+
+> - [ ] In loops, you should always change your styles first and then read layout properties.
+
+Now this answer sounds somewhat reasonable because you're changing the styles first and then hitting the layout properties. The problem here is this keyword, "loops".
+
+[![bro5-21](../assets/images/bro5-21-small.jpg)](../assets/images/bro5-21.jpg)
+
+Once you change the styles, you have to run layout. Okay, so if that happens once that's not a big deal. But if before the end of the frame you have to recalculate styles and then run layout again, you're putting the browser in a situation where it's redoing a lot of work and ultimately creating a forced synchronous layout. So this answer is not correct.
+
+So by the process of elimination, this answer's right.
+
+> - [x] Read layout properties then batch style changes.
+
+Reading the layout properties first in the JavaScript phase means that you'll be using the layout from the previous frame. Then if you do all of your style changes afterwards, right here in the pipeline, the rest of it looks like normal.
+
+[![bro5-22](../assets/images/bro5-22-small.jpg)](../assets/images/bro5-22.jpg)
+
+The keyword here is batch. And then all of the style changes will be batched up to happen after JavaScript. This means that recalculate style will happen at the end of the frame and in the right place for the pipeline.
+
+So then, what does this strategy look like with the example you just saw?
+
+This is the old janky code.
+
+```js
+divs.forEach(function(elem, index, arr) {
+  if (elem.offsetHeight < 500) {
+    elem.style.maxHeight = "100vh";
+  }
+})
+```
+
+This is the 60 frames per second silky smooth code.
+
+```js
+if (elem.offsetHeight < 500) {
+  divs.forEach(function(elem, index, arr) {
+    elem.style.maxHeight = "100vh";
+  }
+})
+```
+
+Notice that this frame only reads a layout property once at the beginning and then batch changes all of the styles afterwards. This is a pretty simple fix that will give you a big performance win.
+
+### 13.9 Causes of Forced Reflow
+In the last examples, I showed you that `offsetWidth` triggered the forced synchronous layout when interleaved with style changes. There are [other properties that will cause similar issues](https://hk.saowen.com/a/32352075fd2d028a372a112f820cae5d608e8c5496c4f1b7fbb82c8807667386) when called at the wrong time.
+
+Essentially it's any property for which a browser must run layout. So anything to do with geometric information like positions and dimensions, that can cause a forced synchronous layout to happen.
+
+And here's something else about this example.
+
+```js
+var paragraphs = document.querySelector('p');
+var greenBlock = document.getElementById('block');
+
+for (var p =0; p < paragraphs.length; p++) {
+  var blockWidth = greenBlock.offsetWidth;          // <- Layout
+  paragraphs[p].style.width = blockWidth + 'px';    // <- Style
+}
+```
+
+Every single paragraph causes layout and then recalc style. This puts the browser into a cycle where you read and write a lot of values and we call this layout thrashing.
+
+It's where you do a forced synchronous layout, many times in quick succession. And you would not believe how many times I see this one out in the wild. For instance, [check out this](https://github.com/udacity/pizza-perf).
+
+Let's record. Change this slider. And then stop.
+
+[![bro5-23](../assets/images/bro5-23-small.jpg)](../assets/images/bro5-23.jpg)
+
+Let's look in here. Pick any one of these, and we'll zoom in a little bit more, And there we go. A forced synchronous layout there.
+
+[![bro5-24](../assets/images/bro5-24-small.jpg)](../assets/images/bro5-24.jpg)
+
+You can start to see here, all the individual forced synchronous layouts. Each one of these is going to make us run really slowly.
+
+### 13.10 Quiz: Stop Forced Reflow
+If you took website performance optimization, then this website may look a little familiar. Inside the project for the course, there's this pizza site that has a lot of problems. And I think it's fair to say that one of the problems with this website is that it will probably burn your eyes out, if you spend too much time looking at it.
+
+When you scroll down to this our pizza section on the left side of the screen,you'll notice this slider. When you toggle the sliders, the pizzas change size.
+
+Now it doesn't look so bad when you toggle back and forth between the different sizes, but I want to take a look at its performance.
+
+[![bro5-25](../assets/images/bro5-25-small.jpg)](../assets/images/bro5-25.jpg)
+
+You'll notice two things when you open up the console. The first is the average time to generate the last ten frames, which in this case is way too low for a site that's a simple as this one. The second thing you'll notice is the amount of time it took to resize the pizzas.
+
+This number will be logged out anytime somebody clicks on the slider. Right now, it's displaying times at around 100 milliseconds. A good question to ask is is 100 milliseconds reasonable for this?
+
+In fact, this resize time falls under the response category of RAILs. And that's because this is happening as a response to a user action, which includes clicking on the slider.
+
+[![bro2-10](../assets/images/bro2-10-small.jpg)](../assets/images/bro2-10.jpg)
+
+Resizing the pizzas falls under the response category of RAIL, which as you remember is 100 milliseconds. In that case, this app is actually meeting the budget for response. However, just given how simple this site is. There is no reason the resize pizza action should be taking 100 milliseconds.
+
+Were this happening in the Animation or Idle phases, this would totally be blowing the frame budget.
+
+I record a timeline to see if I can find out a little bit more about what's happening with the slider.
+
+[![bro5-23](../assets/images/bro5-23-small.jpg)](../assets/images/bro5-23.jpg)
+
+This purple and red is a really bad sign. Let me expand this  to take a closer look. It looks like the slider is calling a function and then the function is causing a ton of layouts one after another.
+
+That is a major issue. I'll click on one to get a little bit more information and in the details pane, I see that there's a warning that says, "Forced reflow is a likely performance bottleneck".
+
+[![bro5-24](../assets/images/bro5-24-small.jpg)](../assets/images/bro5-24.jpg)
+
+That is a problem. So for this quiz, it's going to be your job to download the pizza site, find the cause of the sliders for synchronous layout and then fix it.
+
+### 13.10 Solution
+I'm going to show you how to fix one example of a Forced Reflow this page. You can see that when the slider changes a few different functions get called. 
+
+[![bro5-27](../assets/images/bro5-27-small.jpg)](../assets/images/bro5-27.jpg)
+
+When the change event happens, `resizePizzas` gets called, then `resizePizzas` calls `changePizzaSizes`. And here's where I think the problem might be coming in.It looks like some function called `determineDx` is running over and over.
+
+I think this is a good point to take a look at the code. I gopast the `resizePizzas` function, which gets called when the slider gets activatedand drill down into the `changePizzaSizes` function.
+
+```js
+// Iterates through pizza elements on the page and changes their widths
+function changePizzaSizes(size) {
+  for (var i = 0; i < document.querySelectorAll(".randomPizzaContainer").length; i++) {
+    var dx = determineDx(document.querySelectorAll(".randomPizzaContainer")[i], size);
+    var newwidth = (document.querySelectorAll(".randomPizzaContainer")[i].offsetWidth + dx) + 'px';
+    document.querySelectorAll(".randomPizzaContainer")[i].style.width = newwidth;
+  }
+}
+
+function determineDx (elem, size) {
+  var oldwidth = elem.offsetWidth;
+  var windowwidth = document.querySelector("#randomPizzas").offsetWidth;
+  var oldsize = oldwidth / windowwidth;
+
+  // Changes the slider value to a percent width
+  function sizeSwitcher (size) {
+    switch(size) {
+      case "1":
+        return 0.25;
+      case "2":
+        return 0.3333;
+      case "3":
+        return 0.5;
+      default:
+        console.log("bug in sizeSwitcher");
+    }
+  }
+
+  var newsize = sizeSwitcher(size);
+  var dx = (newsize - oldsize) * windowwidth;
+
+  return dx;
+}
+```
+
+Now this piece of code may look okay on the surface, but it is absolutely insane. And it's insane in that it is doing way too much.
+
+First off there's the very obvious problem that this function doesn't pass the do not repeat yourself test. Look `document.querySelectorAll(".randomPizzaContainer")` is in here three times.
+
+So first is I save this collection to the variable `randomPizzas`. Now I can use `randomPizzas` in my for loop without querying the dom every time.
+
+Now take a look at this for loop. It access is a geometric property of the elements, in this case `offsetWidth` and then changes their styles. So this is clearly the source of the forced reflow.
+
+So then there's this function, `determineDX`. Suffice it to say this function is remarkably useless. It's complicated, it creates a lot of work, and it has no business being inside this for loop.
+
+In the end I just combine it into our `changePizzaSizes` 
+
+```js
+// Iterates through pizza elements on the page and changes their widths
+function changePizzaSizes(size) {
+  var newWidth;
+  switch(size) {
+    case "1":
+      newWidth = 25;
+      break;
+    case "2":
+      newWidth = 33.3;
+      break;
+    case "3":
+      newWidth = 50;
+      break;
+    default:
+      console.log("bug in sizeSwitcher");
+  }
+
+  var randomPizzas = document.querySelectorAll(".randomPizzaContainer");
+
+  for (var i = 0; i < randomPizzas.length; i++) {
+    randomPizzas[i].style.width = newWidth + '%';
+  }
+}
+```
+
+In this version all `changePizzaSizes` does is simply figure out which width it wants and then sets the width for every element to that percentage. There is no more query selecting inside the for loop and there's no more conversion back and forth between pixels and percentages.
+
+This is a lot simpler but the ultimate test for this code is whether or not it produces forced reflows.
+
+Here's the new and improved version and first off let me just see if it's giving me better numbers.
+
+[![bro5-28](../assets/images/bro5-28-small.jpg)](../assets/images/bro5-28.jpg)
+
+And look at that time to `resizePizzas` in under two millisecond vs. 160 milliseconds. This is clearly much more performant. Also no more ugly red triangle saying that there is a Forced reflow. This timeline is much cleaner.
+
+### 13.11 Lesson Outro
+Earlier, we discussed how you don't always touch every part of the rendering pipeline. In fact, the workload depends very heavily on exactly which properties you change.
+
+Often people ask me whether they should animate styles with JavaScript or CSS. Which one is faster? And honestly, it rarely matters. Most of the time the speed is the same. The reason is that changing, say, `width` incurs the cost of layout no matter how you do it. That's true whether you did it in JavaScript or CSS.
+
+If you change `width`, `height`, `top`, `left`, you're going to trigger layout. If you trigger layout, you're going to trigger paint. Or maybe you just change `box-shadow` on an element. That's not going to trigger layout but it will trigger paint, and paint is super expensive, especially on a mobile device and you can't trigger layout without triggering paint.
+
+You need to be careful about what styles you change and when. In the app life cycle, which if you recall was RAIL, Response, Animation, Idle, and Load.
+
+You can afford to do these expensive style changes in the Load, Idle, and Response times but not during Animations.
+
+During animations you'll want to avoid layout and paint if at all possible. Just because they're normally too expensive to fit into the short time you have available.
+
+Now if you can't do that, you're going to have to find a way of limiting your effects. Let's get on to the next lesson, where we'll discuss just that.
