@@ -2041,3 +2041,465 @@ You can afford to do these expensive style changes in the Load, Idle, and Respon
 During animations you'll want to avoid layout and paint if at all possible. Just because they're normally too expensive to fit into the short time you have available.
 
 Now if you can't do that, you're going to have to find a way of limiting your effects. Let's get on to the next lesson, where we'll discuss just that.
+
+## 14. Compositing & Painting
+### 14.1 Lesson Intro
+As you learned back in the first lesson and as you rediscovered in the last lesson, not all style changes are equal.
+
+- Some will trigger layout, paint and composite.
+- Some will trigger paint and composite.
+- And some will just trigger composite.
+
+In this lesson you'll learn how to optimize the last two stages of the pipeline. Painting and compositing.
+
+If you want a full break down of how styles affect the rendering pipeline, check out Paul's awesome website, [csstriggers.com](http://csstriggers.com/). So when you're wondering if the thing that you want to animate is going to trigger a layout, paint, or composite, check out [csstriggers.com](http://csstriggers.com/) because it's got you covered. 
+
+All right, let's see what we've got in our tool kit for getting our heads around painting. Paint is normally one of the fastest ways to kill your frames per second. And let's face it, that's exactly what we're trying to avoid here.
+
+### 14.2 Quiz: Paint Rectangles
+Take a look at [this parallax demo site](http://www.html5rocks.com/static/demos/parallax/demo-1a/demo.html). When you scroll up and down it looks okay but it actually could be a lot better.
+
+[![bro6-1](../assets/images/bro6-1-small.jpg)](../assets/images/bro6-1.jpg)
+
+There's quite a bit of painting happening here. Paint problems can be way worse than virtually any other performance bottleneck you're likely to hit.
+
+So I'm going to open dev tools to turn on Paint Flashing. Once you're in dev tools click the menu (three dots) -> More tools -> Rendering. Rendering has some especially cool options which are going to be really useful and you'll be exploring in this quiz and the next couple.
+
+For this quiz you're going to check Paint flashing. If you're ever worried about painting, this is your go-to move to check out what's happening. It'll show you when and where painting is happening on the page.
+
+[![bro6-2](../assets/images/bro6-2-small.jpg)](../assets/images/bro6-2.jpg)
+
+You're going to be looking at this site for the quiz, so I'm going to show you an example using my Twitter page.
+
+When I scroll up and down, you can see that the scroll bar is showing up in green, and that means it's being repainted. This video here is totally in green and that's because every frame has to be painted.
+
+[![bro6-3](../assets/images/bro6-3-small.jpg)](../assets/images/bro6-3.jpg)
+
+Look for the green flashes and you'll see where painting is happening. So for this quiz, I want you to go back to the [parallax site](https://www.html5rocks.com/static/demos/parallax/demo-1a/demo.html) and click on Paint flashing.
+
+Scroll around a bit, and try to figure out, where is the painting happening? 
+
+[![bro6-4](../assets/images/bro6-4-small.jpg)](../assets/images/bro6-4.jpg)
+
+Pick one of these answers.
+
+#### 14.2 Solution
+So I've got Show paint rectangles checked, and I will scroll. And it looks like the entire page is flashing green. So the correct answer is, **the entire page is being painted**.
+
+So what's going on here? What's being painted and why is it being painted? Let's find out.
+
+### 14.3 Quiz: Paint Profiler
+So if you hit an unexpected paint like you just saw, you've got another tool at your disposal, and it is called the Paint Profiler (Advanced paint instrumentation).
+
+You can find it in the Performance tab.
+
+[![bro6-5](../assets/images/bro6-5-small.jpg)](../assets/images/bro6-5.jpg)
+
+The Paint Profiler makes it really easy to identify what areas of the page are being painted and when they're being painted.
+
+For this quiz, go back to the scene you were on and turn on the Paint Profiler. Hit the record button, and scroll up and down.You should see a bunch of long-running paint records. Click on one of the paints, and then check out what you find.
+
+[![bro6-6](../assets/images/bro6-6-small.jpg)](../assets/images/bro6-6.jpg)
+
+#### 14.3 Solution
+I've clicked on one of the paint records, and now I've got the Paint Profiler. Inside the Paint Profiler there are a few things to pay attention to.
+
+[![bro6-7](../assets/images/bro6-7-small.jpg)](../assets/images/bro6-7.jpg)
+
+1. There is a whole new timeline here.
+2. There is a list of paint commands.
+3. There is the part of the page that was painted.
+
+Notice that, right now, this timeline is the entire paint command, and you see that it's the entire page that got painted. But if you limit the timeline to just a small part, you'll see what was painted then.
+
+This is a fantastic tool to see exactly what the browser is painting at different points .Here I've gone to the beginning of the paint, and you can see where a few lines and circles is being painted.
+
+[![bro6-8](../assets/images/bro6-8-small.jpg)](../assets/images/bro6-8.jpg)
+
+Here on the side you can see the `drawTextBlob` commands. Going back to the whole timeline for the paint,you can see the first one is save, and that is the answer to this question.
+
+I want to point out one last thing, and that is that all of these paint commands, these green bars here, are really close to the 60 fps line.
+
+[![bro6-9](../assets/images/bro6-9-small.jpg)](../assets/images/bro6-9.jpg)
+
+So right now it's running at 60 fps, but it's extremely close to the budget, and if there are any other work going on, chances are you won't be hitting 60 frames per second.
+
+So let's see what you can do about it. But first, the correct answer is `save()`.
+
+### 14.4 Compositing
+Okay, let's talk about compositing a little bit more. Now I've got a page here, and what I want to do is bring out a side nav.
+
+[![bro6-10](../assets/images/bro6-10-small.jpg)](../assets/images/bro6-10.jpg)
+
+So what I normally do is I have one layer in memory, and I just redrawthe pixels for the side nav, and I do that for every frame of animation. So in the end we have one layer here with the side nav drawn and the page content behind it.
+
+[![bro6-11](../assets/images/bro6-11-small.jpg)](../assets/images/bro6-11.jpg)
+
+Now, the problem with that is that on every frame, I've been painting.
+
+Instead, what we can do is a better version of this, where we have one layer with the page content in, another layer with the side nav in.
+
+[![bro6-12](../assets/images/bro6-12-small.jpg)](../assets/images/bro6-12.jpg)
+
+All we then need to do is slide the side nav over the top of the page, and we get the same effect, but without painting.
+
+### 14.5 Quiz: Conceptual Question
+Layers are a common concept in image manipulation software. For instance, at Udacity we use a piece of software called SketchBook Pro to make drawings like the ones you see here.
+
+[![bro6-13](../assets/images/bro6-13-small.jpg)](../assets/images/bro6-13.jpg)
+
+And we use layers to make it easy to separate and edit different parts of our drawings. Here let me show you. These are the menu options I get when I'm using SketchBook. And this one here gives me control over the layers.
+
+[![bro6-14](../assets/images/bro6-14-small.jpg)](../assets/images/bro6-14.jpg)
+
+For instance, I can hide the background. I can hide the sidebar for the stories. I can select this story, and I can move it around the page without affecting any of the other layers which is pretty cool.
+
+Being able to control separate parts of this image individually makes it much easier to put together something complex. Photoshop uses layers too, as does pretty much every other piece of visual media creation software.
+
+Our video production team, for example, uses Adobe Premier to composite all the videos that you watch on Udacity. In fact, these tablet style videos have two main layers. We create one layer by doing a screen recording on the tablet. And then we create a second layer with a camera above the tablet pointed down at our hands. When the two are composited it together, we put the tablet on top of the hand so that no matter where the hand is on the screen, you can always read the text. Pretty cool.
+
+For this quiz, I want you to think about the layers of this mobile app. The menu, which is currently shown on the side of the page, will slide in when somebody clicks on the hamburger icon. The nav bar at the top is going to be stuck at the top, so if the user scrolls up and down, it's not going to move. And then the stories can obviously slide up and and down.
+
+[![bro6-15](../assets/images/bro6-15-small.jpg)](../assets/images/bro6-15.jpg)
+
+So, knowing what you know about how elements that stick and move together should be in the same layer, how would you organize the layers in this app? For elements that you want to be on the same layer, give them the same number. And then one last hint, there should be a total of three layers when you composite this page.
+
+#### 14.5 Solution
+I'll start on the left with world in the entire hamburger icon menu. I've put these two on the same layer because they'll be sticking together as it slides into the page.
+
+[![bro6-16](../assets/images/bro6-16-small.jpg)](../assets/images/bro6-16.jpg)
+
+Next up the top nav is static and doesn't move with anything soit should be its own layer.And lastly I've put all the articles on the same layer.Which makes sense because they stick together as a user scrolls up and down.
+
+### 14.6 Composite Layers
+In Chrome Dev Tools, there are two records that you might see relating to layers or composite to layers.
+
+[![bro6-17](../assets/images/bro6-17-small.jpg)](../assets/images/bro6-17.jpg)
+
+The first one is **Update Layer Tree**, which happens when Chrome's internal engine, called Blink, figures out what layers are needed for the page. It looks at the styles of the elements and tries to figure out what order everything should be in and how many layers it needs.
+
+**Composite Layers** is the other record where the browser is now putting the page together to send to the screen. The more layers you have, the more time will be spent in layer management and compositing.
+
+So there's a tradeoff between reducing paint time, and increasing layer management time.
+
+### 14.7 Managing Layers
+So you might think that layers are a totally automated process, and that's mostly true. Generally speaking, you should let the browser manage layers because it knows what it's doing.
+
+But if you're hitting a paint issue, then you might want to think about promoting an element to its own layer. You may be wondering, how do I create a layer? Well, before I get to that, you should see if an element already has its own layer.
+
+### 14.8 Managing Layers 2
+So back in dev tools one of the things you can do is bring up the Rendering tool by clicking the menu (three vertical dots) -> More tools -> Rendering.
+
+[![bro6-2](../assets/images/bro6-2-small.jpg)](../assets/images/bro6-2.jpg)
+
+What I'm going to do is switch on Layer borders (Show Composited Layer Borders). When it's switched on, the page will show you a grid.
+
+[![bro6-18](../assets/images/bro6-18-small.jpg)](../assets/images/bro6-18.jpg)
+
+These light blue lines represent the tiles that each layer is split into. But as developers, there's nothing we can do about that. It's just how the browser chose to split up the layer.
+
+But the interesting ones are these orange boxes here, which you can see around the circles and heading. These orange boxes are elements that are on their own composited layer.
+
+[![bro6-19](../assets/images/bro6-19-small.jpg)](../assets/images/bro6-19.jpg)
+
+So how, then, do we make one of these layers? Seems like it might be pretty useful. Well, there are ways that virtually every browser uses and some are hackier than others.
+
+Let's start with a newer, not hacky way.
+
+[![bro6-20](../assets/images/bro6-20-small.jpg)](../assets/images/bro6-20.jpg)
+
+In Chrome and Firefox you can use the `will-change` CSS property to tell the browser to expect visual changes. It can then choose to put the element on a new compositor layer. In this case we have, `will-change: transform`, and that tells the browser that we intend to change the elements transform at some point. And so to prepare for that, it creates a new layer.
+
+Instead of `transform`, you could also put `left`, `top`, `width`, or `height`,or any visual property. But even if the browser's expecting those changes, it would still have to run layouts and paint for them. So the forewarning that you plan to change them won't actually yield much improvement.
+
+The benefit of `will-change: transform` comes because creating new layers can be expensive since they need to be created and then painted. And doing that on the fly can be expensive. For older browsers, and Safari,you'll need to use something like a 3D transform.
+
+```css
+.circle {
+  transform: translateZ(0);
+}
+```
+
+In fact, a transform of `translateZ(0)` is the most common form of this hack. It's called the no transform hack by most people. And it applies a 3D transform, pushing the element in Z space by absolutely nothing.
+
+It's enough though to persuade the browser to create a layer. In a production environment, you'll probably need both `transform: translateZ(0)`, and `will-change: transform`.
+
+[![bro6-21](../assets/images/bro6-21-small.jpg)](../assets/images/bro6-21.jpg)
+
+You shouldn't use hacks unnecessarily. But today, not all browsers support `will-change`, so you may well need to. The null transform hack forces the browsers hand. But `will-change` is a hint that the browser can ignore, and that gives the browser more options.
+
+It's better to let the browser decide what to do where you can. With `will-change` of giving it the hint, but letting it decide what to do with it.
+
+### 14.9 Quiz: Will-Change
+Remember [this crazy site](http://udacity.github.io/60fps/lesson6/willChange/index.html)?
+
+[![bro6-22](../assets/images/bro6-22-small.jpg)](../assets/images/bro6-22.jpg)
+
+For this quiz, you're going to be improving its performance a little bit.
+
+I've hit the Animate button to start the spiral. In dev tools, I've hit the Paint flashing (Show paint rectangles) checkbox and you can see that the entire page is flashing green for every frame.
+
+[![bro6-23](../assets/images/bro6-23-small.jpg)](../assets/images/bro6-23.jpg)
+
+What you're seeing here is really inefficient, so for this quiz promote the box class elements using `will-change: transform` so that they get isolated to their own layers.
+
+You could also hit the transform button back on the site, which uses a 3D transform.
+
+And once you've used will-change transform to let the browser know that the box elements are going to be changing, you'll see a code appear on the screen.
+
+[![bro6-26](../assets/images/bro6-26-small.jpg)](../assets/images/bro6-26.jpg)
+
+Type that code into this box to continue.
+
+#### 14.9 Solution
+Here is a recording of the animation without `will-change: transform` css property set. It has a performance of about 10 frames per second.
+
+[![bro6-24](../assets/images/bro6-24-small.jpg)](../assets/images/bro6-24.jpg)
+
+Now, inside the box class I've added the CSS property `will-change: transform` and immediately there is a huge performance boost. 
+
+[![bro6-25](../assets/images/bro6-25-small.jpg)](../assets/images/bro6-25.jpg)
+
+That looks pretty close to 60 frames per second.
+
+Promoting elements to layers can be super awesome for avoiding paint problems. Especially those related to movement or opacity changes.
+
+If you change a visual property though, like say for instance, text color or shadows, promoting an element won't help in any way, because you'll still have to paint it. So make sure you're only using layer promotion when it makes sense.
+
+### 14.10 Compositing Budget
+So you should promote everything, right? No. Like I said earlier, layer management and compositing are not free and so this is a balancing act.
+
+There's no magic number of layers that you should aim for but you are shooting for no more than two milliseconds in update layer tree and two milliseconds in compositing, for 60 frames a second critical work like animations.
+
+Of course, if you're still going over that by hitting 60 frames per second, that's not bad.The key is knowing about the tradeoffs and then finding the right numbers for your own project.
+
+### 14.11 Quiz: Layer Counting
+Did you know that you can find out how many layers you've got in a website?
+
+Of course for this, it's once again time to head over into Chrome dev tools. I'm looking at the parallax demo and I've already added `will-changed: transform` to all the blobs. I've also "Enabled advanced paint instrumentation" in the Performance panel.
+
+I've opened DevTools in a separate window to get a little bit more space. Notice how each frame has a green bar or box in the frames layer. You now have the ability to see all the layers on the screen.
+
+[![bro6-27](../assets/images/bro6-27-small.jpg)](../assets/images/bro6-27.jpg)
+
+At the top, you've got a few looking around and rotating tools. For instance, I can now rotate the page to get a 3D view of all the layers.
+
+#### 14.11 Layers tool
+The Layers tool has gotten it's own menu item outside of the Performance panel with additional information. This is where you go in order to see the Compositing Reasons and get better naming in the layer tree.
+
+You open the Layers tool by clicking the menu (three vertical dots) -> More tools -> Layers.
+
+[![bro6-28](../assets/images/bro6-28-small.jpg)](../assets/images/bro6-28.jpg)
+
+Now in the layers menu you can expand everything under `#document` in order to view all layers.
+
+You also have some looking around and rotating tools which let you move and rotate to get a 3D view.
+
+[![bro6-29](../assets/images/bro6-29-small.jpg)](../assets/images/bro6-29.jpg)
+
+Here's the same layer view after I hit the Animate button. This shows each layer in it's own z plane.
+
+[![bro6-30](../assets/images/bro6-30-small.jpg)](../assets/images/bro6-30.jpg)
+
+Now it's your turn to try counting layers. Head [to this site](http://jsbin.com/ruhahu/1/quiet)
+
+Open Up the Layer tool and answer the following questions.
+
+1. how many layers are there (besides `#document`)
+2. Why was #totes-promoted promoted?
+- [ ] will-change
+- [ ] overlap w/ composited content
+- [ ] 3D transform
+- [ ] accelerated canvas
+- [ ] animates a transform
+
+#### 14.11 Solution
+[![bro6-31](../assets/images/bro6-31-small.jpg)](../assets/images/bro6-31.jpg)
+
+I'll click on tote's promoted and I can see that this layer was composited, because it overlaps with other composited content. In this case the other content is the color block section behind it.
+
+Looking in the layers panel, you can see that underneath the root document there are two layers on the page. Looking at the source for the page you can see that the color block element has a translateZ transform applied to it.
+
+```css
+#color-block {
+  transform: translateZ(0);
+}
+```
+
+This means it's promoted to its own layer. In order to maintain the draw order, the section in the text with it must also now have its own layer and be placed on top of the color block.
+
+If you promote an element to a layer, you need to be careful because you could accidentally create a lot of other layers with it due to overlap. So anyways, there you have it.
+
+The main thing is to try to balance the compositing time in layer management with time that you spend in other parts of the pipeline. Applying `will-change: transform` or `translateZ(0)` to all of your elements might seem appealing, but it's going to send your memory usage and compositing time through the roof.
+
+In the end, you might cause more problems than you solve which is especially a problem on mobile.
+
+### 14.12 Quiz: Paint & Composite
+So I've opened up the Parallax demo from before. And I've got DevTools open. I'll click on show paint rectangles and now I will scroll. And you can see that the entire page is lighting up in green.Which means that there is a lot of painting happening. There must be a problem with this demo.
+
+To understand why there's a lot of painting happening, I've opened up the source code for for the Parallaxing site CSS. You can see that there are a lot of elements that have `will-change: transform` applied to them, but it must not be everything. Something Parallaxing has not been promoted using will-change transform.
+
+So for this quiz I want you to find the element that should have been promoted with will-change. Use DevTools to fix it and then to finish this quiz simply type its ID into this box right here.
+
+[![bro6-32](../assets/images/bro6-32-small.jpg)](../assets/images/bro6-32.jpg)
+
+### 14.13 Make Some Quizzes
+In a few moments, you are going to be introduced to the requirements for the final project of the course. But, before I get to that, I want to talk about quizzes. You've probably noticed that we like to put a lot of quizzes in our courses because that's just how people learn. You're taking this course because you want to make your apps faster. So it makes sense for us to give you a lot of sites to analyze and dejankify as you go through the course.
+
+But of course, not every quiz involves you debugging apps. We also like to pepper in quizzes that we hope will give you a better conceptual understanding of what you're trying to accomplish.
+
+### 14.14 Quiz: Final Project
+You are looking at the final project. Congratulations on making it this far. You're going to need [a copy of this project](http://github.com/udacity/news-aggregator) on your local machine.
+
+[![bro6-33](../assets/images/bro6-33-small.jpg)](../assets/images/bro6-33.jpg)
+
+In this app, Paul has created a performance nightmare. This news aggregator uses the Hacker News API to pull up the current top stories. It's pretty cool, but watch the frame rate right here as I scroll. That definitely didn't look good. Now watch what happens when stories slide in and out. See how it drops? And just try using this app on mobile. It is totally unusable. There's going to be a lot to improve.
+
+[Here's a link to a list of hints](https://github.com/udacity/news-aggregator/blob/gh-pages/hints/hints.md) for major areas that definitely need fixing. But if you want a real performance challenge, don't look. Take some measurements and see what you can find out on your own.Try it yourself first, and then use the hints as a fallback.
+
+In the solution video, you'll see me go over a few of the high level problems that this app faces. And I'll also show you how I fixed those. Keep in mind though, that my solution is just one of many. It is extremely likely that your code will look very, very different than mine. I'll also post a link to my code, which you'll be able to peruse and compare to your own. And for the completionists among you, I will also be posting a list of[ all the known bugs](https://github.com/udacity/news-aggregator/blob/gh-pages/hints/all-bugs.md) in the project.
+
+If you've made it this far, you've got all of the tools that you need to make this app run at 60 frames per second. So what are you waiting for? Download the app, start measuring and start improving! When you are hitting 60 frames per second, post a link to the live version of your Performant app in the forums so that we can see what improvements you've made. Good luck everybody!
+
+#### 14.14 Solution
+So here are a few of the high level problems that I fixed. Even without opening DevTools, it's pretty obvious that this slide in and slide out motion is a little janky. You'll also notice that scrolling is janky. As these are the two major interactions that users will have with this app, I'll show you how I fix them.
+
+First off, I'm going to tackle the janky scrolling. So what's going on here? As I scroll down and then back up, you can see that the little indicators indicating how many points each story has not only changed size, but also changed color.
+
+I want to see what that looks like in DevTools. I will start a recording, scroll a little bit, and then stop recording. In the timeline, it's pretty obvious that I'm not hitting 60 frames per second because here's the 30 frames per second line. I'll zoom into one of these frames.
+
+[![bro6-34](../assets/images/bro6-34-small.jpg)](../assets/images/bro6-34.jpg)
+
+You can see that after the scroll event a function was called. And then you've got a lot of layouts with a lot of red triangles. That is an excellent sign that a forced synchronous layout is happening. Sure enough, there is the warning that forced synchronous layout is happening,and it looks like it is happening inside the function called `colorizedAndScaleStories`.
+
+I jump into the source code and see what this function's doing. In the source code, I'm now looking at `colorizedAndScaleStories`. And from the comments, it seems like this is probably a source of jank. So, thank you Paul for leaving these behind. Take a look at this part of the function, notice that a lot of properties that cause the browser to run layout are being accessed.
+
+```js
+/**
+ * Does this really add anything? Can we do this kind
+ * of work in a cheaper way?
+ */
+function colorizeAndScaleStories() {
+
+  var storyElements = document.querySelectorAll('.story');
+
+  // It does seem awfully broad to change all the
+  // colors every time!
+  for (var s = 0; s < storyElements.length; s++) {
+
+    var story = storyElements[s];
+    var score = story.querySelector('.story__score');
+    var title = story.querySelector('.story__title');
+
+    // Base the scale on the y position of the score.
+    var height = main.offsetHeight;
+    var mainPosition = main.getBoundingClientRect();
+    var scoreLocation = score.getBoundingClientRect().top -
+        document.body.getBoundingClientRect().top;
+    var scale = Math.min(1, 1 - (0.05 * ((scoreLocation - 170) / height)));
+    var opacity = Math.min(1, 1 - (0.5 * ((scoreLocation - 170) / height)));
+
+    score.style.width = (scale * 40) + 'px';
+    score.style.height = (scale * 40) + 'px';
+    score.style.lineHeight = (scale * 40) + 'px';
+
+    // Now figure out how wide it is and use that to saturate it.
+    scoreLocation = score.getBoundingClientRect();
+    var saturation = (100 * ((scoreLocation.width - 38) / 2));
+
+    score.style.backgroundColor = 'hsl(42, ' + saturation + '%, 50%)';
+    title.style.opacity = opacity;
+  }
+}
+```
+
+Then at the bottom of the function, recalculate styles has to happen because there's a new style applied. These two combined are causing the force synchronous layout. And it's a huge problem for performance. Now this begs the very interesting question is this code even worth fixing? The effect is, well, pretty much negligible.
+
+Having story points that are different sizes and different colors doesn't really add anything to the app as a whole. For instance, are the one's higher up more important than the one's lower down? I don't really think so. Ideally, this is the kind of effect you couldn't possibly achieve with CSS properties like scale and transform instead of using JavaScript. But I, to be perfectly honest, think it is totally unnecessary.So, I'm just going to drop it all together.
+
+Here's the result. I got rid of all the calls to colorize and scale stories, and you'll notice that now all of the points here look the same. But more importantly, what effect does this have on performance? Let me show you.I'll hit record and then start scrolling. Now look at that! This is much nicer. I see the scroll event and there is only one recalculated style afterwards. No big deal, this is much more performant.
+
+[![bro6-35](../assets/images/bro6-35-small.jpg)](../assets/images/bro6-35.jpg)
+
+Next up, there are a few other scrolling bugs. I'm looking at `loadStoryBatch`. It does visible work to the page where it appends a new story to the page as it's loaded. But it's not inside a request animation frame. **Ideally, anything that is making a visible change to the page, should be happening inside a request animation frame.**
+
+```js
+function loadStoryBatch() {
+  if (storyLoadCount > 0)
+    return;
+
+  storyLoadCount = count;
+
+  var end = storyStart + count;
+  for (var i = storyStart; i < end; i++) {
+    if (i >= stories.length)
+      return;
+
+    var key = String(stories[i]);
+    var story = document.createElement('div');
+    story.setAttribute('id', 's-' + key);
+    story.classList.add('story');
+    story.innerHTML = storyTemplate({
+      title: '...',
+      score: '-',
+      by: '...',
+      time: 0
+    });
+    main.appendChild(story);
+
+    APP.Data.getStoryById(stories[i], onStoryData.bind(this, key));
+  }
+
+  storyStart += count;
+}
+```
+
+So, I've gone ahead and added `requestAnimationFrame` to the call for `loadStoryBatch`, and that'll be a nice little performance boost.
+
+```js
+if (main.scrollTop > loadThreshold)
+      requestAnimationFrame(loadStoryBatch());
+```
+
+Now, I will take on the stories that slide in, and then slide out. You'll notice that the frame rate actually doesn't look awful on this computer. But on my phone, it's pretty much unusable. And actually, on my laptop, these bars looked a lot worse. So, it's worth tackling.
+
+It looks like the slide in, slide out motion is firing a timer, which doesn't quite look right. And you'll also notice that there's a force synchronous layout down here. All in all, it's worth investigating what's going on here. Looks like line 180 in app.js is being called. So, I'll click on that. And I can see that a function called `animate` is happening. I'll take a deeper look inside the source code. I'm inside `animate` now and first thing I notice is that there's a set timeout. Just like before, this is visible work that's happening outside a request animation frame. So that's an obvious fix. But then the real question is,should this work even be happening with JavaScript? It's a simple transition that could just as easily be handled with CSS. Using some nice transforms and `will-change`s, it shouldn't be too difficult for the browser.
+
+And take a look at this.Inside onStoryClick, a new storyDetails, which is a thing that slides in gets appended to the body every time somebody clicks on a story. Given the fact that only one story will ever be shown at a time, this is incredibly wasteful. After a few clicks, the DOM is going to be filled with a bunch of abandoned nodes that are doing nothing but taking up memory. So, I wound up refactoring `onStoryClick` to simply change the innerHTML of the story details page instead of creating a brand new one for every story. That'll prevent performance from dropping in the long run, but it doesn't speed up the slide in, slide out motion. So, I want to take a closer look at what's happening there.
+
+I'll start with DevTools. I'll turn on the JavaScript profiler. Start recording. And then slide in. And then slide back out. Just like I saw before, `onStoryClick` is causing a forced synchronous layout. So I want to figure out a different way to create the slide in and slide out effect.
+
+[![bro6-36](../assets/images/bro6-36-small.jpg)](../assets/images/bro6-36.jpg)
+
+I'm inside the function called `showStory`.
+
+[![bro6-37](../assets/images/bro6-37-small.jpg)](../assets/images/bro6-37.jpg)
+
+It looks like it's causing the forced synchronous layout with the call to `left`, which causes the browser to run layout. And then the call to `style.left`, which causes the browser to run recalculate styles.
+
+If this happens more than once in a frame, you've got a forced synchronous layout. I could refactor this in some way, but honestly, I just don't want to deal with it. So, I'm going to go ahead and do this with CSS instead. So, what I decided to do is refactor `showStory` and `hideStory` which work the same way, with a couple changes to the classes of `storyDetails`.
+
+[![bro6-38](../assets/images/bro6-38-small.jpg)](../assets/images/bro6-38.jpg)
+
+I'm simply adding and removing classes called `visible` and `hidden`.
+
+I'll show what this looks like in CSS. I'm looking at story details inside app.css. 
+
+[![bro6-39](../assets/images/bro6-39-small.jpg)](../assets/images/bro6-39.jpg)
+
+I've deleted a few things here, just to make it easier to show you everything that I want to. Notice this property `left` at 100%, this pushes the story details page off the screen. So what I wind up doing with `visible` and `hidden` is transforms to translate the x position, either all the way to the left or back to it's original starting point.
+
+[![bro6-40](../assets/images/bro6-40-small.jpg)](../assets/images/bro6-40.jpg)
+
+I've also gone ahead and given story-details the `will-change: transform`. Just to let the browser know that the story details will be sliding back and forth. To achieve the animation I've added transition transform with 0.3 seconds. So, it'll take 0.3 seconds for story details to come in or slide back out.
+
+Looking at these properties, you'll probably see a few differences from where you started and that's because I got rid of the opacity changes, because I didn't think they were really doing anything. I think I've done a lot, but of course, the only way to really know for sure is to record a timeline trace.
+
+That looked a lot better and the timeline is showing that that was a lot better. All the bars are well below the 60 fps line. I no longer need any JavaScript to animate the slide in and sliding out. And all the force synchronous layout warnings are gone.
+
+[![bro6-41](../assets/images/bro6-41-small.jpg)](../assets/images/bro6-41.jpg)
+
+That is awesome news. Everything's looking a lot better, but there's still a lot more that can be done. For instance, the CSS in the app could be improved and some of the story loading could be off-loaded to web workers. Once again, see [here for my full solution](https://github.com/udacity/news-aggregator/tree/solution) as well as some other fixes that you might want to try.
+
+### 14.15 Course Outro
+Congratulations! You've reached the end of the course. You've learned a load of tricks to get your apps to run at 60 frames a second. Remember, profile sites in your apps, figure out where your bottlenecks are and stomp out that jank. Basically, as always, performance matters.
