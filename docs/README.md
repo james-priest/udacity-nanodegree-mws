@@ -58,6 +58,7 @@ These notes contain lesson transcripts along with screenshots, sample code, & li
 
 ### Optional Courses
 - [JavaScript Promises](course-notes/javascript-promises.html) by Google (Lessons 1 & 2)
+- [High Conversion Web Forms](course-notes/high-conversion-web-forms.html) by Google (Lessons 1-4)
 
 <!-- 
 ### 1. Accessible & Responsive
@@ -122,3 +123,4 @@ The core curriculum is split into three parts or stages and consists of courses 
 These are additional classes and courses.
 
 - Udacity course: [JavaScript Promises](https://www.udacity.com/course/javascript-promises--ud898) by Google
+- Udacity course: [High Conversion Web Forms](https://www.udacity.com/course/building-high-conversion-web-forms--ud890) by Google

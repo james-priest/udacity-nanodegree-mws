@@ -26,6 +26,7 @@ These notes contain lesson transcripts along with screenshots, sample code, & li
 
 ### Optional Courses
 - [JavaScript Promises](docs/course-notes/javascript-promises.md) by Google (Lessons 1 & 2)
+- [High Conversion Web Forms](docs/course-notes/high-conversion-web-forms.md) by Google (Lessons 1 & 2)
 
 ## Projects
 ### Restaurant App Stage 1
