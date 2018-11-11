@@ -15,7 +15,7 @@ description: Notes by James Priest
 
 ---
 
-## 1. Effiecient Inputs Part 1
+## 1. Efficient Inputs Pt 1
 ### 1.1 Course Intro
 Hi, I'm Ido Green. I'm a Developer Advocate at Google. And I'm Cameron Pittman. I make front-end courses here at Udacity.
 
@@ -302,7 +302,130 @@ Even if your users aren't logged in, you can still help them out. For example, y
 - [Ido's CodePen Geolocation Example](http://codepen.io/greenido/pen/qOEbGp)
 - [HTMLRocks Geolocation Example](https://www.html5rocks.com/en/tutorials/geolocation/trip_meter/)
 
-
 In the end, this is all in the pursuit of the most important principles to takeout from this lesson. Speed equals conversions.
 
 This lesson got you thinking about fast, efficient inputs, but you are just getting started. In the next lesson, you'll dive into other time-saving tricks, like creating inputs that support autofill and validation.
+
+<!-- 
+## 2. Efficient Inputs Pt 2
+### 2.1 Lesson Intro
+In the last lesson, you starting building efficient form by picking input types. It's a good start, but you can do more to make inputs even simpler.
+
+[![wf1-1](../assets/images/wf1-1-small.jpg)](../assets/images/wf1-1.jpg)
+
+In this lesson, you'll be helping your users fill out inputs faster and with more confidence. This means adding useful labels and prompts, enabling auto-fill and validating their inputs
+
+Let's get to it but first things first, labels.
+
+### 2.2 Question
+Pop quiz. What was the last website you visited? Maybe Twitter? Maybe you can't remember. You know, there's a pretty good chance that you are like me, and you didn't immediately recall. And that's okay, because everybody forgets things.
+
+It's not a big deal, but as a developer you should do what you can to help people remember what they're doing while they're on your site. The good news is that we have the label element to indicate what this is.
+
+### 2.3 The Label Element
+Labels should be prominent and visible when a user is filling out their associated inputs. When writing HTML, use the `label` element as a container for your inputs. Associated inputs get nested inside labels.
+
+You could also use the `for` attributes to link inputs and labels. Either way works fine, but I like to nest because it simplify my HTML and makes it more semantic.
+
+[![wf2-1](../assets/images/wf2-1-small.jpg)](../assets/images/wf2-1.jpg)
+
+As an important bonus, applying labels to our form elements helps to improve the touch target size. The user can touch either the label or the input in order to place the focus on the input element. 
+
+You could see here that we're using the `for` attributes. Okay, enough of me talking. I want you to try one out in the next quiz.
+
+### 2.4 Quiz: Make a Label
+Labels aren't too tricky. And you may have noticed that in previous quizzes I was actually using labels. So, now it's your turn. In this quiz, you're going to be working with this page.
+
+[![wf2-2](../assets/images/wf2-2-small.jpg)](../assets/images/wf2-2.jpg)
+
+There are two inputs that need some labels. The first label will be for this check box which is asking users if they want to use their shipping address, for their billing address.
+
+And then the second one is for this telephone number. For the billing address check box just use the `for` attribute, but don't nest the input inside the label.
+
+And then for the telephone number input, nest the input inside the label but still use the `for` attribute.
+
+Using it make sure that the screen readers connect the label with its associated input. One last thing.Eto and I, highly recommend that you test this input on an actual mobile device too.
+
+#### 2.4 Solution
+
+##### Before
+
+```html
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Quiz - Labels</title>
+</head>
+<body>
+    <form>
+        <span>Same as billing address</span>
+        <input type="checkbox">
+
+        <br>
+
+        <span>Telephone Number</span>
+        <input type="tel">
+    </form>
+</body>
+</html>
+```
+
+##### After
+
+For the billing address input I just set the `for` attribute on the label to the same `id` that the input has. Easy enough, and then for the telephone number I nested the `input` inside the `label`.
+
+I actually like doing it this way a little bit more, because nesting it makes it more obvious that the `input` belongs to the `label`.
+
+I still used a `for` attribute though, so that my form would play nice with screen readers.
+
+```html
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Quiz - Labels</title>
+</head>
+<body>
+    <form>
+        <label for="use-billing">Same as billing address</label>
+        <input id="use-billing" type="checkbox">
+
+        <br>
+
+        <label for="tel-number">Telephone Number
+        <input id="tel-number" type="tel">
+        </label>
+    </form>
+</body>
+</html>
+```
+
+It doesn't look too different right now but you'll notice that when you click on the labels, that their associated inputs get put into focus. Very nice.
+
+Next stop, we'll be continuing our interview with Luke Wroblewski. Watch him as he describes how he likes to design inputs.
+
+### 2.5 Luke Interview Pt 3
+Customer wants to buy something, company wants to sell something, what's sitting in between them? A form.
+
+[![wf1-5](../assets/images/wf1-5-small.jpg)](../assets/images/wf1-5.jpg)
+
+If you think about registration, a company wants to grow their user base, someone wants to be part of that community, or product they have. And again what's between them is a form.
+
+So in all these places where this connection happens between the organizations that make things on the internet, and the people that use those things, there's generally a form.
+
+And those forms as you say consist of input fields. The biggest mistake that I think people make is treating those things from what I would call almost a back end perspective.
+
+That is inside of a database, to simplify things, you have these name value pairs, right, name and then a field for what the name is. And you've got a whole bunch of these things and they constitute something like the record of a user, or a purchase.
+
+And when it comes time to collect that information to fully fill in that database, what you do is you just spit out those name value pairs as input fields and labels. And ta-da, job done with a form.
+
+So both of these things I learned almost the hard way, if you will, at eBay about how to think about them differently.
+
+When I was at Ebay many years ago it was the 28th largest economy in the world. So lots and lots of people buying and selling things on there. And we found that when we made small changes to these forms we could really have a huge impact.
+
+In fact when we redesigned the registration form process, we had to go back to Wall Street and restate earnings because that was how tremendous the impact was. And when you think about the ability for something like a form to impact something like the 28th largest economy in the entire planet, you really start to understand the importance of all the little details in the forms.
+
+And that goes well beyond which name value pairs you include.
+
+How you put the labels in, what kind of form control you use, what kind of feedback you give to people as they're filling in this information. How do you organize it? What do you do to message the before and after parts of the form?because it's a part of a broader flow. And so the biggest mistake is really not considering that full envelope of form design, and really just regurgitating a database's fields onto a screen and putting a submit button on the bottom. -->
