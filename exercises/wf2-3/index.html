@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Autofill Form</title>
+  <style>
+    *, *:before, *:after {
+      box-sizing: border-box;
+    }
+    html, input {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 16px;
+      line-height: 1.5;
+      box-sizing: border-box;
+      /* color: rgba(0,0,0,0.87); */
+    }
+    body{
+      margin: 0;
+    }
+    .container {
+      padding: 1rem;
+      margin: 0 auto;
+      max-width: 800px;
+    }
+    form {
+      display: flex;
+      flex-wrap: wrap;
+    }
+    fieldset {
+      background-color: #f5f5f5;
+      border: 1px solid #aaa;
+      border-radius: 5px;
+      padding-block-end: 1.2em;
+      margin-block-end: 1.2em;
+    }
+    legend {
+      font-size: 1.4rem;
+      color: #666;
+    }
+    .field-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      /* justify-content: flex-end; */
+    }
+    label, input, button {
+      display: block;
+    }
+    label {
+      font-variant: small-caps;
+      font-size: 0.875rem;
+      font-weight: bold;
+      color: #666;
+      max-width: 100%;
+      margin-bottom: 5px;
+      margin-right: 16px;
+      margin-top: 2px;
+      text-align: right;
+      letter-spacing: 1px;
+    }
+    .form-element {
+      display: block;
+      width: 100%;
+      padding: 8px 14px;
+      color: #333;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+      transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+      margin-bottom: 16px;
+    }
+    ::placeholder {
+      color: #aaa;
+    }
+    .right {
+      width: 100%;
+      display: flex;
+      justify-content: flex-end;
+    }
+    button {
+      font-size: 1em;
+      padding: 6px 10px;
+      border-radius: 4px;
+      border: 1px solid #aaaaaa;
+      color: #333;
+      font-variant: all-small-caps;
+    }
+    button:hover {
+      background-color: #e5e5e5;
+    }
+    button:active {
+      background-color: #ccc;
+    }
+
+    @media screen and (min-width: 500px) {
+      form {
+        padding-right: 15px;
+        padding-left: 15px;
+      }
+      fieldset {
+        padding-inline-end: 1.2em;
+      }
+      /* .field-wrapper {
+        margin-right: 5px;
+      } */
+      label {
+        flex-basis: 21%;
+      }
+      .form-element {
+        flex-basis: 74%;
+        flex-grow: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <form action="">
+      <!-- <fieldset>
+        <legend>Contact</legend>
+        <div class="field-wrapper">
+          <label for="name">Name</label>
+          <input type="text" name="name" id="name" class="form-element" required autocomplete="name" placeholder="Full Name">
+          <label for="email">Email</label>
+          <input type="email" name="email" id="email" class="form-element" required autocomplete="email" placeholder="name@example.com">
+          <label for="confirm-email">Confirm Email</label>
+          <input type="email" name="confirm-email" id="confirm-email" class="form-element" required autocomplete="email" placeholder="name@example.com">
+          <label for="tel">Telephone</label>
+          <input type="tel" name="phone" id="phone" class="form-element" required autocomplete="tel-national" placeholder="+1-425-450-1212">
+          <div class="right">
+            <button type="button">Submit</button>
+          </div>
+        </div>
+      </fieldset> -->
+      <fieldset>
+          <legend>Shipping</legend>
+          <div class="field-wrapper">
+            <label for="address">Address</label>
+            <input type="text" name="address" id="address" class="form-element" required autocomplete="street-address">
+            <label for="city">City</label>
+            <input type="text" name="city" id="city" class="form-element" required autocomplete="street-address address-level2" placeholder="San Francisco">
+            <label for="state">State</label>
+            <input type="text" name="state" id="state" class="form-element" required autocomplete="street-address address-level3" placeholder="CA">
+            <label for="zip">Zip</label>
+            <input type="text" name="zip" id="zip" class="form-element" required autocomplete="street-address postal-code" placeholder="94102">
+            <div class="right">
+              <button type="button">Submit</button>
+            </div>
+          </div>
+        </fieldset>
+    </form>
+  </div>
+</body>
+</html>
