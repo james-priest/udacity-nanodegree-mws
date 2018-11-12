@@ -306,7 +306,6 @@ In the end, this is all in the pursuit of the most important principles to takeo
 
 This lesson got you thinking about fast, efficient inputs, but you are just getting started. In the next lesson, you'll dive into other time-saving tricks, like creating inputs that support autofill and validation.
 
-<!-- 
 ## 2. Efficient Inputs Pt 2
 ### 2.1 Lesson Intro
 In the last lesson, you starting building efficient form by picking input types. It's a good start, but you can do more to make inputs even simpler.
@@ -351,6 +350,7 @@ Using it make sure that the screen readers connect the label with its associated
 ##### Before
 
 ```html
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -361,9 +361,7 @@ Using it make sure that the screen readers connect the label with its associated
     <form>
         <span>Same as billing address</span>
         <input type="checkbox">
-
         <br>
-
         <span>Telephone Number</span>
         <input type="tel">
     </form>
@@ -380,6 +378,7 @@ I actually like doing it this way a little bit more, because nesting it makes it
 I still used a `for` attribute though, so that my form would play nice with screen readers.
 
 ```html
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -390,9 +389,7 @@ I still used a `for` attribute though, so that my form would play nice with scre
     <form>
         <label for="use-billing">Same as billing address</label>
         <input id="use-billing" type="checkbox">
-
         <br>
-
         <label for="tel-number">Telephone Number
         <input id="tel-number" type="tel">
         </label>
@@ -428,4 +425,140 @@ In fact when we redesigned the registration form process, we had to go back to W
 
 And that goes well beyond which name value pairs you include.
 
-How you put the labels in, what kind of form control you use, what kind of feedback you give to people as they're filling in this information. How do you organize it? What do you do to message the before and after parts of the form?because it's a part of a broader flow. And so the biggest mistake is really not considering that full envelope of form design, and really just regurgitating a database's fields onto a screen and putting a submit button on the bottom. -->
+How you put the labels in, what kind of form control you use, what kind of feedback you give to people as they're filling in this information. How do you organize it? What do you do to message the before and after parts of the form?because it's a part of a broader flow.
+
+And so the biggest mistake is really not considering that full envelope of form design, and really just regurgitating a database's fields onto a screen and putting a submit button on the bottom.
+
+### 2.6 Label Size & Position
+When you were playing with the label element, did you notice how the label appeared next to the input? This is not an accident. It makes it easier to see the label.
+
+[![wf2-6](../assets/images/wf2-6-small.jpg)](../assets/images/wf2-6.jpg)
+
+Please remember, portrait and landscape view have different form factors.
+
+In landscape view ports, like this one, labels should be next to the input elements.
+
+[![wf2-4](../assets/images/wf2-4-small.jpg)](../assets/images/wf2-4.jpg)
+
+In portrait view ports, like this one, labels should be above the input elements.
+
+[![wf2-5](../assets/images/wf2-5-small.jpg)](../assets/images/wf2-5.jpg)
+
+Few things to keep in mind. If you are not careful, custom scroll handlers may scroll input elements to the top of the page hiding the label.
+
+You should especially avoid placing labels below the input elements because you run the risk that they may be covered by the virtual keyboard, not good. 
+
+For example, all the labels in the portrait view on mobile appear above the inputs because, as you can see, the virtual keyboard is coming up.
+
+[![wf2-7](../assets/images/wf2-7-small.jpg)](../assets/images/wf2-7.jpg)
+
+### 2.7 Placeholders
+Along with labels, placeholders like this one are super useful for text or numeric inputs.
+
+[![wf2-8](../assets/images/wf2-8-small.jpg)](../assets/images/wf2-8.jpg)
+
+Use placeholders to give users a concrete idea of exactly what they should type. For example, an input on a city field show what is the expected value telling users they should use a full name of the city, like here.
+
+But remember that placeholders disappear as soon as the user start typing in the element, which means they are not a replacement for labels. They should be used as an aid to help guide users.
+
+### 2.8 Quiz: Placeholder
+At Udacity we've used the slogan, "Learn. Think. Do". And there's no better way to learn than by doing, so for this next quiz you are going to do some placeholders.
+
+You'll be given a little input that prompts users to type in the name of an event. And I want you to give it the placeholder event name. Make sure you test on your mobile devices.
+
+```html
+<!DOCTYPE html>
+<!--
+Add the placeholder attribute with the text "Event Name".
+-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Quiz - Placeholder</title>
+</head>
+<body>
+    <form action="#">
+        <label for="event-name">
+            <span>Enter the name of your event:</span>
+            <input type="text" id="event-name">
+        </label>
+    </form>
+</body>
+</html>
+```
+
+#### 2.8 Solution
+This one is pretty simple. All you have to do is add the placeholder attribute to the input and set it to some text, which in this case is "Event Name"
+
+```html
+<!DOCTYPE html>
+<!--
+Add the placeholder attribute with the text "Event Name".
+-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Quiz - Placeholder</title>
+</head>
+<body>
+    <form action="#">
+        <label for="event-name">
+            <span>Enter the name of your event:</span>
+            <input type="text" id="event-name" placeholder="Event Name">
+        </label>
+    </form>
+</body>
+</html>
+```
+
+Notice that you can see "Event Name" within the input when there's no text. But when you start typing, it disappears.
+
+[![wf2-11](../assets/images/wf2-11-small.jpg)](../assets/images/wf2-11.jpg)
+
+### 2.9 Calendars
+Let's talk about calendars.
+
+Many forms need the concept of a date. It shows up everywhere - ordering plane tickets, movie tickets, setting a doctor appointment, and probably a million other examples.
+
+You could turn dates into a three or four parts process with time, day of month, months, and a year. Or you could use a calendar widget.
+
+I like calendar widgets because they are much simpler, and more straightforward.
+
+[![wf2-9](../assets/images/wf2-9-small.jpg)](../assets/images/wf2-9.jpg)
+
+You've got a few options for displaying calendars. You could use the browser's implementation by setting the attribute `type="datetime-local"` on an input element. But, you might find that it doesn't match the visual theme of your app, that's fine.
+
+You could always edit it's styles or simply roll on your own CSS, using web components or a JavaScript widget. See the Resources section below for some more info about styling or building calendars.
+
+Other way, the most important thing, is to show your users a full calendar when they need to set a date .If not, users will never get away from your form to look up dates which only increase the odds that they will abandon the form all together.
+
+Here is another example. When I wish to book a flight, I can see clearly what are the dates that this flight is going to take off and land.
+
+[![wf2-10](../assets/images/wf2-10-small.jpg)](../assets/images/wf2-10.jpg)
+
+Dates are common. Show your users calendars when they need them.
+
+#### 2.9 Resources
+Links to styling of form elements.
+
+- [Styling HTML Forms](https://developer.mozilla.org/en-US/docs/Learn/HTML/Forms/Styling_HTML_forms) - MDN article
+- [Advanced CSS Form Styling](https://jonathan-harrell.com/advanced-css-form-styling/) - Article from 2017
+- [List of Pseudo-Elements to Sytle Form Controls](https://www.tjvantoll.com/2013/04/15/list-of-pseudo-elements-to-style-form-controls/) - Article from 2013
+
+### 2.10 Quiz: Calendars
+Here's another opportunity for you to practice. This calendar is really doing things the hard way.Each part of the date is being typed in individually, as is the time.
+
+[![wf2-12](../assets/images/wf2-12-small.jpg)](../assets/images/wf2-12.jpg)
+
+So for this quiz, I want you to simplify this calendar. Consolidate all of these inputs into a single input that still let's users input all the same information.
+
+#### 2.10 Solution
+I started by going [straight to the Mozilla Developer Network](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#Form_%3Cinput%3E_types). I wanted to check out the list of different input types.
+
+As you might recall, there's an input that consolidate date and time called `datetime-local`.
+
+Here's how it looks. You can click on this drop down arrow to get a nice visual calendar to pick out dates, and you've got a place to input times.
+
+[![wf2-13](../assets/images/wf2-13-small.jpg)](../assets/images/wf2-13.jpg)
