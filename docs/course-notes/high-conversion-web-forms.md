@@ -12,7 +12,7 @@ description: Notes by James Priest
 - [Create Amazing Forms by Pete LePage](https://goo.gl/i0vY1M) - input types, datalist, labels, autocomplete attributes, autofill pitfalls, real-time validation
 - [Web Forms the Right Way](https://www.slideshare.net/greenido/web-forms-the-right-way) - a deck slides detailing HTML5 Forms best practices.
 - [Autocomplete example](http://greenido.github.io/Product-Site-101/form-cc-example-m3.html) - with multiple tabs and various autocomplete fields.
-
+- [Responsive Mobile Ready Forms](https://codepen.io/james-priest/pen/PxbKdy) - my pen on CodePen
 ---
 
 ## 1. Efficient Inputs Pt 1
@@ -562,3 +562,62 @@ As you might recall, there's an input that consolidate date and time called `dat
 Here's how it looks. You can click on this drop down arrow to get a nice visual calendar to pick out dates, and you've got a place to input times.
 
 [![wf2-13](../assets/images/wf2-13-small.jpg)](../assets/images/wf2-13.jpg)
+
+### 2.11 Typos from Typing
+Ugh, come on! These buttons are too small. So you know what, I'm not going to buy these shoes,I just can't deal with typing my address in one more time on this small screen.
+
+It's hard to type on a small screen. So if it's hard to type the form doesn't get submitted and you lose the user.
+
+This is particularly sad, if you're an online retailer and you just missed a sale.
+
+This is where you could leverage to autocomplete attribute. It tells the browsers to automatically fill the user's saved information into a form.
+
+### 2.12 Autocomplete
+In modern browsers, there is a cool feature that you could use called autofill. Users appreciate when a website saves them time by automatically filling common fields like name, email, and more.
+
+[![wf2-14](../assets/images/wf2-14-small.jpg)](../assets/images/wf2-14.jpg)
+
+Plus autofill helps to reduce potential input errors like what we experienced before. Browsers use many heuristics to determine which field they could auto-populate based on a previously specified data by the user.
+
+You, the developer, can give hints to the browser by providing both the `name` attribute and the `autocomplete` attribute on each input element.
+
+For example, to give the browser a hint that it should auto complete the form with a user's name, email, and phone number. You should use these `autocomplete` attributes.
+
+Let's have a look at the code.
+
+```html
+<label for="name">Name</label>
+<input type="text" name="name" id="name" required autocomplete="name"
+  placeholder="Full Name">
+
+<label for="email">Email</label>
+<input type="email" name="email" id="email" required autocomplete="email" 
+  placeholder="name@example.com">
+
+<label for="confirm-email">Confirm Email</label>
+<input type="email" name="confirm-email" id="confirm-email" required 
+  autocomplete="email" placeholder="name@example.com">
+
+<label for="tel">Telephone</label>
+<input type="tel" name="phone" id="phone" required autocomplete="tel-national"
+  placeholder="+1-425-450-1212">
+```
+
+The name input has an autocomplete attribute value of `name`. The email input hav the autocomplete value of `email`. And the phone input element has the `tel-national` 
+
+Let's see it in action. When I start typing the address, you could see that the browser is already remember what was typed here before.
+
+[![wf2-15](../assets/images/wf2-15-small.jpg)](../assets/images/wf2-15.jpg)
+
+And now when I click select the appropriate email the rest of the form gets filled in.
+
+[![wf2-16](../assets/images/wf2-16-small.jpg)](../assets/images/wf2-16.jpg)
+
+Awesome. Below is [a massive list of auto-complete attributes](https://developers.google.com/web/updates/2015/06/checkout-faster-with-autofill?hl=en). Take a look and see how you could automate life for your users and put a big smile on their faces.
+
+#### 2.12 Resources
+Here are some resources
+
+- [Help users checkout faster with Autofill](https://developers.google.com/web/updates/2015/06/checkout-faster-with-autofill?hl=en) - Google Developer website
+- [Contact Form](../exercises/wf/contact.html)
+
