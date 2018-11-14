@@ -8,11 +8,15 @@ description: Notes by James Priest
 
 [<-- back to Mobile Web Specialist Nanodegree homepage](../index.html)
 
-### Resources
+### Links
+#### Resources
 - [Create Amazing Forms by Pete LePage](https://goo.gl/i0vY1M) - input types, datalist, labels, autocomplete attributes, autofill pitfalls, real-time validation
 - [Web Forms the Right Way](https://www.slideshare.net/greenido/web-forms-the-right-way) - a deck slides detailing HTML5 Forms best practices.
 - [Autocomplete example](http://greenido.github.io/Product-Site-101/form-cc-example-m3.html) - with multiple tabs and various autocomplete fields.
-- [Responsive Mobile Ready Forms](https://codepen.io/james-priest/pen/PxbKdy) - my pen on CodePen
+
+#### Samples
+- [Responsive Mobile Ready Forms](https://codepen.io/james-priest/pen/PxbKdy) - Pen on CodePen
+
 ---
 
 ## 1. Efficient Inputs Pt 1
@@ -326,7 +330,8 @@ Labels should be prominent and visible when a user is filling out their associat
 
 You could also use the `for` attributes to link inputs and labels. Either way works fine, but I like to nest because it simplify my HTML and makes it more semantic.
 
-[![wf2-1](../assets/images/wf2-1-small.jpg)](../assets/images/wf2-1.jpg)
+[![wf2-1](../assets/images/wf2-1-small.jpg)](../assets/images/wf2-1.jpg)<br>
+**Live demo:** [Basic form](../exercises/wf2-3/index.html)
 
 As an important bonus, applying labels to our form elements helps to improve the touch target size. The user can touch either the label or the input in order to place the focus on the input element. 
 
@@ -400,6 +405,9 @@ I still used a `for` attribute though, so that my form would play nice with scre
 
 It doesn't look too different right now but you'll notice that when you click on the labels, that their associated inputs get put into focus. Very nice.
 
+[![wf2-21](../assets/images/wf2-21-small.jpg)](../assets/images/wf2-21.jpg)<br>
+**Live demo:** [Label form](../exercises/wf2-4/index.html)
+
 Next stop, we'll be continuing our interview with Luke Wroblewski. Watch him as he describes how he likes to design inputs.
 
 ### 2.5 Luke Interview Pt 3
@@ -432,7 +440,8 @@ And so the biggest mistake is really not considering that full envelope of form 
 ### 2.6 Label Size & Position
 When you were playing with the label element, did you notice how the label appeared next to the input? This is not an accident. It makes it easier to see the label.
 
-[![wf2-6](../assets/images/wf2-6-small.jpg)](../assets/images/wf2-6.jpg)
+[![wf2-6](../assets/images/wf2-6-small.jpg)](../assets/images/wf2-6.jpg)<br>
+**Live demo:** [Contact form](../exercises/wf/contact.html)
 
 Please remember, portrait and landscape view have different form factors.
 
@@ -455,7 +464,8 @@ For example, all the labels in the portrait view on mobile appear above the inpu
 ### 2.7 Placeholders
 Along with labels, placeholders like this one are super useful for text or numeric inputs.
 
-[![wf2-8](../assets/images/wf2-8-small.jpg)](../assets/images/wf2-8.jpg)
+[![wf2-8](../assets/images/wf2-8-small.jpg)](../assets/images/wf2-8.jpg)<br>
+**Live demo:** [Shipping form](../exercises/wf/shipping.html)
 
 Use placeholders to give users a concrete idea of exactly what they should type. For example, an input on a city field show what is the expected value telling users they should use a full name of the city, like here.
 
@@ -515,7 +525,8 @@ Add the placeholder attribute with the text "Event Name".
 
 Notice that you can see "Event Name" within the input when there's no text. But when you start typing, it disappears.
 
-[![wf2-11](../assets/images/wf2-11-small.jpg)](../assets/images/wf2-11.jpg)
+[![wf2-11](../assets/images/wf2-11-small.jpg)](../assets/images/wf2-11.jpg)<br>
+**Live demo:** [Placeholder](../exercises/wf2-8/index.html) text
 
 ### 2.9 Calendars
 Let's talk about calendars.
@@ -526,7 +537,8 @@ You could turn dates into a three or four parts process with time, day of month,
 
 I like calendar widgets because they are much simpler, and more straightforward.
 
-[![wf2-9](../assets/images/wf2-9-small.jpg)](../assets/images/wf2-9.jpg)
+[![wf2-9](../assets/images/wf2-9-small.jpg)](../assets/images/wf2-9.jpg)<br>
+**Live demo:** [Date/Time Attributes Demo](https://codepen.io/james-priest/pen/mQOdJV?editors=1000) on CodePen
 
 You've got a few options for displaying calendars. You could use the browser's implementation by setting the attribute `type="datetime-local"` on an input element. But, you might find that it doesn't match the visual theme of your app, that's fine.
 
@@ -562,6 +574,7 @@ As you might recall, there's an input that consolidate date and time called `dat
 Here's how it looks. You can click on this drop down arrow to get a nice visual calendar to pick out dates, and you've got a place to input times.
 
 [![wf2-13](../assets/images/wf2-13-small.jpg)](../assets/images/wf2-13.jpg)
+**Live demo:** [Calendar control](../exercises/wf2-10/index.html) with input type `datatime-local`.
 
 ### 2.11 Typos from Typing
 Ugh, come on! These buttons are too small. So you know what, I'm not going to buy these shoes,I just can't deal with typing my address in one more time on this small screen.
@@ -575,7 +588,8 @@ This is where you could leverage to autocomplete attribute. It tells the browser
 ### 2.12 Autocomplete
 In modern browsers, there is a cool feature that you could use called autofill. Users appreciate when a website saves them time by automatically filling common fields like name, email, and more.
 
-[![wf2-14](../assets/images/wf2-14-small.jpg)](../assets/images/wf2-14.jpg)
+[![wf2-14](../assets/images/wf2-14-small.jpg)](../assets/images/wf2-14.jpg)<br>
+**Live demo:** [Contact form](../exercises/wf/contact.html)
 
 Plus autofill helps to reduce potential input errors like what we experienced before. Browsers use many heuristics to determine which field they could auto-populate based on a previously specified data by the user.
 
@@ -599,19 +613,21 @@ Let's have a look at the code.
   autocomplete="email" placeholder="name@example.com">
 
 <label for="tel">Telephone</label>
-<input type="tel" name="phone" id="phone" required autocomplete="tel-national"
+<input type="tel" name="phone" id="phone" required autocomplete="tel"
   placeholder="+1-425-450-1212">
 ```
 
-The name input has an autocomplete attribute value of `name`. The email input hav the autocomplete value of `email`. And the phone input element has the `tel-national` 
+The name input has an autocomplete attribute value of `name`. The email input hav the autocomplete value of `email`. And the phone input element has the `tel`.
 
 Let's see it in action. When I start typing the address, you could see that the browser is already remember what was typed here before.
 
-[![wf2-15](../assets/images/wf2-15-small.jpg)](../assets/images/wf2-15.jpg)
+[![wf2-15](../assets/images/wf2-15-small.jpg)](../assets/images/wf2-15.jpg)<br>
+**Live demo:** [Contact form](../exercises/wf/contact.html)
 
 And now when I click select the appropriate email the rest of the form gets filled in.
 
-[![wf2-16](../assets/images/wf2-16-small.jpg)](../assets/images/wf2-16.jpg)
+[![wf2-16](../assets/images/wf2-16-small.jpg)](../assets/images/wf2-16.jpg)<br>
+**Live demo:** [Contact form](../exercises/wf/contact.html)
 
 Awesome. Below is [a massive list of auto-complete attributes](https://developers.google.com/web/updates/2015/06/checkout-faster-with-autofill?hl=en). Take a look and see how you could automate life for your users and put a big smile on their faces.
 
@@ -619,5 +635,107 @@ Awesome. Below is [a massive list of auto-complete attributes](https://developer
 Here are some resources
 
 - [Help users checkout faster with Autofill](https://developers.google.com/web/updates/2015/06/checkout-faster-with-autofill?hl=en) - Google Developer website
-- [Contact Form](../exercises/wf/contact.html)
 
+### 2.13 Quiz: Autocomplete
+It's time to practice. Here is a very simple input for an email address.
+
+[![wf2-17](../assets/images/wf2-17-small.jpg)](../assets/images/wf2-17.jpg)
+
+Right now, this box that you'll be checking out in a moment is just a text input. So the browser has no way of knowing what kind of information is about to be typed in and if it doesn't know what's going to be typed in, it can't help you type it in.
+
+So for this quiz, I want you to make this input auto fillable by adding an autocomplete attribute. When you do it right, you should start seeing some email addresses pop up here as you type.
+
+- [Autocomplete attributes on MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#attr-autocomplete)
+
+```html
+<!DOCTYPE html>
+
+<!--
+Make this email input auto-fillable by adding an `autocomplete` attribute.
+-->
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Quiz - Autocomplete</title>
+</head>
+<body>
+  <form action="#">
+    <label for="email">
+      <span>Email:</span>
+      <input type="email" id="email" placeholder="example@udacity.com">
+    </label>
+  </form>
+</body>
+</html>
+```
+
+#### 2.13 Solution
+I started by heading over to the Mozilla Developer Network, and then looking at the autocomplete attribute.
+
+I chose the one called "email". Back inside my HTML, I went to the input element and added the `autocomplete` attribute. I set its value to "email".
+
+```html
+<!DOCTYPE html>
+
+<!--
+Make this email input auto-fillable by adding an `autocomplete` attribute.
+-->
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Quiz - Autocomplete</title>
+</head>
+<body>
+  <form action="#">
+    <label for="email">
+      <span>Email:</span>
+      <input type="email" id="email" placeholder="example@udacity.com"
+        autocomplete="email">
+    </label>
+  </form>
+</body>
+</html>
+```
+
+So this is how it looks. Now, when I type into this input, I can see suggestions from past email addresses I've used.Perfect.
+
+[![wf2-18](../assets/images/wf2-18-small.jpg)](../assets/images/wf2-18.jpg)
+**Live demo:** [Email autocomplete](../exercises/wf2-13/index.html)
+
+### 2.14 Autofocus
+Speaking of automation, it's worth mentioning the `autofocus` attribute.
+
+Autofocus automatically puts the cursor on an input when the input is rendered,making it easy for users to quickly begin using the form.
+
+[![wf2-19](../assets/images/wf2-19-small.jpg)](../assets/images/wf2-19.jpg)
+
+Desktop browsers immediately move the focus to the input field. However, mobile browsers ignore the autofocus attribute, so that the keyboard doesn't randomly appear.
+
+The Google home page, for example, as you could see here, uses the autofocus attribute on the search bar, because the vast majority of users just want to start typing the queries as soon as the page loads.
+
+[![wf2-20](../assets/images/wf2-20-small.jpg)](../assets/images/wf2-20.jpg)
+
+Use autofocus when you want to save your user's time. But be careful because it will steal keyboard focus and potentially prevent the backspace character from being used for navigation.
+
+Also, it's recommended that you only autofocus inputs that are above the fold. Otherwise, the page will scroll down immediately upon rendering, which can be jarring.
+
+### 2.15 Past Data to Fill Inputs
+In many cases, we ask users to type out the same information, even when the website has their information.
+
+For example, think about name, address, telephone number, email, credit card, etc. Wouldn't it be cool to offer a shortcut that saves time, typing, and money?
+
+As you know, retailers often use past orders to suggest future inputs. Because once they've already collected and saved your address why ask for it again?
+
+It makes life less frustrating for your users. It also a good idea to ask permission. For example Amazon asks which saved address to use.
+
+But be careful. If your application fills in too much, users might get the wrong information. For example, shipping your package to the wrong address. 
+
+Remember, reusing information will make your forms faster.
+
+<!-- 
+### 2.16 Validation
+So far, we focused on helping users fill out forms faster by, well,not filling out anything.But now, I want you to think about your users confidence,with good validation features.With validation, you can ensure that users knowthat they are filling forms with the right information.More importantly,validation can ensure that the users fill out form correctly the first time.They won't waste time leaving an input and submitting a form only to findout a few seconds later that they forgot a digit in their zip code.With validation, you are giving your users a real time feedback andminimizing errors.I want to choose a new password, and like in any good website,I have a few rules that I need to enforce.Here, while i'm typing, you could see that I'm using lowercase, andnow I understand that I need an uppercase, as well, I need few numbers,and I just passed the minimum length of eight characters.I'm adding some punctuation, and only then, I'm enabling the next button.It's worth adding that HTML file validation or any front end validation,for that matter, is not a replacement for a service side validation.Your websites are obviously not safe,unless you validate on your back end too.The approach Cam and I are discussing is justa way to improve the user experience, and to put a big smile on the faces.In the next video, I'll show you how to use HTML5 attributes for validation. -->
