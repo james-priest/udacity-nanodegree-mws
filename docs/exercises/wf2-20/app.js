@@ -41,10 +41,10 @@ class IssueTracker {
       case 0:
         break; // do nothing bc message is already ""
       case 1:
-        message = "Please correct the following issue:\n" + this.issues[0];
+        message = "Please correct the following issue: " + this.issues[0];
         break;
       default:
-        message = "Please correct the following issues:\n" + this.issues.join('\n');
+        message = "Please correct the following issues: " + this.issues.join('; ');
         break;
     }
     return message;
@@ -85,36 +85,35 @@ submit.onclick = function () {
   function checkRequirements() {
     if (firstPassword.length < 16) {
       // firstPasswordInput.setCustomValidity('16 characters');
-      firstInputIssuesTracker.add('16 characters');
+      firstInputIssuesTracker.add('fewer than 16 characters');
     } else if (firstPassword.length > 100) {
       // firstPasswordInput.setCustomValidity('100 characters');
-      firstInputIssuesTracker.add('100 characters');
+      firstInputIssuesTracker.add('greater than 100 characters');
     }
     if (!firstPassword.match(/[\!\@\#\$\%\^\&\*]/g)) {
       // firstPasswordInput.setCustomValidity('symbol');
-      firstInputIssuesTracker.add('symbol');
+      firstInputIssuesTracker.add('missing a symbol');
     }
     if (!firstPassword.match(/[0-9]/g)) {
       // firstPasswordInput.setCustomValidity('number');
-      firstInputIssuesTracker.add('number');
+      firstInputIssuesTracker.add('missing a number');
     }
     if (!firstPassword.match(/[a-z]/g)) {
       // firstPasswordInput.setCustomValidity('lowercase');
-      firstInputIssuesTracker.add('lowercase');
+      firstInputIssuesTracker.add('missing a lowercase letter');
     }
     if (!firstPassword.match(/[A-Z]/g)) {
       // firstPasswordInput.setCustomValidity('uppercase');
-      firstInputIssuesTracker.add('uppercase');
+      firstInputIssuesTracker.add('missing an uppercase letter');
     }
     var illegalCharacterGroup = firstPassword.match(/[^A-z0-9\!\@\#\$\%\^\&\*]/g);
     if (illegalCharacterGroup) {
       // firstPasswordInput.setCustomValidity('illegal');
-      firstInputIssuesTracker.add('illegal');
+      firstInputIssuesTracker.add('includes illegal character');
     }
   }
 
   if (firstPassword !== secondPassword) {
-    // firstPasswordInput.setCustomValidity('match');
     secondInputIssuesTracker.add('match');
   } else {
     checkRequirements();
