@@ -703,7 +703,7 @@ Make this email input auto-fillable by adding an `autocomplete` attribute.
 
 So this is how it looks. Now, when I type into this input, I can see suggestions from past email addresses I've used.Perfect.
 
-[![wf2-18](../assets/images/wf2-18-small.jpg)](../assets/images/wf2-18.jpg)
+[![wf2-18](../assets/images/wf2-18-small.jpg)](../assets/images/wf2-18.jpg)<br>
 **Live demo:** [Email autocomplete](../exercises/wf2-13/index.html)
 
 ### 2.14 Autofocus
@@ -711,7 +711,8 @@ Speaking of automation, it's worth mentioning the `autofocus` attribute.
 
 Autofocus automatically puts the cursor on an input when the input is rendered,making it easy for users to quickly begin using the form.
 
-[![wf2-19](../assets/images/wf2-19-small.jpg)](../assets/images/wf2-19.jpg)
+[![wf2-19](../assets/images/wf2-19-small.jpg)](../assets/images/wf2-19.jpg)<br>
+**Live Demo:** [Contact form autofocus](../exercises/wf2-14/contact.html)
 
 Desktop browsers immediately move the focus to the input field. However, mobile browsers ignore the autofocus attribute, so that the keyboard doesn't randomly appear.
 
@@ -736,6 +737,347 @@ But be careful. If your application fills in too much, users might get the wrong
 
 Remember, reusing information will make your forms faster.
 
-<!-- 
 ### 2.16 Validation
-So far, we focused on helping users fill out forms faster by, well,not filling out anything.But now, I want you to think about your users confidence,with good validation features.With validation, you can ensure that users knowthat they are filling forms with the right information.More importantly,validation can ensure that the users fill out form correctly the first time.They won't waste time leaving an input and submitting a form only to findout a few seconds later that they forgot a digit in their zip code.With validation, you are giving your users a real time feedback andminimizing errors.I want to choose a new password, and like in any good website,I have a few rules that I need to enforce.Here, while i'm typing, you could see that I'm using lowercase, andnow I understand that I need an uppercase, as well, I need few numbers,and I just passed the minimum length of eight characters.I'm adding some punctuation, and only then, I'm enabling the next button.It's worth adding that HTML file validation or any front end validation,for that matter, is not a replacement for a service side validation.Your websites are obviously not safe,unless you validate on your back end too.The approach Cam and I are discussing is justa way to improve the user experience, and to put a big smile on the faces.In the next video, I'll show you how to use HTML5 attributes for validation. -->
+So far, we focused on helping users fill out forms faster by, well, not really filling out anything.
+
+But now, I want you to think about your user's confidence, with good validation features. With validation, you can ensure that users know that they are filling forms with the right information.
+
+More importantly, validation can ensure that users fill out the form correctly the first time. They won't waste time by accidentally leaving an input field empty or submitting a form only to find out a few seconds later that they forgot a digit in their zip code.
+
+[![wf2-22](../assets/images/wf2-22-small.jpg)](../assets/images/wf2-22.jpg)<br>
+**Live Demo:** [Contact form validation](../exercises/wf2-16/contact.html)
+
+With validation, you are giving your users a real time feedback and minimizing errors.
+
+you can make your inputs required with the `required` attribute. Add `required` to any HTML5 input to let users know that the input must be filled out in order to finish the form.
+
+I want to choose a new password, and like in any good website, I have a few rules that I need to enforce.
+
+[![wf2-23](../assets/images/wf2-23-small.jpg)](../assets/images/wf2-23.jpg)
+
+Here, while I type, I see I need lowercase and uppercase characters. I also need a few numbers, and minimum length of eight characters. Lastly, I need some punctuation, and only then, does the "Next" button get enabled.
+
+[![wf2-24](../assets/images/wf2-24-small.jpg)](../assets/images/wf2-24.jpg)
+
+It's worth adding that HTML file validation or any front end validation, for that matter, is not a replacement for a server-side validation.
+
+Your websites are obviously not safe, unless you validate on your back end too. The approach discussed here is more about improving the user experience, and make the experience less painful to users.
+
+In the next video, I'll show you how to use HTML5 attributes for validation.
+
+### 2.17 Numeric Validation
+#### Numeric Inputs
+Numbers are even easier to validate than text. For number input types, the HTML5 spec gives you [attributes](https://www.wufoo.com/html5/number-type/) like `min`, `max`, and `step`. Each of these do pretty much what you would expect.
+
+`min` and `max` set the minimum and maximum values that the arrows in the input will allow. `step` sets the increments for between possible values. There’s also `value`, which sets the starting value of the input.
+
+Of course, you’ll probably notice that users can still type whatever number they want into numeric inputs. If you want to really limit possible values, consider a [range](https://www.wufoo.com/html5/range-type/) instead.
+
+#### Range Inputs
+The range input type creates a slider on the page. It also has min, max, step and value attributes. If you want to display the current value of the range when it changes, you’ll need to use some JavaScript to pull the value from the range. Here's an example:
+
+```js
+// grab <input id="range-example" type="range" min="0" max="5" step="1">
+// from the page
+var rangeInput = document.querySelector('input#range-example');
+
+// grab <p id="output"></p> to display the output
+var output = document.querySelector('p#output');
+
+// update the display when the range changes
+rangeInput.onchange = function() {
+    output.innerHTML = this.value;
+};
+```
+
+In the next quiz you'll be validating some inputs yourself.
+
+### 2.18 Quiz: Validate Inputs
+Ready to validate numeric inputs? Here's a gradebook that calculates grades.
+
+[![wf2-25](../assets/images/wf2-25-small.jpg)](../assets/images/wf2-25.jpg)<br>
+**Live Demo:** [Gradebook - numeric](../exercises/wf2-18/index.html)
+
+The way this gradebook works is that you enter four grades and hit Calculate. It then displays the average.
+
+Each of these grades should be a multiple of 10, which means they should be either 0, 10, 20, 30, and so on all the way up to a maximum of 100.
+
+There are a few issues with these inputs that I want you to fix. As it is right now, these inputs only take numbers, but the controls here on the side are less than useful.
+
+For instance, you can click and hold the first one and it will go up well above 100. It needs to stop at 100. The second goes into the negative numbers. The third needs min and max set and the fourth only increments by 1.
+
+Now just so you know with HTML attributes alone, you won't be able to prevent people from typing crazy numbers but you can make these controls more useful.
+
+So for this quiz, it's your job to apply the numeric validation attributes that you just learned about.
+
+For bonus points take a look at this text input for a letter grade. Try using the pattern attribute with regular expressions to validate possible letter grades.
+
+I'm thinking you could use American letter grades which go from A, B, C,D and then skips E and then goes to F, with subgrades of plus and minus.
+
+Lastly, it's worth noting that these numeric inputs look and behave slightly differently in different browsers. So test in different browsers to see the differences.
+
+#### Helpful Links
+- [Input element on MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input)
+- [The number Type](https://www.wufoo.com/html5/number-type/)
+- [The pattern Attribute](https://www.wufoo.com/html5/pattern-attribute/)
+
+#### Solution
+I made sure that each input had the following:
+
+- `type="number"`
+- `min="0"`
+- `max="100"`
+- `step="10"`
+- `required`
+
+The html looked lik this.
+
+```html
+<tr>
+  <td><label for="quiz1">Quiz 1:</label></td>
+  <td><input type="number" id="quiz1" min="0" max="100" step="10" value="0" required></td>
+  <td>(needs max)</td>
+</tr>
+<tr>
+  <td><label for="quiz2">Quiz 2:</label></td>
+  <td><input type="number" id="quiz2" min="0" max="100" step="10" value="0" required></td>
+  <td>(needs min)</td>
+</tr>
+<tr>
+  <td><label for="quiz3">Quiz 3:</label></td>
+  <td><input type="number" id="quiz3" min="0" max="100" step="10" value="0" required></td>
+  <td>(needs min and max)</td>
+</tr>
+<tr>
+  <td><label for="quiz4">Quiz 4:</label></td>
+  <td><input type="number" id="quiz4" min="0" max="100" step="10" value="0" required></td>
+  <td>(needs min, max, and step)</td>
+</tr>
+```
+
+Lastly, I added a value for the `pattern` attribute. I used  [https://regexr.com/](https://regexr.com/) to help build the RegEx. I then added a value for the `title` attribute which serves as the error message if there is no match.
+
+```html
+<tr>
+  <td><label for="grade">Grade:</label></td>
+  <td><input type="text" id="grade" size="2" minlength="1" maxlength="2"
+  pattern="[Aa]-?|[B-Db-d][+-]?|[Ff]" title="A, A-, B, B+, B-, down to F"
+  required></td>
+  <td>(Extra cred: use "pattern" to check for A, A-, B, B+, B-, down to F.)</td>
+</tr>
+```
+
+Now that the code is in place I can run the form to test it.
+
+[![wf2-26](../assets/images/wf2-26-small.jpg)](../assets/images/wf2-26.jpg)<br>
+**Live Demo:** [Gradebook - numeric](../exercises/wf2-18/index.html)
+
+I really hope you're starting to see just how useful these validation attributes are. They provide a fantastic first pass at making sure the data that's going into your forms is accurate.
+
+### 2.19 Constraints Validation API
+For more complex validation, you've got the constraint validation API which allows you to harness the power of JavaScript to validate inputs on the fly.
+
+[![wf2-27](../assets/images/wf2-27-small.jpg)](../assets/images/wf2-27.jpg)<br>
+**Live Demo:** [Puppy validator](http://udacity.github.io/course-web-forms/lesson2/setCustomValidity)
+
+```js
+var puppyInput = document.querySelector('#puppy-input');
+var submit = document.querySelector('#submit');
+
+submit.onclick = function () {
+  if (puppyInput.value !== "puppy") {
+    puppyInput.setCustomValidity("The input should say 'puppy'. You typed: '" +
+      puppyInput.value + "'");
+  } else {
+    puppyInput.setCustomValidity("");
+  }
+};
+```
+
+Here's how it works. The core of the constraint validation API is the function: `setCustomValidity`. As you could see, it's getting a string.
+
+`setCustomValidity` makes the assumption that if you pass a none empty string to it, the input is invalid. So it displays an error message.
+
+That means that the opposite is true. If you pass an empty string to it, then the input is valid.
+
+In practice, simply set a callback on an input's, "on input" event like we did here. And at the end of the callback, call `setCustomValidity` on the input.
+
+If we type in something like that, we will get the error message. And if we are typing correctly, we're passing the test.
+
+[![wf2-28](../assets/images/wf2-28-small.jpg)](../assets/images/wf2-28.jpg)
+
+- [setCustomeValidity](https://developer.mozilla.org/en-US/docs/Web/API/HTMLSelectElement/setCustomValidity) on MDN
+- [Constraint Validation](https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/HTML5/Constraint_validation) on MDN
+
+### 2.20 Quiz: Validate Data
+All right.Are you ready for a challenge? This quiz is going to be a bit more difficult than the last few.
+
+For this one, I want you to validate this new password entry using the constraints validation API.
+
+[![wf2-29](../assets/images/wf2-29-small.jpg)](../assets/images/wf2-29.jpg)<br>
+**Live Demo:** [Password validation](../exercises/wf2-20/index.html)
+
+
+Notice how there are two inputs for passwords? This is pretty common and it prevents users from making typos when their letters are typed out as little black dots.
+
+You'll be using JavaScript and `setCustomValidity` to check that both passwords are the same and that the passwords meet all of the requirements listed here.
+
+The validation messages that you pass to set custom validityare really important. They need to help the user out. Don't just tell them that something's wrong. If the password is too short, tell them how many characters it should be. If it's missing a number, tell them that it's missing a number, and so on.
+
+Give this quiz a good, honest try, because it's a great opportunity for you to think through the nuances of more complex validation. The idea of checking for these requirements may seem really straightforward, but the implementation details might surprise you.
+
+As part of this quiz, you'll need to think about string parsing, which can be a little annoying. To help you out a bit, I'm giving you some regex's in the code that you might find useful. Good luck.
+
+#### 2.20 Solution
+This quiz is slightly challenging because, though the logic is simple, it's easy to accidentally get lost in a nasty series of nested if statements if you're not careful.
+
+The first thing that you'll come across is the `IssueTracker` object. We're using it to collect and format the validation messages we wish to show.
+
+```js
+class IssueTracker {
+  constructor() {
+    this.issue = [];
+  }
+
+  add(issue) {
+    this.issues.push(issue);
+  }
+  retrieve() {
+    let message = "";
+    switch (this.issues.length) {
+      case 0:
+        break; // do nothing bc message is already ""
+      case 1:
+        message = "Please correct this issue:\n" + this.issues[0];
+        break;
+      default:
+        message = "Please correct these issues:\n" + this.issues.join('\n');
+        break;
+    }
+    return message;
+  }
+}
+```
+
+The idea is that we'll eventually call `retrieve`, which returns a string. And this string is the validation message that I want to pass to `setCustomValidity`.
+
+And remember that if there are no issues with the validation, then `setCustomValidity` expects an empty string. Which is what this case 0 is doing.
+
+Next up, there is the `onclick` handler for submit.
+
+```js
+submit.onclick = function () {
+  // grab input's values
+  var firstPassword = firstPasswordInput.value;
+  var secondPassword = secondPasswordInput.value;
+
+  // issue tracker for ea input bc some validation msgs
+  // should end up on the first, some on the second
+  var firstInputIssuesTracker = new IssueTracker();
+  var secondInputIssuesTracker = new IssueTracker();
+  // ...
+```
+
+I start by grabbing the values on both of the inputs and then creating two different IssueTrackers. One for the first input and one for the second input. The reason is that sometimes I might want a message to show upon the first input, and then sometimes on the second.
+
+After that there is the `checkRequirements` method, and it's a pretty legible series of if statements.
+
+```js
+  function checkRequirements() {
+    if (firstPassword.length < 16) {
+      firstInputIssuesTracker.add('16 characters');
+    } else if (firstPassword.length > 100) {
+      firstInputIssuesTracker.add('100 characters');
+    }
+    if (!firstPassword.match(/[\!\@\#\$\%\^\&\*]/g)) {
+      firstInputIssuesTracker.add('symbol');
+    }
+    if (!firstPassword.match(/[0-9]/g)) {
+      firstInputIssuesTracker.add('number');
+    }
+    if (!firstPassword.match(/[a-z]/g)) {
+      firstInputIssuesTracker.add('lowercase');
+    }
+    if (!firstPassword.match(/[A-Z]/g)) {
+      firstInputIssuesTracker.add('uppercase');
+    }
+    var illegalCharacterGroup = firstPassword.match(/[^A-z0-9\!\@\#\$\%\^\&\*]/g);
+    if (illegalCharacterGroup) {
+      firstInputIssuesTracker.add('illegal');
+    }
+  }
+```
+
+There's no nesting with these if statements so, I'm pretty happy. And this is where all of the regular expressions are coming into play.
+
+Next is where `checkRequirements` actually gets called.
+
+```js
+  if (firstPassword !== secondPassword) {
+    secondInputIssuesTracker.add('match');
+  } else {
+    checkRequirements();
+  }
+```
+
+It only happens after I know that the first password and the second password match.
+
+After that, it's just a matter of retrieving the two messages and then setting them on each input with `setCustomValidity`. 
+
+```js
+  const firstInputIssues = firstInputIssuesTracker.retrieve();
+  const secondInputIssues = secondInputIssuesTracker.retrieve();
+
+  firstPasswordInput.setCustomValidity(firstInputIssues);
+  secondPasswordInput.setCustomValidity(secondInputIssues);
+```
+
+All right, not too bad, let's see this in action. Once I enable the Udacity Validity Tests I see that the code is passing all tests
+
+[![wf2-30](../assets/images/wf2-30-small.jpg)](../assets/images/wf2-30.jpg)<br>
+**Live Demo:** [Password validation](../exercises/wf2-20/index.html)
+
+Okay, I switched from password to text, so now you can see what I'm typing. I type 'abc' into both text boxes and submit.
+
+[![wf2-31](../assets/images/wf2-31-small.jpg)](../assets/images/wf2-31.jpg)<br>
+**Live Demo:** [Password validation](../exercises/wf2-20/index.html)
+
+All right, I hope you had as much fun validating these inputs as I did. In the next lesson you'll start designing forms with all of the inputs you've practiced with so far.
+
+With designing comes testing. So in the next video watch Luke describe how he likes to test forms.
+
+### 2.21 Luke Interview Pt 4
+[![wf1-5](../assets/images/wf1-5-small.jpg)](../assets/images/wf1-5.jpg)
+
+So we use a combination of things. Over my career I've used lots of different things, all the way from eye tracking to usability to quantitative analysis. But I think the most important thing is to be iterative and to be in a process of learning.
+
+The worst case scenario you can get to is what I call the sort of "culture of delivery". Which is, your whole processes are aligned to one ship date; "we redesigned checkout". "Okay, what's the next project?" And we shipped that, that's done. All right, that's a culture of delivery.
+
+A culture of learning is, hey, we're going to try this. Oh, let's see what we can learn before we actually build it. Oh, we started to build it. Let's prototype it, and make it better and better. Hey, we launched it. What happened?Let's measure. We should tweak that. Let's keep measuring. Let's keep learning.
+
+When you do that then you find all of these opportunities for optimization, and for insights, that you wouldn't have. If all you're doing is getting to that launch and then moving on to the next launch after that.
+
+So internally here I have a number of different teams that look at both sides of the equation. We do rapid iterative prototyping up front. So we'll build a little prototype, we'll put users through it, and we'll learn, do they understand our intent. Can they actually act on what we're trying to allow them to do?
+
+And then after launch, we'll go and track the metrics and sometimes with the metrics you'll see, oh that's weird. Why is that going on?
+
+And then the next natural step is to actually go talk to people.
+
+There's a case study that Expedia published a long time ago which was fascinating to me because they had a check out flow, standard thing, right.
+
+You have booked the trip and you're going through and they had this optional field called company, right above billing information. And for whatever reason, people would enter their company, and then start putting in the address of their company below company, which kind of makes sense. But what happened is, they would get these billing errors. Because they put in a billing address that is not the billing address of the credit card, instead it's the company that they work for, this was an optional field. So Expedia removed it, and instantly they got 12 million more in profit a year overnight just from dropping this one optional field.
+
+And until you actually see somebody go through a flow, how would you ever guess why there's so many errors? You have to talk to a couple people and go, oh they think it's their company's address that's why we're getting all these billing errors.
+
+It's not like bad credit cards or what have you. So that combination of the quantitative data, hm, lots of errors in billing addresses, and qualitative, why let's talk to them, really let's you fix the product and make it work.
+
+### 2.22 Lesson Outro
+At this point, you've done a lot with individual inputs. 
+
+1. You've tried out different input types and you know how to pick the right one for the right situation.
+2. You've attached useful labels to your inputs ensuring that users always know what they are typing while they are typing.
+3. You've used the autocomplete attribute to help the browser autofill common input fields.
+4. You've used different validation attributes to validate users' input, even before they submit your forms.
+5. And you've played with the constraints validation API, for those times when you need to validate more complex inputs.
+
+In the next lesson, Ken and I will help you to take a step back from looking at single inputs to looking at the forms as a whole.
