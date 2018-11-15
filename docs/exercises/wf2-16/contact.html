@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Contact Form</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <form action="">
+      <fieldset>
+        <legend>Contact</legend>
+        <div class="field-wrapper">
+          <label for="name">Name</label>
+          <input type="text" name="name" id="name" class="form-element" required autocomplete="name" placeholder="Full Name" autofocus>
+          <label for="email">Email</label>
+          <input type="email" name="email" id="email" class="form-element" required autocomplete="email" placeholder="name@example.com">
+          <label for="confirm-email">Confirm Email</label>
+          <input type="email" name="confirm-email" id="confirm-email" class="form-element" required autocomplete="email" placeholder="name@example.com">
+          <label for="tel">Telephone</label>
+          <input type="tel" name="phone" id="phone" class="form-element" required autocomplete="tel" placeholder="+1-425-450-1212">
+          <div class="right">
+            <button type="submit">Submit</button>
+          </div>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</body>
+</html>
