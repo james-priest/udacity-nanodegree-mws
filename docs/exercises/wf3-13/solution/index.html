@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cam's Solution</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+</head>
+<body>
+  <header>
+    <div class="company-name">Cam's Checkout</div>
+    <div class="progress-bar"></div>
+  </header>
+  <div class="main">
+    <div class="display-section">
+      <h2>Your Order</h2>
+      <div class="flex-container flex-vertical">
+        <div class="flex-container flex-horizontal">
+          <div class="flex-2 bold"></div>
+          <div class="flex-3 bold">Item</div>
+          <div class="flex-1 bold"></div>
+          <div class="flex-2 bold">Price</div>
+        </div>
+        <div class="flex-container flex-horizontal">
+          <div class="flex-2"><img class="responsive" src="images/NES-Console-Set.png" alt="NES Console By Evan-Amos (Own work) [Public domain], via Wikimedia Commons"></div>
+          <div class="flex-3">Classic Video Game Console</div>
+          <div class="flex-1">1x</div>
+          <div class="flex-2 price">$500.00</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="display-section">
+      <h2>Where Do You Want Your Order Sent?</h2>
+      <label for="ship-name"><span class="sr-only">Name</span>
+        <input class="full" id="ship-name" type="text" placeholder="Name" required>
+      </label>
+      <label for="ship-address1"><span class="sr-only">Address Line 1</span>
+        <input class="full" id="ship-address1" type="text" placeholder="Address Line 1" required>
+      </label>
+      <label for="ship-address2"><span class="sr-only">Address Line 2</span>
+        <input class="full" id="ship-address2" type="text" placeholder="Address Line 2">
+      </label>
+      <label for="ship-address3"><span class="sr-only">Address Line 3</span>
+        <input class="full" id="ship-address3" type="text" placeholder="Address Line 3">
+      </label>
+      <label for="ship-address4"><span class="sr-only">Address Line 4</span>
+        <input class="full" id="ship-address4" type="text" placeholder="Address Line 4">
+      </label>
+    </div>  
+
+    <div class="display-section">
+      <h2>How Would You Like to Pay?</h2>
+      <p class="cc-warning"><em>Note: don't enter any actual credit card info!</em></p>
+
+      <div class="flex-container flex-horizontal">
+        <div class="flex-2 flex-cc">
+          <label for="cc-number"><span class="sr-only">Credit Card Number</span>
+            <input class="full" id="cc-number" type="cc-number" placeholder="●●●● ●●●● ●●●● ●●●●" required>
+          </label>
+        </div>
+        <div class="flex-1 flex-cc">
+          <label for="cc-type"><span class="sr-only">Type</span>
+            <input class="full" id="cc-type" type="cc-type" placeholder="Card Type" disabled></input>
+          </label>
+        </div>
+      </div>
+      
+      <div class="flex-container flex-horizontal">
+        <div class="flex-1 flex-cc">
+          <label for="cc-mm"><span class="sr-only">Credit Card Expiration Month</span>
+            <input class="full" id="cc-mm" type="number" min="0" max="9999" maxlength="2" placeholder="MM" required>
+          </label>
+        </div>
+        <div class="flex-1 flex-cc">
+          <label for="cc-yy"><span class="sr-only">Credit Card Expiration Year</span>
+            <input class="full" id="cc-yy" type="number" min="15" max="9999" maxlength="2" placeholder="YY" required>
+          </label>          
+        </div>
+        <div class="flex-1 flex-cc">
+          <label for="cc-csc"><span class="sr-only">Credit Card Security Code</span>
+            <input class="full" id="cc-csc" type="number" min="000" max="9999" maxlength="3" placeholder="CSC" required>
+          </label>
+        </div>
+      </div>
+
+      <label for="use-diff-billing"><span>Use a different billing address?</span>
+        <input id="use-diff-billing" type="checkbox">
+      </label>
+      <div class="new-billing">
+        <label for="billing-name"><span class="sr-only">Name</span>
+        <input class="full" id="billing-name" type="text" placeholder="Name" required>
+      </label>
+      <label for="billing-address1"><span class="sr-only">Address Line 1</span>
+        <input class="full" id="billing-address1" type="text" placeholder="Address Line 1" required>
+      </label>
+      <label for="billing-address2"><span class="sr-only">Address Line 2</span>
+        <input class="full" id="billing-address2" type="text" placeholder="Address Line 2">
+      </label>
+      <label for="billing-address3"><span class="sr-only">Address Line 3</span>
+        <input class="full" id="billing-address3" type="text" placeholder="Address Line 3">
+      </label>
+      <label for="billing-address4"><span class="sr-only">Address Line 4</span>
+        <input class="full" id="billing-address4" type="text" placeholder="Address Line 4">
+      </label>
+      </div>
+    </div>
+    <button class="submit">Place Order</button>
+  </div>
+  <script src="js/app.js"></script>
+</body>
+</html>

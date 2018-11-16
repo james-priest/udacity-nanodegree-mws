@@ -1,0 +1,87 @@
+html, input {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  box-sizing: border-box;
+}
+body {
+  margin: 0;;
+}
+
+.inline {
+  display: inline !important;
+}
+
+header {
+  position: fixed;
+  display: block;
+  height: 64px;
+  min-width: 100%;
+  background: rgb(5, 107, 209);
+  color: #fff
+}
+h1.company-name {
+  font-size: 1.5em;
+  margin: 0;
+  padding: 16px;
+}
+main {
+  padding-top: 64px;
+}
+
+
+section {
+  padding: 0px 10px;
+}
+
+label {
+  display: block;
+  margin-bottom: 1em;
+}
+
+section.form, section.order-review{
+  display: block;
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+section.form {
+  /*font-size: 2em;*/
+}
+
+/* section.form input {
+  display: block;
+  font-size: 1em;
+} */
+
+.cc-warning {
+  font-size: 0.5em;
+  margin-bottom: 1em;
+}
+
+.your-order {
+  border: 1px solid;
+  max-width: 100%;
+}
+
+tr.headings {
+  font-weight: bold;
+}
+
+tr.total {
+  font-style: italic;
+}
+
+td {
+  padding: 10px;
+  border: 1px solid;
+}
+
+tr:nth-child(even) {
+  background-color: #eee;
+}
+
+.check-correct {
+  margin-top: 10px;
+}

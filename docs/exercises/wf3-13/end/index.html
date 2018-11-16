@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>James' Checkout</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header>
+    <h1 class="company-name">James' Checkout</h1>
+  </header>
+  <main class="container">
+    <form action="">
+      <section>
+        <fieldset>
+          <legend>Your order</legend>
+          <div class="field-wrapper">
+            <div class="flex-container flex-horizontal">
+              <div class="flex-1"></div>
+              <div class="flex-2 bold">Item</div>
+              <div class="flex-3 bold">Qty</div>
+              <div class="flex-4 bold">Price</div>
+            </div>
+            <div class="flex-container flex-horizontal">
+              <div class="flex-1"><img src="./images/NES-Console-Set.png"></div>
+              <div class="flex-2">Classic Game Console</div>
+              <div class="flex-3">1</div>
+              <div class="flex-4">$500.00</div>
+            </div>
+          </div>
+        </fieldset>
+      </section>
+      <section>
+        <fieldset>
+          <legend>Ship order to</legend>
+          <div class="field-wrapper">
+            <label for="name">Name</label>
+            <input type="text" name="name" id="name" class="form-element" required autocomplete="name" placeholder="Full Name" autofocus>
+
+            <label for="address">Address</label>
+            <input type="text" name="address" id="address" class="form-element" required autocomplete="street-address">
+            
+            <label for="city">City</label>
+            <input type="text" name="city" id="city" class="form-element" required autocomplete="street-address address-level2" placeholder="San Francisco">
+            
+            <label for="state">State</label>
+            <input type="text" name="state" id="state" class="form-element" required autocomplete="street-address address-level3" placeholder="CA">
+            
+            <label for="zip">Zip</label>
+            <input type="text" name="zip" id="zip" class="form-element" required autocomplete="street-address postal-code" placeholder="94102">
+          </div>
+        </fieldset>
+      </section>
+      <section>
+        <fieldset>
+          <legend>Payment info</legend>
+          <div class="field-wrapper">
+            <label for="cc-name">Name on card</label>
+            <input type="text" name="cc-name" id="cc-name" class="form-element" required autocomplete="cc-name" placeholder="Full Name">
+
+            <label for="cc-number">Card Number</label>
+            <input type="text" name="cc-number" id="cc-number" class="form-element" required autocomplete="cc-number" placeholder="●●●● ●●●● ●●●● ●●●●" maxlength="19">
+
+            <label for="cc-exp">Expiry</label>
+            <input type="text" name="city" id="cc-exp" class="form-element" required autocomplete="cc-exp" placeholder="MM-YYYY" maxlength="7">
+            
+            <label for="cc-csc">CVV</label>
+            <input type="text" name="cc-csc" id="cc-csc" class="form-element" required autocomplete="cc-csc" placeholder="CVC" maxlength="3">
+          </div>
+        </fieldset>
+      </section>
+      <div class="right">
+        <button type="submit">Submit</button>
+      </div>
+    </form>
+  </main>
+</body>
+</html>
