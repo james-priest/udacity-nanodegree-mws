@@ -46,7 +46,8 @@ If you want to get better at building forms, you need to start critiquing forms.
 
 With that in mind, I want you to try critiquing this form. You can find [a link to it here](http://udacity.github.io/course-web-forms/project/start/create.html).
 
-[![wf1-2](../assets/images/wf1-2-small.jpg)](../assets/images/wf1-2.jpg)
+[![wf1-2](../assets/images/wf1-2-small.jpg)](../assets/images/wf1-2.jpg)<br>
+**Live demo:** [Event Form](http://udacity.github.io/course-web-forms/project/start/create.html)
 
 This form is actually part of the final project for this course which is an event planner app.
 
@@ -67,7 +68,8 @@ Next up, consolidate inputs, definitely. Look, right now you have to select the 
 
 Now, what about better validation messages, definitely. Right now you have to scroll down to the bottom to see a list of errors.
 
-[![wf1-4](../assets/images/wf1-4-small.jpg)](../assets/images/wf1-4.jpg)
+[![wf1-4](../assets/images/wf1-4-small.jpg)](../assets/images/wf1-4.jpg)<br>
+**Live demo:** [Event Form](http://udacity.github.io/course-web-forms/project/start/create.html)
 
 This could be a lot more helpful in a lot of different ways so that should definitely be improved.
 
@@ -80,7 +82,7 @@ Hi, I'm Luke Wroblewski. I'm a product director at Google, and the experience I 
 
 [![wf1-5](../assets/images/wf1-5-small.jpg)](../assets/images/wf1-5.jpg)
 
-I think what you just said about thinking purposefully about forms is the key. 
+I think what you just said about thinking purposefully about forms is the key.
 
 Don't just treat these things as one offs that you have to do. Don't just copy a pattern and assume that it works. Actually take the time to think what are you asking people and how are you asking them that? And if you put in a little bit of effort, you'll have a lot of impact and that's kind of the whole essence of form design.
 
@@ -125,9 +127,8 @@ But before thinking about our attributes on your inputs, I want you to think abo
 
 I'm just start typing here and when I'm choosing, it's automatically fill the form.
 
-[![wf1-9](../assets/images/wf1-9-small.jpg)](../assets/images/wf1-9.jpg)
-
-Here's a [link to the autocomplete example](http://greenido.github.io/Product-Site-101/form-cc-example-m3.html) used in screen capture above.
+[![wf1-9](../assets/images/wf1-9-small.jpg)](../assets/images/wf1-9.jpg)<br>
+**Live demo:** [Autocomplete example](http://greenido.github.io/Product-Site-101/form-cc-example-m3.html)
 
 ### 1.7 Death to Dropdowns
 You know, I'm one of those people that likes to finish something as soon as I think of it. If I think about something like let's say picking out a flight. I'll just take out my phone and start picking dates. And I found that I pretty often encounter dropdown menus, usually for things like dates. This seems reasonable, right?
@@ -1081,3 +1082,290 @@ At this point, you've done a lot with individual inputs.
 5. And you've played with the constraints validation API, for those times when you need to validate more complex inputs.
 
 In the next lesson, Ken and I will help you to take a step back from looking at single inputs to looking at the forms as a whole.
+
+## 3. Fast Forms
+### 3.1 Lesson Intro
+In the last lesson you practiced building better inputs. You practiced picking the right input types. You enabled autofill. You added clickable labels and you validated inputs
+
+[![wf1-1](../assets/images/wf1-1-small.jpg)](../assets/images/wf1-1.jpg)
+
+Now it's time to take a step back from perfecting individual input and start thinking about designing better forms made of many inputs. This lesson is particularly important for e-commerce, where better forms means more sales.
+
+This is really, really important. And take a look at PayPal's ridiculous rise in mobile payments. I think it makes sense that this lesson also focuses on creating great mobile experiences.
+
+Luckily, there are a few basic principles everyone can follow to build better forms on every platform. And they also apply well outside of e-commerce. Your ultimate goal is to minimize the amount of time your user spends filling out forms.
+
+In this lesson, you'll practice techniques to make forms mentally easier for your users to handle. And at the end of the lesson, you'll be given two ugly, nasty forms with low conversion rates. It'll be your job to apply best practices to improve the forms and boost conversion rates.
+
+### 3.2 Form Principles
+Following a few principles will make forms a breeze for your users which ultimately means more conversions for you.
+
+[![wf3-1](../assets/images/wf3-1-small.jpg)](../assets/images/wf3-1.jpg)
+
+1. Make forms as short and sweet as possible. Avoid making any redundant information and auto-fill as much as possible.
+2. Provide helpful prompts. In the last lesson you did it with the label elements
+3. Provide immediate feedback. Feedback comes in many different shapes.In the last lesson, you get feedback on an input with an instant validation.
+
+In this lesson, you'll use a progress bar to provide feedback on the user's progress through the entire form.
+
+You can learn about these principles through this deck: [Web Forms the Right Way](https://www.slideshare.net/greenido/web-forms-the-right-way).
+
+Now that these principles are fresh in your mind, Ken is going to help you do some brainstorming.
+
+### 3.3 Quiz: Empathy
+I know that you have quit filling out a massive form like this one before. I know you've groaned when you've come across some huge form with a million pages and tons of little radio buttons, because nobody likes to click these for hours on end.
+
+[![wf3-2](../assets/images/wf3-2-small.jpg)](../assets/images/wf3-2.jpg)
+
+So, with that in mind, I want you to brainstorm some questions that people ask when they come across big forms like this one. The reason why is that one of the most important skills for any developer is empathy.
+
+Empathy is the ability to see the world through somebody else's perspective. Any one who creates any thing for any other people needs a strong sense of empathy. And that includes web developers.
+
+Remember, you're building a website for your users, not for yourself. So this questions is going to be a free response question.
+
+See this long form? Ask yourself, what are you thinking when you see it? What do you want to know before you start? What kind of knowledge would help you finish it?
+
+#### 3.3 Solution
+So I actually got this survey a few months ago from my university's alumni association. It was awful. There were hundreds of radio buttons and every question seemed basically the same.
+
+I had no idea when it would end. I know it was probably important for them, but I just kind of gave up halfway through. I just didn't want to spend 20 minutes clicking little radio buttons.
+
+That's one question. How much more is there?
+
+So I wondered if I could save my progress and come back later. Would it even be safe to close my laptop? I wasn't sure, so that's my second question.Can I finish this form later?
+
+This is especially important for e-commerce, where people may start shopping now, but actually purchase later. I take the train home almost every day. My laptop doesn't have Internet on the train, but my phone does. I'm always looking for work I can do to keep myself occupied on the hour of my journey home. So that leads to my next question. Can I finish this form on a different device?
+
+Giving your users the option to easily finish later only makes it more likely that they'll actually finish. These all seem like really reasonable questions to me.
+
+In the next video you'll watch the next part of the interview with Luke. He'll describe the ways he empathizes with users when testing new forms.
+
+### 3.4 Luke Interview Pt 5
+Yeah, so my process for sort of putting myself, the methodology I like to think of here is this sort of outside in view. This is, you look at what your product looks like to people outside of your organization.
+
+[![wf1-5](../assets/images/wf1-5-small.jpg)](../assets/images/wf1-5.jpg)
+
+Most companies think about it from inside out perspective. That is, oh we have these legal requirements, oh, the tech team can only build this. The design teams, and you add up all of these different ideas and thought processes, which make a lot of sense within the bounds of your company, but don't make a lot of sense when somebody's looking at it externally.
+
+This is why you find simple forms, like a Contact Us form, including 20 fields,because this one came from legal, that one comes from marketing. You have five things like this because the database is structured this way.
+
+One very common technique, not common but very useful technique that you can have to force yourself to think outside in, is to actually have somebody role play the role the role of a form. And what do I mean by that? If you give someone a form, and you act like a human, and they only are able to respond with what the form says. So as an example you can say,
+
+- "Hi, I'm Luke. I'm trying to decide whether or not I want to get a loan with you." 
+- "First name."
+- "Okay, Luke."
+- "Last name."
+- "Wroblewski."
+- "Gender."
+- "Male."
+
+You can really start to see how it doesn't make any sense as a conversation. If instead you were to make that a real world conversation, you'd say something like, 
+
+- "Hi, I'm looking to maybe get a loan."
+- "Oh, well what are you trying to buy?"
+- "Oh, well I'm trying to buy a home."
+- "Is this your first home?"
+
+And, very naturally, you can weave that process through. And to go back to the original answer, this name-value pair in the database, it is not a human interaction. It is a process of telling a machine the requires fields it needs to process a document, which generally is not how we think about the world.
+
+So that role playing can go a really long way to helping people see almost the silliness, if you will, for a lot of the interactions we have online.
+
+### 3.5 Show Progress
+It is super important that you provide your users feedback because it's all about showing your users their progress throughout the process.
+
+### 3.6 Asking too much
+I'm shopping for some shoes and found this site. It looks pretty good, but it's asking me to register before viewing. So, I bounced out of there. This kind of thing happens all the time.
+
+Registration gates really only push users away. It makes it more difficult to view products and buy them, and that just is bad.
+
+### 3.7 Quiz: Frustrate Users
+You just watched us discuss the downside of gated shopping experiences. I want you to draw a conclusion from our discussion.
+
+[![wf3-3](../assets/images/wf3-3-small.jpg)](../assets/images/wf3-3.jpg)
+
+Imagine that you're building an e-commerce site. Of the practices listed here,which are most likely to drive users away and decrease conversions?
+
+Check all the options that you think will drive users away.
+
+### 3.7 Solution
+I'll start at the top.
+
+[![wf3-4](../assets/images/wf3-4-small.jpg)](../assets/images/wf3-4.jpg)
+
+1. Complicated password requirements are not likely to drive users away unless there's something totally insane like 1,000 characters. But in that case, you should still just use a password manager and then not worry about it, so no.
+2. Registration gates will though. More on this one in a moment.
+3. Suggesting products is fine, no harm in subtlety helping people find products that they might like. Just don't overdo it.
+4. Shipping address should have a name, so this one also isn't a problem.
+
+Okay, so it looks like the only problem from this list is registration gates on checkout. Remember how you should avoid putting your products behind a registration wall?
+
+[![wf3-5](../assets/images/wf3-5-small.jpg)](../assets/images/wf3-5.jpg)
+
+The same applies to purchases. When someone wants to buy something, they just want to buy it. Don't slow them down, and that's all registration gates really do.
+
+If you minimize the time to conversion, you'll watch your conversions increase.
+
+### 3.8 On Another Device
+This is a multi-device world. Everyone uses their phone on the go and they probably sit down with their laptops when they get home.
+
+People probably visit the same sites on both, but that doesn't mean that they've got the same intention.
+
+While you may peruse your favorite online retailer while you're on the go, you may not feel comfortable taking out your wallet and typing in your payment information in public. Or maybe you just don't feel like dealing with tiny little buttons and you're in a big rush.
+
+So you wait until you get home to actually make the purchase. It's perfectly reasonable. And developers who take advantage of this pattern stand to convert even more users.
+
+There are a few ways you could help users start a form on one device and then finish on another. For instance, you could offer them a way to share an item through social channels or email. Or there's an even simpler tactic, save to a shopping cart. This let's users leave for now without worrying. Because they know when they come back later, their items will be waiting for them.
+
+### 3.9 Quiz: Fast Forms
+Here's a website that you'll be improving at the end of this lesson. And like before, there's a slight chance that what you'll see may look slightly different than this, and that's only because we might tweak it between now and when you take the class.
+
+[![wf3-6](../assets/images/wf3-6-small.jpg)](../assets/images/wf3-6.jpg)<br>
+**Live Demo:** [Starting Checkout page](../exercises/wf3-13/start/index.html)
+
+What I really want you to do though is play around with it. Start clicking through, start giving it a shot, and start thinking about what you would want to do to improve it.
+
+[![wf3-7](../assets/images/wf3-7-small.jpg)](../assets/images/wf3-7.jpg)
+
+This is another quiz where you'll just be brainstorming. I want you to think about what areas for improvement that you can find in this form. How would you make it faster?How would you make it simpler? And once you've thought about it, check this box to continue.
+
+#### 3.9 Solution
+First things first. There are too many fields and a lot of them are completely irrelevant. Why is this form asking for a middle initial? First off, not everyone has one. And secondly, it's just not necessary for a checkout.
+
+Same thing with age and gender. This is a checkout form not a census. And still, why is age a drop down? Isn't that a number? Anyway, there's Confirm Email Address which just annoys me, like I don't know how to type it the first time?Don't put these on your forms.
+
+I could keep going. There are a lot of examples of totally irrelevant information here. And the layout isn't that great either.The form doesn't try to help you out. There's no indication of progress, and nothing is being validated whatsoever.
+
+So, it looks like you'll have your work cut out for you at the end of this lesson when you fix this.
+
+### 3.10 Luke Interview Pt 6
+Yeah, so how can we make forms that are fast, easy and accurate to fill in? Which is essentially all of form design.
+
+[![wf1-5](../assets/images/wf1-5-small.jpg)](../assets/images/wf1-5.jpg)
+
+So, I'll try a distill an entire book slash year's worth of materials into a couple of minute answer. But at the very highest level, when we have a series of questions we need answered.
+
+The process we should start with is this thing that Caroline Gerrit calls,
+
+- Keep
+- Cut
+- Postpone
+- Explain
+
+Keep is information that's critical, required, we've got to have it in the form somewhere.
+
+Cut means we actually don't need it. It's surprising how many times you can go and look at forms and see things that are included there and nobody's even actually using.
+
+Postpone are things that you can ask later. So there's a lot of information that we force you to give us upfront, which isn't applicable, and actually has a better time and place further down in the flow.
+
+So postponing questions until they're appropriate is a really good strategy as well.
+
+The last one is Explain. Explain just basically boils down to telling people why you're asking for something, or how they can answer that question.
+
+There's a case study at the beginning of my web form design book where a major e-tailer, a huge e-commerce site, had two options at checkout, one was log-in and one was register.
+
+It turned out you could actually register without creating an account. You could actually buy something without making an account, but it was totally unclear from that language, "Login or Register". So what they did is they changed the label of the button that said "Register" to "Continue" and they put a little bit of text that said you do not need an account to continue. And conversions went up something like 30%. They made 300 million more a year overnight, just from explaining what they were actually talking about.
+
+So that Keep, Cut, Postpone, and Explain methodology is great at the very highest level.
+
+Then when you go deeper, you get much more into interaction design and visual design considerations. What's the right input control for this type of question How do I minimize typing mistakes? How do I bound people so that they don't go into an error state? And you can do that with things like custom keyboards, input types, inline validation.
+
+There's a whole school of methodology for the nuances of forms. But it all starts at that bigger picture methodology of really thinking through what should be there, where and what you need to tell people about the questions you're asking them, if that makes sense.
+
+### 3.11 Efficiency
+We should always pay attention to ways in which to speed up the process of filling out a form. Another way we can speed things along is by using a device's location.
+
+### 3.12 Location
+Many forms ask for addresses, e-commerce in particular. Incidentally addresses are often incredibly annoying parts of the form because they require so many input fields.
+
+There are street address, postal codes, territories, countries, region, etc. But luckily, addresses can be pretty easily generated from a mobile device.
+
+Essentially all mobile devices have location services through gps or wi-fi. By accessing geo location, you can often auto fill addresses to within a fairly close range. Users might need to adjust a bit but manipulating one input is obviously better than eight.
+
+[![wf3-8](../assets/images/wf3-8-small.jpg)](../assets/images/wf3-8.jpg)
+
+In this example, you could see how we got the location of the users with this simple JavaScript code. Another way to do it will be to allow users the auto fill option.
+
+[![wf3-9](../assets/images/wf3-9-small.jpg)](../assets/images/wf3-9.jpg)<br>
+**Live Demo:** [Shipping form](../exercises/wf/shipping.html)
+
+Here you could see that with only few clicks I have been able to retrieve a location that was previously saved.
+
+When you search for a car, the app uses your location to guess your address .And when you sign up they ask for permission to use your location.
+
+[![wf3-10](../assets/images/wf3-10-small.jpg)](../assets/images/wf3-10.jpg)
+
+To learn more about accessing location services on the web, Android, and iOS, check out [The Geolocation API on MDN](https://developer.mozilla.org/en-US/docs/Web/API/Geolocation/Using_geolocation).
+
+### 3.13 Build a Checkout
+You've got quite a few new tools in your forms tool belt at this point. You've spent a lot of time thinking about forms as a whole, so I want you to put your skills to the test with this check out.
+
+[![wf3-6](../assets/images/wf3-6-small.jpg)](../assets/images/wf3-6.jpg)<br>
+**Live Demo:** [Starting Checkout page](../exercises/wf3-13/start/index.html)
+
+I'm going to give it to you in its current state, which is a bit ugly. This skeleton of a nice form is here but that's about it.
+
+You can tell that there are definitely way too many inputs. Clicking on the labels isn't working and the color scheme isn't really looking that great.
+
+What I’d like you to do is turn this into a simple, beautiful form using everything that you've learned so far. This is an open ended exercise in that there's really no correct answer. I want you to apply what you've learned about inputs, labels, simplification, auto completion, validation and form design.
+
+You may find that you can make some small tweaks to improve this checkout, or you may want to just blow it up and start from scratch. It's up to you.
+
+In the next video, you'll see me discuss two different versions of my check-out. One will use native HTML elements, while the other will take advantage of Polymer.
+
+Polymer includes a set of elements called gold elements that I found to be really helpful with e-commerce. As this is totally up to you to create, feel free to take advantage of whatever framework or library you like.
+
+Doesn't matter if that's Polymer, Angular, React, or something else entirely. It's up to you. The point of this quiz is to give you a chance to think through a checkout flow from start to finish.
+
+I want you to make decisions and build something that you're proud to show off. I also want you to think mobile first while you're designing. You'll learn more about this in a bit. But for now i just want you to do your best to think about what it's like for your mobile users first. It'll be a big help.
+
+Prioritizing for mobile devices will only help simplify and expedite your checkout flow.
+
+#### 3.13 Solution
+To start off with here's the native version of my check out form. I did do as much as I could to get rid of as many inputs as possible. I also made the language a little bit friendlier.And I did my best to make sure that the form was pared down to just the bare minimum.
+
+[![wf3-11](../assets/images/wf3-11-small.jpg)](../assets/images/wf3-11.jpg)<br>
+**Live Demo:** [Cam's Checkout page](../exercises/wf3-13/solution/index.html)
+
+I also make the assumption that somebody wants to use the same billing address as they used for shipping. That allows me to add this check box which I like. 
+
+If somebody wants to use a different billing address they simply click it and then enter it. You can see that I'm using placeholders in lieu of labels. But if you look in the source code, you can see that the labels are actually still there.
+
+[![wf3-12](../assets/images/wf3-12-small.jpg)](../assets/images/wf3-12.jpg)<br>
+**Live Demo:** [Cam's Checkout page](../exercises/wf3-13/solution/index.html)
+
+Screen readers need labels so I wound up just simply hiding them using a special CSS class. This keeps them in the DOM, but they don't show up. There's also a bit of validation happening.
+
+Among other things, credit card numbers are being parsed to find the type of credit card. That's pretty helpful. Of course, this version doesn't quite follow all of the best practices that you've learned. I wound up ditching the progress bar at the top and I'm doing nothing to help out with location.
+
+Here's my form.
+
+[![wf3-13](../assets/images/wf3-13-small.jpg)](../assets/images/wf3-13.jpg)
+
+[![wf3-14](../assets/images/wf3-14-small.jpg)](../assets/images/wf3-14.jpg)<br>
+**Live Demo:** [James' Checkout page](../exercises/wf3-13/end/index.html)
+
+### 3.14 Luke Interview Pt 7
+So for a long time, I've advocated this approach of Mobile First. And the reason why I've pushed for that is threefold.
+
+[![wf1-5](../assets/images/wf1-5-small.jpg)](../assets/images/wf1-5.jpg)
+
+First, mobile's a huge opportunity. If you look at the scope of it, it's much, much bigger than what we've had before with personal computers. 
+
+Two, mobile has new capabilities. For example, with a desktop or laptop, we knew with 99% certainty you were in the U.S. Yay. With mobile we can get you down to like 50 meters, which is a huge, huge difference. And there's a lot of other capabilities like multi-touch and all the sensors and devices that we didn't have before.
+
+But the third one, which I thought was actually the most impactful was if you go from a typical 1024 by 768 screen down to a 320 by 480, kind of early smartphone screen, you've lost 80% of your screen space .Which means you need to think really, really hard about what can fit on that screen, because you can't fit everything from before.
+
+So you have to do this really hard thing called prioritization. And in order to prioritize, you have to understand what you're doing for people, why and how. And when you think about all these different devices, mobile is a great forcing function for getting you down to the core essence, to what really matters. How fast and easy can we make this?
+
+Maybe the watch is another forcing function because you should be able to, I saw people ordering pizzas with their voice on their watch. But the less capabilities you have, the more creative you have to get with how people can get stuff done. So it's a great way to essentially force yourself to simplify.
+
+For instance, we have this 40 input field check out form, can we get it down to five, what would that take? Would that even work? And when you do it on the desktop, you don't have that concern. It's like oh yeah, there's plenty of room. I'll just add field number 45 on page 3.
+
+People can type. So on a multi-device we're all right. I think it helps to have that filter first, to get down to the core essence and then you can bring that core essence everywhere. Because why should someone with a 20 inch monitor suffer through 40 form fields, where someone with a 4 inch monitor gets away with only five, right? They should equally get the same treatment.
+
+### 3.15 Lesson Outro
+Great job! You applied the clicks to make forms faster and better.
+
+You applied the principles of short forms. You didn't ask for redundant information. You simplified. You gave feedback. And you tried out location services to help with addresses.
+
+Now it is on to the next lesson where you'll focus on touch. Remember your mobile users are incredibly important so we want to create touch interaction that users will love.
