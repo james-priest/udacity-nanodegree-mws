@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Quiz - Touch Slider</title>
+	<link rel="stylesheet" href="css/styles.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+</head>
+<body>
+	<div class="main">
+		<h3>Slide me</h3>
+		<div class="slider-main">
+			<svg id="line" height="48" width="300">
+			  <line x1="0" y1="24" x2="300" y2="24" style="stroke:rgb(0,0,0);stroke-width:2" />
+			</svg>
+			<div id="toggle"><div class="markings">|||</div></div>
+		</div>
+	</div>
+	<script src="js/app.js"></script>
+	<script>
+		/*
+		No need to touch! Just blocks accidental scrolling
+		 */
+
+		// http://stackoverflow.com/questions/16348031/disable-scrolling-when-touch-moving-certain-element
+		window.blockMenuHeaderScroll = false;
+		$(window).on('touchstart', function(e) {
+	    if ($(e.target).closest('.main').length == 1) {
+				blockMenuHeaderScroll = true;
+	    }
+		});
+		$(window).on('touchend', function() {
+			blockMenuHeaderScroll = false;
+		});
+		$(window).on('touchmove', function(e) {
+	    if (blockMenuHeaderScroll) {
+				e.preventDefault();
+	    }
+		});
+	</script>
+</body>
+</html>

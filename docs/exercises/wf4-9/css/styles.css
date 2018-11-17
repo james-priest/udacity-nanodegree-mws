@@ -1,0 +1,42 @@
+body {
+	-moz-user-select: none;
+ 	-webkit-user-select: none;
+ 	-ms-user-select: none;
+ 	user-select: none;
+}
+
+.slider-main {
+	width: 300px;
+	margin-top: 200px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#toggle {
+	text-align: center;
+	position: absolute;
+	height: 48px;
+	width: 96px;
+	background: rgba(100,100,100,1);
+	will-change: transform;
+}
+
+.markings {
+	padding-top: 16px;
+}
+
+svg {
+	position: absolute;
+}
+
+.output {
+	position: absolute;
+	bottom: 0vh;
+	width: 96px;
+	height: 48px;
+	display: block;
+}
+
+.hide {
+	opacity: 0;
+}
