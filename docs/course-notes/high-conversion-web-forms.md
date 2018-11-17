@@ -11,11 +11,32 @@ description: Notes by James Priest
 ### Links
 #### Resources
 - [Create Amazing Forms by Pete LePage](https://goo.gl/i0vY1M) - input types, datalist, labels, autocomplete attributes, autofill pitfalls, real-time validation
-- [Web Forms the Right Way](https://www.slideshare.net/greenido/web-forms-the-right-way) - a deck slides detailing HTML5 Forms best practices.
-- [Autocomplete example](http://greenido.github.io/Product-Site-101/form-cc-example-m3.html) - with multiple tabs and various autocomplete fields.
+- [Web Forms the Right Way](https://www.slideshare.net/greenido/web-forms-the-right-way) - slide deck detailing HTML5 Forms best practices.
+- [Input types on MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#Form_%3Cinput%3E_types) - List of all input types on MDN
+- [HTMLRocks Geolocation Code](https://www.html5rocks.com/en/tutorials/geolocation/trip_meter/) - Writeup on how to use Geolocaton
+- [Styling HTML Forms](https://developer.mozilla.org/en-US/docs/Learn/HTML/Forms/Styling_HTML_forms) - MDN article
+- [Advanced CSS Form Styling](https://jonathan-harrell.com/advanced-css-form-styling/) - Article from 2017
+- [Help users checkout faster with Autofill](https://developers.google.com/web/updates/2015/06/checkout-faster-with-autofill?hl=en) - Google Developer website article
+- [Autocomplete attributes on MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#attr-autocomplete) - list of all autocomplete attributes
+- [The pattern Attribute](https://www.wufoo.com/html5/pattern-attribute/) - RegEx input validation
+- [Constraint Validation on MDN](https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/HTML5/Constraint_validation) - required, min, max, step, pattern, etc.
 
 #### Samples
-- [Responsive Mobile Ready Forms](https://codepen.io/james-priest/pen/PxbKdy) - Pen on CodePen
+- [Bad Event Form](http://udacity.github.io/course-web-forms/project/start/create.html) - Allows you to schedule an event. This form needs works
+- [Tabbed Autocomplete](http://greenido.github.io/Product-Site-101/form-cc-example-m3.html) with Bootstrap - Has Contact, Address, & Payment fields.
+- [CodePen Responsive Mobile Ready Form](https://codepen.io/james-priest/pen/PxbKdy) - Contact, Address, & Pmt fields
+- [Date & Time controls](../exercises/wf1-9/datetime.html) - Simple example of date and time input types
+- [Calendar control](../exercises/wf2-10/index.html) Simple example of input type `datatime-local`
+- [Datalist control](../exercises/wf1-10/datalist.html) - Simple example of self-filtering list allow custom entry
+- [CodePen Geolocation Example](http://codepen.io/greenido/pen/qOEbGp) - Detects lat lon coordinates.
+- [CodePen Date/Time Attributes Demo](https://codepen.io/james-priest/pen/mQOdJV?editors=1000) - all date & time controls
+- [Gradebook - numeric](../exercises/wf2-18/index.html) - number input types with min, max, step, & pattern  
+- [Puppy validator](http://udacity.github.io/course-web-forms/lesson2/setCustomValidity) - uses `setCustomValidity` on text control
+- [Password validation](../exercises/wf2-20/index.html) - uses `setCustomValidity` with custom `IssueTracker` class
+- [Contact form](../exercises/wf/contact.html) - styled, constraint validation, autocomplete, & responsive
+- [Shipping form](../exercises/wf/shipping.html) - styled, constraint validation, autocomplete, & responsive
+- [Cam's Checkout page](../exercises/wf3-13/solution/index.html) - Streamlined checkout form
+- [James' Checkout page](../exercises/wf3-13/end/index.html) - Responsive & streamlined checkout form
 
 ---
 
@@ -128,7 +149,7 @@ But before thinking about our attributes on your inputs, I want you to think abo
 I'm just start typing here and when I'm choosing, it's automatically fill the form.
 
 [![wf1-9](../assets/images/wf1-9-small.jpg)](../assets/images/wf1-9.jpg)<br>
-**Live demo:** [Autocomplete example](http://greenido.github.io/Product-Site-101/form-cc-example-m3.html)
+**Live demo:** [Tabbed Autocomplete](http://greenido.github.io/Product-Site-101/form-cc-example-m3.html) using Bootstrap
 
 ### 1.7 Death to Dropdowns
 You know, I'm one of those people that likes to finish something as soon as I think of it. If I think about something like let's say picking out a flight. I'll just take out my phone and start picking dates. And I found that I pretty often encounter dropdown menus, usually for things like dates. This seems reasonable, right?
@@ -172,7 +193,7 @@ In the next quizzes, Cam will challenge you to research on your own and pick the
 ### 1.9 Quiz: Pick an Input
 This flight picker app was annoying. I was tapping way too much to pick flight dates. 
 
-[![wf1-14](../assets/images/wf1-14-small.jpg)](../assets/images/wf1-14.jpg)
+[![wf1-14](../assets/images/wf1-14-small.jpg)](../assets/images/wf1-14.jpg)**Live demo:** [Bad Flight Picker](http://udacity.github.io/course-web-forms/lesson1/flightPicker/) using select controls
 
 This site is obviously using the wrong kinds of inputs. There's gotta be a better way. So for this quiz, I want you to think about the types of inputs you're inflicting upon your users. So you don't make the same mistakes that I did when I built this.
 
@@ -182,7 +203,7 @@ Here are two HTML inputs.The first input is for date and the second one is for t
 
 What types of inputs make the most sense for these two inputs? Check out the link below to see a list of inputs on the Mozilla Developer Network.
 
-- [Input types on MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#Form_%3Cinput%3E_types)
+- [Input types on MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#Form_%3Cinput%3E_types) - list of all input type controls
 
 Do some research, and when you're done, type your answers into these boxes.
 
@@ -197,13 +218,15 @@ Given that there's a separate input for time in this quiz, I want to go with `da
 
 So I'll scroll down, and there is time. Well, that's pretty straightforward. This is what the form looks like before you enter date and time.
 
-[![wf1-17](../assets/images/wf1-17-small.jpg)](../assets/images/wf1-17.jpg)
+[![wf1-17](../assets/images/wf1-17-small.jpg)](../assets/images/wf1-17.jpg)<br>
+**Live demo:** [Text controls](../exercises/wf1-9/text.html) - Bad UX
 
 You'll notice that these two are just defaulted to text inputs.
 
 And then after you enter date and time for the types, you will see that now you have a nice date selector for dates, and a nice time selector for time.
 
-[![wf1-18](../assets/images/wf1-18-small.jpg)](../assets/images/wf1-18.jpg)
+[![wf1-18](../assets/images/wf1-18-small.jpg)](../assets/images/wf1-18.jpg)<br>
+**Live demo:** [Date & Time controls](../exercises/wf1-9/datetime.html) - Good Usability
 
 That looks pretty good.
 
@@ -237,7 +260,7 @@ For this quiz you're going to be building the data list you just saw. I'll be gi
 #### 1.10 Solution
 Turn this dropdown into a datalist!
 
-##### Select
+##### Old code using Select
 Here's where the code starts. There's a select tag indicating that this is a drop down and there are a few options inside.
 
 ```html
@@ -259,7 +282,10 @@ Here's where the code starts. There's a select tag indicating that this is a dro
 </html>
 ```
 
-##### Datalist
+[![wf1-23](../assets/images/wf1-23-small.jpg)](../assets/images/wf1-23.jpg)<br>
+**Live demo:** [Select control](../exercises/wf1-10/select.html) - Bad UX: inflexible & requires multiple clicks
+
+##### New code using Datalist
 And this is what it looks like as a datalist.
 
 ```html
@@ -281,6 +307,9 @@ And this is what it looks like as a datalist.
 </body>
 </html>
 ```
+
+[![wf1-24](../assets/images/wf1-24-small.jpg)](../assets/images/wf1-24.jpg)<br>
+**Live demo:** [Datalist control](../exercises/wf1-10/datalist.html) - Good Usability: self-filtering list allow custom entry
 
 The differences are pretty minimal. The `select` tag turned into a `datalist` tag. I added a `list` attribute to the `input` with the same `id` as the `datalist`. And I changed all the option values from inert HTML text to values.
 
@@ -305,7 +334,7 @@ You know, there are other ways to predict what your users will want to type. For
 Even if your users aren't logged in, you can still help them out. For example, you could guess their location using location services. See links below.
 
 - [Ido's CodePen Geolocation Example](http://codepen.io/greenido/pen/qOEbGp)
-- [HTMLRocks Geolocation Example](https://www.html5rocks.com/en/tutorials/geolocation/trip_meter/)
+- [HTMLRocks Geolocation Code](https://www.html5rocks.com/en/tutorials/geolocation/trip_meter/)
 
 In the end, this is all in the pursuit of the most important principles to takeout from this lesson. Speed equals conversions.
 
@@ -630,7 +659,7 @@ And now when I click select the appropriate email the rest of the form gets fill
 [![wf2-16](../assets/images/wf2-16-small.jpg)](../assets/images/wf2-16.jpg)<br>
 **Live demo:** [Contact form](../exercises/wf/contact.html)
 
-Awesome. Below is [a massive list of auto-complete attributes](https://developers.google.com/web/updates/2015/06/checkout-faster-with-autofill?hl=en). Take a look and see how you could automate life for your users and put a big smile on their faces.
+Awesome. Take a look and see how you could automate life for your users and put a big smile on their faces.
 
 #### 2.12 Resources
 Here are some resources
@@ -923,7 +952,7 @@ Notice how there are two inputs for passwords? This is pretty common and it prev
 
 You'll be using JavaScript and `setCustomValidity` to check that both passwords are the same and that the passwords meet all of the requirements listed here.
 
-The validation messages that you pass to set custom validityare really important. They need to help the user out. Don't just tell them that something's wrong. If the password is too short, tell them how many characters it should be. If it's missing a number, tell them that it's missing a number, and so on.
+The validation messages that you pass to set custom validity are really important. They need to help the user out. Don't just tell them that something's wrong. If the password is too short, tell them how many characters it should be. If it's missing a number, tell them that it's missing a number, and so on.
 
 Give this quiz a good, honest try, because it's a great opportunity for you to think through the nuances of more complex validation. The idea of checking for these requirements may seem really straightforward, but the implementation details might surprise you.
 
@@ -1369,3 +1398,21 @@ Great job! You applied the clicks to make forms faster and better.
 You applied the principles of short forms. You didn't ask for redundant information. You simplified. You gave feedback. And you tried out location services to help with addresses.
 
 Now it is on to the next lesson where you'll focus on touch. Remember your mobile users are incredibly important so we want to create touch interaction that users will love.
+
+## 4. Touch Support
+Welcome back, in the first two lessons you learned how to build great inputs. In the last lesson you practiced building great forms.
+
+[![wf1-1](../assets/images/wf1-1-small.jpg)](../assets/images/wf1-1.jpg)
+
+Along the way you probably noticed that building great experiences for your mobile users has been a major theme of this course.
+
+That's because it can be a lot more difficult to build a really fantastic experience for them. When users choose to interact with you app, it should respond to that touch in intuitive and beautiful ways.And that's what you'll learn in this lesson.
+
+You'll fix a few sites that badly need your help with some better touch events. And at the end of it you'll be given this courses project. If you feel like you need more practice designing websites for mobile, I highly recommend checking out the course called Responsive Web Design Fundamentals.
+
+### 4.2 Touch vs. Click
+So why worry about touch?  Aren't touch events just click events on a touch screen?
+
+No, they aren't. They have different pseudo classes and different event cycles and you need to account for both.
+
+Let me show you what can happen if you don't account for touch events at all.This is an example site that use touch.Which you can find the link in the instructor notes.I recommend posing this video and go play with it for a moment.Pay attention as I'm dragging this element, what's going on.Both in depth tools and on the element itself.Another good example is here as you can see I'm just improving my images.In this example is taking touch, mouse, and pointer events.Much better.Well that was fun.Notice how the UI didn't quite react to your touch.First thing first.You need to account for the touch pseudo states.
