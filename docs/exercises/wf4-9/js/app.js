@@ -96,13 +96,18 @@ Write your code in the attachEventListeners() function defintion, which starts o
 			3) On end, set flag that the toggle has stopped sliding. Once again, it doesn't need to be 
 			limited to the toggle as the finger/mouse can come up anywhere in the window.
 		 */
-
+		
+  	// Flag to indicate whether the toggle is in the process of sliding.
+		var sliding = false;
+		
 		toggle.addEventListener('touchstart', function (event) {
+			event.preventDefault();
 			sliding = true;
 			toggleTracker.addMovement(event.touches[0].pageX);
 		});
 
 		window.addEventListener('touchmove', function (event) {
+			// event.preventDefault();	// no longer needed
 			if (sliding) {
 				toggleTracker.addMovement(event.touches[0].pageX);
 				this.requestAnimationFrame(slide);
@@ -110,8 +115,25 @@ Write your code in the attachEventListeners() function defintion, which starts o
 		});
 
 		window.addEventListener('touchend', function (event) {
+			event.preventDefault();
 			sliding = false;
-		})
+		});
+
+		toggle.addEventListener('mousedown', function (event) {
+			sliding = true;
+			toggleTracker.addMovement(event.clientX);
+		});
+
+		window.addEventListener('mousemove', function (event) {
+			if (sliding) {
+				toggleTracker.addMovement(event.clientX);
+				this.requestAnimationFrame(slide);
+			}
+		});
+
+		window.addEventListener('mouseup', function (event) {
+			sliding = false;
+		});
 	}
 
 	/*
@@ -121,7 +143,7 @@ Write your code in the attachEventListeners() function defintion, which starts o
   	/*
 		Flag to indicate whether the toggle is in the process of sliding.
 		 */
-		var sliding = false;
+		// var sliding = false;
     attachEventListeners();
   });
 })();
