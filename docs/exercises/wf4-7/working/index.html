@@ -26,7 +26,9 @@
 <body>
 	<form>
 		<div id="square"></div>
-		<p id="output"></p>
+		<p id="output1"></p>
+		<!-- <p id="output2"></p> -->
+		<p id="output3"></p>
   </form>
   <script>
 	
@@ -36,14 +38,36 @@
 
 	(function() {
 	  var square = document.querySelector('#square');
-	  var output = document.querySelector('#output');
+	  var output1 = document.querySelector('#output1');
+	  var output2 = document.querySelector('#output2');
 
+		// square.addEventListener('touchstart', (e)=> e.preventDefault(),true);
+		// square.addEventListener('touchmove', (e) => e.preventDefault(), true);
 		square.addEventListener('touchend', handleTouchEnd);
+		// square.addEventListener('mouseup', handleMouseUp);
+		square.addEventListener('click', handleClick);
 		
 		function handleTouchEnd(e) {
-			output.innerHTML = 'touchend';
+			// e.preventDefault(); // looks like this is no longer necessary
+			output1.innerHTML = 'touchend';
+			clear();
+		}
+
+		// function handleMouseUp(e) {
+		// 	output2.innerHTML = 'mouseup';
+		// 	clear();
+		// }
+
+		function handleClick(e) {
+			output3.innerHTML = 'click';
+			clear();
+		}
+
+		function clear() {
 			setTimeout(function() {
-				output.innerHTML = '';
+				output1.innerHTML = '';
+				output2.innerHTML = '';
+				output3.innerHTML = '';
 			}, 2000)
 		}
 	})();
