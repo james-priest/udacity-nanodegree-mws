@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Quiz - Event Listener</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+  <!-- jquery.ui.touch-punch adds touch events to jQuery UI. It'll bind touchend events to mouseup -->
+  <script src="http://udacity.github.io/course-web-forms/etc/jquery.ui.touch-punch.min.js"></script>
+  <style>
+    #square {
+      background-color: red;
+      height: 200px;
+      width: 200px;
+    }
+
+    .output {
+      -moz-user-select: none;
+      -webkit-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+  </style>
+</head>
+<body>
+  <form>
+    <div id="square"></div>
+    <p id="output"></p>
+  </form>
+  <script>
+    /*
+    You can solve this quiz with vanilla JS or jQuery!
+     */
+
+    (function() {
+      var square = document.querySelector('#square');
+      var output = document.querySelector('#output');
+
+      var updatingInProcess = false;
+      function showTouchEnd() {
+        output.innerHTML = 'touchend';
+
+        /*
+        Hide the fact that touchend occured after 2s so that you can click again.
+         */
+        if (!updatingInProcess) {
+          updatingInProcess = true;
+          setTimeout(function () {
+            output.innerHTML = '';
+            updatingInProcess = false;
+          }, 2000);
+        }
+      }
+
+      square.addEventListener('touchend', showTouchEnd, false);
+    })();
+    
+    $(function(){
+      /*
+      FYI, this is the jQuery way of running a locally scoped function on
+      document ready. Check out http://gregfranko.com/blog/jquery-best-practices/
+      to learn more.
+       */
+      var square = $('#square');
+      var output = $('#output');
+
+      /*
+      Don't delete this or the square won't be draggable!
+       */
+      square.draggable();
+
+      /*
+      Here's the same technique w/jQuery. It's commented out because there's no need
+      for identical JS and jQuery event listeners on the same node.
+       */
+      /*
+      var updatingInProcess = false;
+      square.on('touchend', function() {
+        if (!updatingInProcess) {
+          updatingInProcess = true;
+          output.html('touchend');
+          setTimeout(function() {
+            output.fadeOut(500);
+            updatingInProcess = false;
+          }, 2000);
+        }
+      });
+       */
+    });
+
+  </script>
+</body>
+</html>
