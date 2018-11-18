@@ -1465,7 +1465,7 @@ You could open dev tools and see what are the pseudo states that we gave foreach
 
 - [Add Touch to Your Site](https://developers.google.com/web/fundamentals/design-and-ux/input/touch/) - Google Developer article
 
-### 4.4 Suppress Select
+### 4.4 Suppress Text Select
 Quick note: some mobile browsers will select text if the user long presses on the screen. This is super useful for copying and pasting, but can be frustrating if a user didn’t intend to select any text.
 
 You can prevent this from happening using the user-select CSS property seen here:
