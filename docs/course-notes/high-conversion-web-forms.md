@@ -13,13 +13,17 @@ description: Notes by James Priest
 - [Create Amazing Forms by Pete LePage](https://goo.gl/i0vY1M) - input types, datalist, labels, autocomplete attributes, autofill pitfalls, real-time validation
 - [Web Forms the Right Way](https://www.slideshare.net/greenido/web-forms-the-right-way) - slide deck detailing HTML5 Forms best practices.
 - [Input types on MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#Form_%3Cinput%3E_types) - List of all input types on MDN
-- [HTMLRocks Geolocation Code](https://www.html5rocks.com/en/tutorials/geolocation/trip_meter/) - Writeup on how to use Geolocaton
+- [HTMLRocks Geolocation Code](https://www.html5rocks.com/en/tutorials/geolocation/trip_meter/) - Write-up on how to use Geolocation
 - [Styling HTML Forms](https://developer.mozilla.org/en-US/docs/Learn/HTML/Forms/Styling_HTML_forms) - MDN article
 - [Advanced CSS Form Styling](https://jonathan-harrell.com/advanced-css-form-styling/) - Article from 2017
 - [Help users checkout faster with Autofill](https://developers.google.com/web/updates/2015/06/checkout-faster-with-autofill?hl=en) - Google Developer website article
 - [Autocomplete attributes on MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#attr-autocomplete) - list of all autocomplete attributes
 - [The pattern Attribute](https://www.wufoo.com/html5/pattern-attribute/) - RegEx input validation
 - [Constraint Validation on MDN](https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/HTML5/Constraint_validation) - required, min, max, step, pattern, etc.
+- [Add Touch to Your Site](https://developers.google.com/web/fundamentals/design-and-ux/input/touch/) - Google Developer article
+- [Touch Events on MDN](https://developer.mozilla.org/en-US/docs/Web/API/Touch_events) - Docs on Touch events 
+- [Using Touch Events on MDN](https://developer.mozilla.org/en-US/docs/Web/API/Touch_events/Using_Touch_Events) - Walkthrough for implementing touch events
+- [Supporting both TouchEvent and MouseEvent on MDN](https://developer.mozilla.org/en-US/docs/Web/API/Touch_events/Supporting_both_TouchEvent_and_MouseEvent) - Event order
 
 #### Samples
 - [Bad Event Form](http://udacity.github.io/course-web-forms/project/start/create.html) - Allows you to schedule an event. This form needs works
@@ -37,6 +41,9 @@ description: Notes by James Priest
 - [Shipping form](../exercises/wf/shipping.html) - styled, constraint validation, autocomplete, & responsive
 - [Cam's Checkout page](../exercises/wf3-13/solution/index.html) - Streamlined checkout form
 - [James' Checkout page](../exercises/wf3-13/end/index.html) - Responsive & streamlined checkout form
+- [Touch samples](https://github.com/googlesamples/web-fundamentals/tree/gh-pages/fundamentals/design-and-ux/input/touch) - Source code for touch demos on Google Developer site
+- [Touch drag sample](../exercises/wf4-7/working/index.html) - Uses touch event handlers
+- [Slider sample](../exercises/wf4-9/index.html) - Uses both mouse and touch events
 
 ---
 
@@ -1400,6 +1407,7 @@ You applied the principles of short forms. You didn't ask for redundant informat
 Now it is on to the next lesson where you'll focus on touch. Remember your mobile users are incredibly important so we want to create touch interaction that users will love.
 
 ## 4. Touch Support
+### 4.1 Intro
 Welcome back, in the first two lessons you learned how to build great inputs. In the last lesson you practiced building great forms.
 
 [![wf1-1](../assets/images/wf1-1-small.jpg)](../assets/images/wf1-1.jpg)
@@ -1415,4 +1423,387 @@ So why worry about touch?  Aren't touch events just click events on a touch scre
 
 No, they aren't. They have different pseudo classes and different event cycles and you need to account for both.
 
-Let me show you what can happen if you don't account for touch events at all.This is an example site that use touch.Which you can find the link in the instructor notes.I recommend posing this video and go play with it for a moment.Pay attention as I'm dragging this element, what's going on.Both in depth tools and on the element itself.Another good example is here as you can see I'm just improving my images.In this example is taking touch, mouse, and pointer events.Much better.Well that was fun.Notice how the UI didn't quite react to your touch.First thing first.You need to account for the touch pseudo states.
+Let me show you what can happen if you don't account for touch events at all. This is an example site that uses touch.
+
+[![wf4-1](../assets/images/wf4-1-small.jpg)](../assets/images/wf4-1.jpg)<br>
+**Live Demo:** [Swipe Demo](https://googlesamples.github.io/web-fundamentals/fundamentals/design-and-ux/input/touch/touch-demo-1.html)
+
+Pay attention as I'm dragging this element, to what's going on both in dev tools and on the element itself.
+
+Another good example is this drawing app.
+
+[![wf4-2](../assets/images/wf4-2-small.jpg)](../assets/images/wf4-2.jpg)<br>
+**Live Demo:** [Touch & Pointer Events Demo](https://codepen.io/greenido/pen/RWBjKz)
+
+This example uses touch, mouse, and pointer events. 
+
+Notice how the UI didn't quite react to your touch. First thing first though. You need to account for the touch pseudo states.
+
+### 4.3 Touch Pseudo States
+The fastest way to support touch is to change the UI in response to a DOM elements change in state.
+DOM elements can be in one of the following states
+
+- default
+- hover
+- focus
+- active
+
+To change our UI for each of these states, we need to apply styles to the following pseudo classes `:active`, `:focus` and `:hover`
+
+[![wf4-3](../assets/images/wf4-3-small.jpg)](../assets/images/wf4-3.jpg)
+
+On most mobile browsers `:hover` and `:focus` states will apply to an element after it's being tapped.
+
+So, consider carefully what size you set, and how they will look to the user after they finish their touch. Bear in mind that anchor tags and buttons may have different behaviors in different browsers. So assume in some cases the `:hover` will remain, and in others `:focus` will remain.
+
+Here you could see it in action, when we're clicking on each of the buttons, and it's left with a different style.
+
+[![wf4-4](../assets/images/wf4-4-small.jpg)](../assets/images/wf4-4.jpg)<br>
+**Live Demo:** [Touch States Sample](https://googlesamples.github.io/web-fundamentals/fundamentals/design-and-ux/input/touch/states-example.html)
+
+You could open dev tools and see what are the pseudo states that we gave foreach of the buttons.
+
+- [Add Touch to Your Site](https://developers.google.com/web/fundamentals/design-and-ux/input/touch/) - Google Developer article
+
+### 4.4 Suppress Select
+Quick note: some mobile browsers will select text if the user long presses on the screen. This is super useful for copying and pasting, but can be frustrating if a user didn’t intend to select any text.
+
+You can prevent this from happening using the user-select CSS property seen here:
+
+```css
+-moz-user-select: none;
+-webkit-user-select: none;
+-ms-user-select: none;
+user-select: none;
+```
+
+### 4.5 Build a Better UI
+For this quiz, I'm giving you this site with these three buttons. I want you to load it on your touch capable devices, like my phone here, and I want you to do some research.
+
+[![wf4-5](../assets/images/wf4-5-small.jpg)](../assets/images/wf4-5.jpg)<br>
+**Live Demo:** [3 button Sample](http://udacity.github.io/course-web-forms/lesson4/quizSimpleTouch/solution/)
+
+We just covered how you can use pseudo-classes to make your your UI feel more reactive.
+
+These three buttons have `:active`, `:focus` and `:hover` pseudo-classes applied to them with the following colors.
+
+```css
+:active { background: Aqua; }
+:focus { background: FireBrick; }
+:hover { background: HotPink; }
+```
+
+See how the first letters match? Anyway, take a look at this site on your touchscreen devices and answer this question.
+
+Which pseudo-class does not get applied on mobile devices? That means, never gets applied on mobile devices. Does active never show up, does focus never show up or does hover never show up?
+
+[![wf4-6](../assets/images/wf4-6-small.jpg)](../assets/images/wf4-6.jpg)
+
+Take a minute, play around with the site and then select one of these three answers.
+
+#### 4.5 Solution
+So I've got the site open on my mobile device, and I will start tapping. Okay, so did you see that? It goes aqua then pink.
+
+So Aqua is `:active`, and pink is actually HotPink, and that means `:hover`. Notice that no matter what you do, you don't see FireBrick showing up. But that was on an iOS device.
+
+[![wf4-7](../assets/images/wf4-7-small.jpg)](../assets/images/wf4-7.jpg)
+
+I wonder if it's any different on an Android device? Let's see. Okay, so it goes Aqua, then FireBrick, interesting. Last time on the iOS device, I didn't see FireBrick.
+
+[![wf4-9](../assets/images/wf4-9-small.jpg)](../assets/images/wf4-9.jpg)
+
+I wonder if HotPink is there?If I press down on a button and then slide my finger off, the HotPink shows up. Which means that hover is actually there too.
+
+[![wf4-8](../assets/images/wf4-8-small.jpg)](../assets/images/wf4-8.jpg)
+
+So on Android you have all three. So the correct answer is, actually, none of them because different mobile devices behave slightly differently.
+
+It's worth keeping this in mind as you develop your sites to look good on any device. You're starting to think about forms with touch, which is a distinctly human interaction.
+
+In the next video,watch Luke describe how the human body becomes a factor with mobile devices.
+
+### 4.6 Luke Interview Pt 8
+[![wf1-5](../assets/images/wf1-5-small.jpg)](../assets/images/wf1-5.jpg)
+
+So one of the big differences that comes from direct manipulation screens, that is things you touch to provide input versus what we have in the desktop and laptop world, is that the human body all the sudden really starts to matter.
+
+Before when we're building software for desk tops and laptops the size of our hands, the size of our finger what's a comfortable reach, that burden is taken on by the keyboards and the mice.
+
+Right so long as the mouse is comfortable and the keyboards comfortable the software designer doesn't have to worry about it. They don't have to think about these are going to considerations.
+
+As soon as software is something that people can touch and feel, the screen has to be considered in the context of your hand. How far can you reach that thumb?How big is that thumb? These things impact where you put controls, how large you make controls and how easily those controls are to manipulate.
+
+Anyone who's struggled with a desktop form on a mobile device knows these teeny little tick boxes and radio buttons can be super frustrating especially if you're trying to pick a specific one.
+
+So at the very least we need to consider how to size controls, how to space them. And that's sort of the bare minimum. If you want to do one better then you start thinking about well. Is it possible to create this flow or to complete this flow using what I call one thumb one eyeball.
+
+And one thumb one eyeball actually illustrate this here since I have a phone like all of you too. In your pocket, kind of hold it like this, and you look at it like this. TV may be on, you may be outside, or something like this. How can I get something done, just with these sorts of actions?
+
+And that goes much broader than just size, right? It's where you place the controls, it's what the flow looks like, it's the kind of controls you use as well. And we have a lot of controls that require the precision of a mouse cursor to use well little like spinner wheels that you find on the desktop dropdown menus that you find desktop. All those controls need to be rethought for touch screens so that they can actually be used by our hands.
+
+### 4.7 Quiz: Event Listeners
+It's worth doing a quick refresher on creating event listeners. For this quiz, I want you to add an event listener to this sample site. See this red box here? You can click and drag or touch and drag it around the page.
+
+[![wf4-10](../assets/images/wf4-10-small.jpg)](../assets/images/wf4-10.jpg)<br>
+**Live Demo:** [Touch drag sample](../exercises/wf4-7/working/index.html)
+
+There's also a `<p>` tag that I want you to change its inner HTML to "touch end" only when the `touchend` event occurs.
+
+Here let me show you. In device emulation mode when I let up, you can see touch and pop up and when i'm not in device emulation mode, nothing happens.
+
+[![wf4-11](../assets/images/wf4-11-small.jpg)](../assets/images/wf4-11.jpg)<br>
+**Live Demo:** [Touch drag sample](../exercises/wf4-7/working/index.html)
+
+That's because me letting up here is a `click` event, not a `touchend` event.
+
+Here's the general structure of an event listener in plain old vanillaJavaScript.
+
+[![wf4-12](../assets/images/wf4-12-small.jpg)](../assets/images/wf4-12.jpg)
+
+The target is the specific node you want to actually listen to the event. And this could be a DOM node, it could be `document` or `window`.
+
+The type is simply a string of whatever type of event you want to listen to, in this case, it'll be `touchend`.
+
+The listener is a callback function that will get passed the event object as the only argument and this gives you access to the event itself and whatever information it contains from within this listener callback.
+
+There's also this use capture boolean which comes at the end of the method. It determines whether you should catch the event before or after other elements have had the opportunity to catch and interpret it. If you're not sure what that means, don't worry about it. You actually don't need to use it for this quiz.
+
+Also, when you take a look at the code, you may notice that you have the option to do this quiz with vanilla JavaScript or jQuery. Both vanilla JavaScript and jQuery are perfectly valid solutions. But I want you to give it a shot with vanilla JavaScript first.
+
+#### 4.7 Solution
+Here's the code
+
+```html
+<form>
+  <div id="square"></div>
+  <p id="output1"></p>
+  <p id="output2"></p>
+</form>
+```
+
+```js
+(function() {
+  var square = document.querySelector('#square');
+  var output1 = document.querySelector('#output1');
+  var output2 = document.querySelector('#output2');
+
+  square.addEventListener('touchend', handleTouchEnd);
+  square.addEventListener('click', handleClick);
+  
+  function handleTouchEnd(e) {
+    // e.preventDefault(); // looks like this is no longer necessary
+    output.innerHTML = 'touchend';
+    clear();
+  }
+  function handleClick(e) {
+    output3.innerHTML = 'click';
+    clear();
+  }
+
+  function clear() {
+    setTimeout(function() {
+      output1.innerHTML = '';
+      output2.innerHTML = '';
+    }, 2000)
+  }
+})();
+```
+
+I set an event listener on the square target listening to `touchend` and I also added the callback `handleTouchEnd`, which will get called whenever `touchend` occurs on the square.
+
+It's pretty straightforward, but I did add some logic to it to make it disappear after a moment.
+
+So basically it will work in device emulation mode but not when the mouse click event happens.
+
+### 4.8 Touch Events
+When users touch the screen of a website, touch events are fired. Let me show you what information you receive with touch events.
+
+#### Touch Events
+Use the `event` object to tailor actions to events. Each touch event includes three lists of touches.
+
+- `touches` - a list of all fingers currently on the screen.
+- `targetTouches` - a list of fingers on the current DOM element.
+- `changedTouches` - a list of fingers involved in the current event. For example, in a touchend event, this will be the finger that was removed.
+
+These lists consist of objects that contain touch information:
+
+- `identifier` - a number that uniquely identifies the current finger in the touch session.
+- `target` - the DOM element that was the target of the action.
+- `client`/`page`/`screen` coordinates - where on the screen the action happened.
+- `radius` coordinates and `rotationAngle` - describe the ellipse that approximates finger shape.
+
+In the next quiz, you'll be challenged to create an element that responds to touches naturally!
+
+### 4.9 Quiz: Single Element
+For this quiz you'll be making this slider slide back and forth.
+
+[![wf4-13](../assets/images/wf4-13-small.jpg)](../assets/images/wf4-13.jpg)<br>
+**Live Demo:** [Slider sample](../exercises/wf4-9/index.html)
+
+Let me show you what the code looks like. You can [look through the entire app.js file](https://github.com/james-priest/udacity-nanodegree-mws/tree/master/docs/exercises/wf4-9/js) to see how the slider works.
+
+It's pretty straightforward. The crux of it being two methods, `ToggleTracker.addMovement` and `slide`.
+
+```js
+  ToggleTracker.prototype = {
+    _touches: [],
+    /**
+     * Call this to register a movement.
+     * @param {Number} posX - The current x-position of the finger/mouse.
+     */
+    addMovement: function (posX) {
+      this._touches[0] = this._touches[1] || posX;
+      this._touches[1] = posX;
+    },
+    // more code...
+  };
+  /*
+  Call with requestAnimationFrame for silky smooth 60fps performance.
+  */
+  function slide() {
+    var translateX = toggleTracker.getTranslateX();
+    toggle.style.webkitTransform = "translateX(" + translateX + "px)";
+    toggle.style.transform = "translateX(" + translateX + "px)";
+  }
+```
+
+You'll want to call `slide` whenever you want to animate a new position of the toggle. I also recommend using `requestAnimationFrame` with it because that'll give you nice performance.
+
+You can see that `slide` uses transform translateX to move the toggle some x position away from its original origin, and `slide` determines that distance by using `toggleTracker.getTtranslateX`.
+
+On `toggleTracker.addMovement`, it expects an x position to get passed to it. This x-position represents the current x-position of either the finger, as in a touch event, or a mouse on the screen.
+
+You'll want to call `addMovement` whenever a new `touchstart` or `touchmove` event occurs. And likewise, you'll want to call it for a `mousedown` or `mousemove`.
+
+It's going to be your job to use the event listener to find the x-position that gets passed to `addMovement`. In the end, all you'll need to do is set the correct event handlers on the toggle in the window so that both touch dragging and mouse striking work.
+
+Your code should go inside the `attachEventListeners` function.
+
+You'll know you've done it right when the toggle is sliding back and forth. Make sure you test on mobile. And if you're having a hard time, make sure you read the comments in the code because I left you a lot of hints.
+
+#### 4.9 Resources
+
+- [Event Listeners on MDN](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener)
+- [Touch Events on MDN](https://developer.mozilla.org/en-US/docs/Web/API/Touch_events)
+
+#### 4.9 Solution
+To solve this problem, I started where `attachEventListeners` gets called. It occurs inside an event listener for `DOMContentLoaded`.
+
+```js
+document.addEventListener("DOMContentLoaded", function(event) {
+  attachEventListeners();
+});
+```
+
+Inside `attachEventListeners` there is a flag that's set for sliding and that indicates whether or not the toggle's actually sliding.
+
+I'm going to take advantage of this flag to figure out when I should use events on the window to move the toggle.
+
+```js
+  var sliding = false;
+
+  toggle.addEventListener('touchstart', function (event) {
+    event.preventDefault();
+    sliding = true;
+    toggleTracker.addMovement(event.touches[0].pageX);
+  });
+
+  window.addEventListener('touchmove', function (event) {
+    // event.preventDefault();	// no longer needed
+    if (sliding) {
+      toggleTracker.addMovement(event.touches[0].pageX);
+      this.requestAnimationFrame(slide);
+    }
+  });
+
+  window.addEventListener('touchend', function (event) {
+    event.preventDefault();
+    sliding = false;
+  });
+```
+
+I set the `touchstart` event listener on the `toggle` itself. This is because I wanted to make sure that sliding starts when somebody is actually touching the toggle, not some random place on the screen.
+
+Inside the event listener I set `sliding` to `true` because at this point the toggle should be able to slide. And I added the first movement to the toggle tracker.
+
+Remember `addMovement` is expecting the x-position of either a mouse or a finger on the screen, so in order to get that I'm using the `event` object.
+
+The `event` object contains a touches array and there's only one touch. And it has a property `pageX` which is exactly what I'm looking for.
+
+Next up, here comes the move. So on `touchmove`, I look for if the `toggle` is sliding already. I need to look for `sliding` because I attached `touchmove` to the whole window. And that's because somebody's finger can pretty easily slip off the toggle.
+
+So if the toggle should actually be sliding, I add the movement the same way I did before and then i request an animation frame using the `slide` callback.
+
+This is what actually makes the toggle move.
+
+Lastly, I want to watch out for any `touchend` events, whether or not they occur on the toggle itself. So, in that case, I add `touchend` to the window. It doesn't matter where the finger gets let up on the screen.
+
+In that case, sliding is done. I then d0 basically the same thing for `mousedown`, `mousemove` and `mouseup`. The only difference is now I don't have a touches object on the event objects and I can simply go straight to `pageX` (or `clientX).
+
+```js
+  toggle.addEventListener('mousedown', function (event) {
+    sliding = true;
+    toggleTracker.addMovement(event.clientX);
+  });
+
+  window.addEventListener('mousemove', function (event) {
+    if (sliding) {
+      toggleTracker.addMovement(event.clientX);
+      this.requestAnimationFrame(slide);
+    }
+  });
+
+  window.addEventListener('mouseup', function (event) {
+    sliding = false;
+  });
+```
+
+Cool, okay, that's enough code. Let me show you what this looks like. 
+
+[![wf4-14](../assets/images/wf4-14-small.jpg)](../assets/images/wf4-14.jpg)<br>
+**Live Demo:** [Slider sample](../exercises/wf4-9/index.html)
+
+Just like before, touch events seem to be working and mouse events work as well. I can slide off and keeps going but as soon as I let up, no more sliding.
+
+### 4.10 Final Project
+#### Meet-Up Event Planner
+Prepare for this project with [Building High Conversation Web Forms](https://www.udacity.com/course/building-high-conversion-web-forms--ud890) and [Web Tooling and Automation](https://www.udacity.com/course/web-tooling-automation--ud892).
+
+##### Requirements
+*You do not need to create a functioning back-end or save user information. Only the form components themselves and their performance will be evaluated.*
+
+1. You do not need to create a real back-end or save user information, but the app must provide a form for users to create an account. Account creation should include, but is not limited to:
+- Name
+- Email address
+- Secure password (with character and length requirements)
+- Optional public biographical information (such as employer, job title, birthday, etc)
+
+1. The app should allow users to create a new event. Each event should, at a minimum, allow a user to set:
+- Name of the event
+- Type of the event (birthday party, conference talk, wedding, etc.)
+- Event host (could be an individual’s name or an organization)
+- Event start date and time
+- Event end date and time
+- Guest list
+- Location
+- Optional message to the guests with additional information about the event
+
+1. The app should display events that have been created.
+
+##### Tips, Tricks, and Advice
+- You may find that you want to save user information in some way, as opposed to just hard-coding in a few events to meet the “display events” requirement. You could accomplish this by using [localStorage](https://developer.mozilla.org/en-US/docs/Web/API/Storage) or by using a “back-end as a service” platform like [Firebase](https://www.firebase.com/).
+- You can use any framework you’d like - or don’t! It’s up to you.
+- Need some help testing your site with a screen reader? Check out [this video from our Responsive Images course](https://classroom.udacity.com/courses/ud882/lessons/3574748851/concepts/37757186550923) for some tips.
+- [Use this checklist as a reference](http://labs.udacity.com/images/web-forms-checklist.pdf) to help you throughout this project.
+
+##### Evaluation
+Your project will be evaluated by a Udacity reviewer according to the rubric below. Be sure to review it thoroughly before you submit. All criteria must "meet specifications" in order to pass.
+
+### 4.11 Course Outro
+Congratulations. You are well on your way to building fantastic forms. You've been building forms that take less time and help users along the way.
+
+[![wf1-1](../assets/images/wf1-1-small.jpg)](../assets/images/wf1-1.jpg)
+
+Now you know how to build better inputs, faster forms, and reactive touch interfaces. You've got all the tools you need to make your forms a breeze and increase conversions.
+
+Most importantly, you've been developing the right mindset for tackling forms in the future. So get out there and build some forms to convert more users.
